@@ -55,7 +55,7 @@ java -jar joogle.jar -f App.java /"void => ()"/
 ```shell
 java -jar joogle.jar -f App.java -d ./OtherProyect/ /"void => ()"/
 ```
->>- if you combine remember to set the search sentence the same for both of the CLI options
+>>- if you combine the CLI options remember to set the search sentence the same for both of the CLI options
 
 >- if you indicate a different search for each one of the CLI options
 >>- the output can be a little bit confusing
