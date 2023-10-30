@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.LineNumberReader;
 import java.util.ArrayList;
 
@@ -307,7 +308,6 @@ public class Busqueda {
       try {
          File miFile = new File(filePath);
          if (miFile.exists()) {
-             this.ConcurrencyFormat(miFile.getCanonicalPath(), sentencia);
             for(int i = 0; i < method_names.length; ++i) {
                if (sentencia.equals("")) {
                   this.BusquedaFormat(filePath, method_names[i], types[i], arguments[i]);
@@ -329,15 +329,75 @@ public class Busqueda {
 
    }
    /**
-    * genera la sentencia a buscar desde el argumento de la consolaarguemnto 
+    * genera un String con la ruta de los archivos dentro de los directorios
+    * <br> pre: </br> busca dentro de los directorios un archivo; si el hijo es directorio ingresa y busca los archivos
+    * @param miFiles: los archivos dentro del directorio designado
+    * @throws IOException: error al buscar los archivos del directorio
+    * @return String con la ruta de los archivos
+    */
+   private String GetFilesFromDirectory(File[] miFiles) throws IOException {
+       String fileName = "";
+       for(File f: miFiles) {
+           if(f.isFile()) {
+               fileName += f.getCanonicalPath() + "\n";
+           }
+           if(f.isDirectory()) {
+               fileName += this.GetFilesFromDirectory(f.listFiles()) + "\n";
+           }
+       }
+       return fileName;
+   }
+   /**
+    * busca la sentencia en el archivo designado
     * @param filePath: ruta del archivo a leer
     */
    public void SearchInFile(String filePath) {
        for(int i=0; i<options.length; ++i) {
            if(options[i].contains("/")) {
                String sentence = options[i].replace("/", "");
+               this.ConcurrencyFormat(filePath, sentence);
                this.BuscarSentencia(filePath, sentence);
            }
+       }
+   }
+   /**
+    * busca la sentencia dentro de los archivos del directorio designado
+    * @param directory: directory con los archivos
+    */
+   public void SearcInDirectory(String directory) {
+       try {
+           File miFile = new File(directory);
+           if(miFile.isDirectory()) {
+               File[] files = miFile.listFiles();
+               for(File f: files) {
+                   if(f.getName().contains(".java")) {
+                       this.SearchInFile(f.getCanonicalPath());
+                   }
+               }
+           }
+        } catch(Exception e) {
+            System.err.println(e);
+        }
+   }
+   /**
+    * busca la sentencia dentro de los archivos de los directorios del directorio designado
+    * @param directorys: directorys del directory designado
+    */
+   public void SearcInDirectorys(String directorys) {
+       try {
+           String filesName = "";
+           File miFile = new File(directorys);
+           if(miFile.isDirectory()) {
+               filesName = this.GetFilesFromDirectory(miFile.listFiles());
+               String[] partition = filesName.split("\n");
+               for(String p: partition) {
+                   if(p.contains(".java")) {
+                       this.SearchInFile(p);
+                   }
+               }
+           }
+       } catch(Exception e) {
+           System.err.println(e);
        }
    }
    /**
@@ -347,22 +407,19 @@ public class Busqueda {
        try {
            String directory = "";
            String fileName = "";
+           String directorys = "";
            for(int i=0; i<options.length; ++i) {
                if(options[i].contains("-d")) {
                    directory = options[i+1];
+                   this.SearcInDirectory(directory);
                }
                if(options[i].contains("-f")) {
                    fileName = options[i+1];
                    this.SearchInFile(fileName);
                }
-           }
-           File miFile = new File(directory);
-           if(miFile.isDirectory()) {
-               File[] files = miFile.listFiles();
-               for(File f: files) {
-                   if(f.getName().contains(".java")) {
-                       this.SearchInFile(f.getCanonicalPath());
-                   }
+               if(options[i].contains("-D")) {
+                   directorys = options[i+1];
+                   this.SearcInDirectorys(directorys);
                }
            }
        } catch(Exception e) {
