@@ -401,7 +401,10 @@ public class Busqueda {
        }
    }
    /**
-    * organiza la forma en la que se ejecutan los argumentos de la consola
+    * organiza la forma en la que se ejecutan los argumentos de la consola;
+    *  -f es para buscar la sentencia dentro de un archivo 
+    *  -d es para buscar la sentencia dentro de los archivos del directory designado, solo se tienen en cuenta los archivos no directorios
+    *  -D es para buscar la sentencia dentro de los archivos del directory designado si el directorio tiene más directorios se busca tambien dentro de ellos
     */
    public void GetFilesFromPath() {
        try {
