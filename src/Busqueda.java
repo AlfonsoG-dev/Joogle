@@ -167,14 +167,16 @@ public class Busqueda {
         String[] validate = method_names.split(";");
         for(int i=0; i<validate.length; ++i) {
             if(validate[i].contains(",")) {
-                String[] coma = validate[i].split(",");
-                String[] p = coma[0].split(" ");
-                String[] s = coma[1].split(" ");
-                String l = "";
-                if(s[1].contains(")") == false) {
-                    l += p[0]+ ", " + s[1] + ")";
+                String args = validate[i].split("\\)")[0] + ")";
+                String[] comas = args.split(",");
+                String b = "( ";
+                for(int c=0; c<comas.length; ++c) {
+                    String separate = comas[c].replace("(", "").replace(")", "").trim();
+                    String sp = separate.split(" ")[0];
+                    b += sp + ", ";
                 }
-                validate[i] = l;
+                String clean_sp = b.substring(0, b.length()-2) + " )";
+                build += clean_sp + "\n";
             } else {
                 String[] d = validate[i].split(" ");
                 String l = "";
@@ -187,8 +189,8 @@ public class Busqueda {
                     l += d[0];
                 }
                 validate[i] = l;
+                build += validate[i].replace("(", "( ").replace(")", " )") + "\n";
             }
-            build += validate[i].replace("(", "( ").replace(")", " )") + "\n";
         }
         return build;
     }
@@ -323,16 +325,39 @@ public class Busqueda {
         String[] sentences = this.GetArguments(filePath).split("\n");
         String result = "";
         int r = 0;
-        for(String s: sentences) {
+        for(int i=0; i<sentences.length; ++i) {
+            String s = sentences[i];
             if(st.equals("")) {
                 result += ANSI_YELLOW + s + ANSI_RESET + "\n";
                 ++r;
-            } else if(s.replace(" ", "").toLowerCase().equals(st)) {
+            } 
+            if(s.replace(" ", "").toLowerCase().equals(st)) {
                 result += ANSI_YELLOW + s + ANSI_RESET + "\n";
                 ++r;
-            } else {
-                result += s + "\n";
             }
+            if(s.replace(" ", "").toLowerCase().contains(",") && st.contains(",")) {
+                String[] coma = s.split(",");
+                String[] stComa = st.split(",");
+                for(int c=0; c<stComa.length; ++c) {
+                    if(coma[c].replace(" ", "").toLowerCase().equals(stComa[c])) {
+                        coma[c] = ANSI_YELLOW + coma[c] + ANSI_RESET;
+                    }
+                }
+                String m = "";
+                for(String c: coma) {
+                    if(c.contains("(")) {
+                        m += c;
+                    }
+                    if(c.contains(")")) {
+                        m += ", " + c +";";
+                    }
+                }
+                String[] rm = m.split(";");
+                for(String comas: rm) {
+                    result += comas + "\n";
+                }
+                ++r;
+            } 
         }
         this.ConcurrencyFormat(r, "Arguments");
         return result;
@@ -346,10 +371,11 @@ public class Busqueda {
         String[] method_names = this.GetMethodName(filePath).split("\n");
         String[] types = this.CompareToReturnType(filePath, sentencia).split("\n");
         String[] arguments = this.CompareToArguments(filePath, sentencia).split("\n");
+        String[] ar = this.GetArguments(filePath).split("\n");
         try {
             File miFile = new File(filePath);
             if (miFile.exists()) {
-                for(int i = 0; i < method_names.length; ++i) {
+                for(int i = 0; i < ar.length; ++i) {
                     if (sentencia.equals("")) {
                         this.BusquedaFormat(
                         filePath,
