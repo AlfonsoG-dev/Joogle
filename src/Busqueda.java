@@ -36,7 +36,6 @@ public class Busqueda {
    public Busqueda(String[] nOptions) {
       this.options = nOptions;
    }
-
    /**
     * tokens a ignorar en la busqueda
     * @return lista de tokens a ignorar
@@ -263,58 +262,79 @@ public class Busqueda {
     * @param type: tipo de retorno del método
     * @param argument: argumentos del método
     */
-   private void BusquedaFormat(String filePath, String method_name, String type, String argument, int nivelIgualdad) {
+   private void BusquedaFormat(String filePath, String method_name, String type, String argument) {
       String build = "";
       int lineNumber = this.GetLineNumber(filePath, method_name);
       if(lineNumber != -1) {
-          if(nivelIgualdad == 1) {
-              build = ANSI_YELLOW + build + "| " + ANSI_RESET + ANSI_RED + lineNumber + ANSI_RESET + ANSI_YELLOW + " | " + method_name + " :: " + type + " => " + argument + ANSI_RESET + "\n";
-          } else {
-              build = build + "| " + lineNumber + " | " + method_name + " :: " + type + " => " + argument + "\n";
-          }
+          build = build + "| " + ANSI_RED + lineNumber + ANSI_RESET + " | " + method_name + " :: " + type + " => " + argument + "\n";
       } else {
           build = build + "| " + "unknow" + " | " + method_name + " :: " + type + " => " + argument + "\n";
       }
       System.out.println(build);
    }
    /**
-    * da el número de respuestas encontradas
-    * @param filePath: ruta del archivo a leer
-    * @param sentencia: sentencia a buscar
-    * @return número de respuestas
+    * da formato a la cantidad de respuestas encontradas
+    * @param cantidad: cantidad de veces que se encuentra el valor
+    * @param tipo: tipo de valor repetido
     */
-   private int CantidaConcurrency(String filePath, String sentencia) {
-      String[] method_names = this.GetMethodName(filePath).split("\n");
-      String[] types = this.GetReturnType(filePath).split("\n");
-      String[] arguments = this.GetArguments(filePath).split("\n");
-      int m = 0;
-      try {
-        for(int i = 0; i < method_names.length; ++i) {
-           if (sentencia.equals("")) {
-               m = method_names.length;
-           } else {
-              String type = types[i].replace(" ", "").toLowerCase();
-              String s_type = sentencia.split("=>")[0].replace(" ", "").toLowerCase();
-              String s_arg = sentencia.split("=>")[1].replace(" ", "").toLowerCase();
-              String args = arguments[i].replace(" ", "").toLowerCase();
-              if (type.contains(s_type) || args.contains(s_arg)) {
-                  ++m;
-              }
-           }
-        }
-      } catch (Exception var11) {
-          //
-      }
-      return m;
+   private void ConcurrencyFormat(int cantidad, String tipo) {
+       System.out.println(String.format("%s : %s", tipo, ANSI_RED + cantidad + ANSI_RESET) + "\n");
    }
    /**
-    * da formato a la cantidad de respuestas encontradas
-    * @param filePath: ruta del archivo a leer
-    * @param sentencia: sentencia a buscar
+    * modifica los datos para que solo aquellos que tengan el mismo valor se pinten de cierto color
+    * @param filePath: archivo a leer
+    * @param sentence: sentencia buscada
+    * @return lista de datos modificados con el color
     */
-   private void ConcurrencyFormat(String filePath, String sentencia, int cantidad) {
-       System.out.println(String.format("\n%s\n", ANSI_CYAN + filePath + ANSI_RESET));
-       System.out.println(String.format("Resultados: %s\n", ANSI_RED + cantidad + ANSI_RESET));
+   private String CompareToReturnType(String filePath, String sentence) {
+       String st = sentence.split("=>")[0].trim().toLowerCase();
+       String[] sentences = this.GetReturnType(filePath).split("\n");
+       String result = "";
+       int r = 0;
+       for(String s: sentences) {
+           if(st.equals("")) {
+               result += ANSI_YELLOW + s + ANSI_RESET + "\n";
+               ++r;
+           }
+           else if(s.toLowerCase().equals(st)) {
+               result += ANSI_YELLOW + s + ANSI_RESET + "\n";
+               ++r;
+           } else {
+               result += s + "\n";
+           }
+       }
+       ConcurrencyFormat(r, "ReturnType");
+       return result;
+   }
+
+   /**
+    * modifica los datos para que solo aquellos que tengan el mismo valor se pinten de cierto color
+    * @param filePath: archivo a leer
+    * @param sentence: sentencia buscada
+    * @return lista de datos modificados con el color
+    */
+   private String CompareToArguments(String filePath, String sentence) {
+       String st = sentence;
+       if(sentence.equals("") == false) {
+            st = sentence.split("=>")[1].replace(" ", "").toLowerCase();
+       }
+       String[] sentences = this.GetArguments(filePath).split("\n");
+       String result = "";
+       int r = 0;
+       for(String s: sentences) {
+           if(st.equals("")) {
+               result += ANSI_YELLOW + s + ANSI_RESET + "\n";
+               ++r;
+           }
+           else if(s.replace(" ", "").toLowerCase().equals(st)) {
+               result += ANSI_YELLOW + s + ANSI_RESET + "\n";
+               ++r;
+           } else {
+               result += s + "\n";
+           }
+       }
+       this.ConcurrencyFormat(r, "Arguments");
+       return result;
    }
    /**
     * busca la sentencia según el tipo de retorno y los argumentos
@@ -323,24 +343,26 @@ public class Busqueda {
     */
    private void BuscarSentencia(String filePath, String sentencia) {
       String[] method_names = this.GetMethodName(filePath).split("\n");
-      String[] types = this.GetReturnType(filePath).split("\n");
-      String[] arguments = this.GetArguments(filePath).split("\n");
+      String[] types = this.CompareToReturnType(filePath, sentencia).split("\n");
+      String[] arguments = this.CompareToArguments(filePath, sentencia).split("\n");
       try {
          File miFile = new File(filePath);
          if (miFile.exists()) {
             for(int i = 0; i < method_names.length; ++i) {
                if (sentencia.equals("")) {
-                  this.BusquedaFormat(filePath, method_names[i], types[i], arguments[i], 1);
+                  this.BusquedaFormat(
+                          filePath,
+                          method_names[i],
+                          types[i],
+                          arguments[i]
+                  );
                } else {
-                  String type = types[i].replace(" ", "").toLowerCase();
-                  String s_type = sentencia.split("=>")[0].replace(" ", "").toLowerCase();
-                  String s_arg = sentencia.split("=>")[1].replace(" ", "").toLowerCase();
-                  String args = arguments[i].replace(" ", "").toLowerCase();
-                  if (type.contains(s_type) && args.contains(s_arg)) {
-                     this.BusquedaFormat(filePath, method_names[i], types[i], arguments[i], 1);
-                  } else if(type.contains(s_type) || args.contains(s_arg)) {
-                     this.BusquedaFormat(filePath, method_names[i], types[i], arguments[i], 0);
-                  }
+                       this.BusquedaFormat(
+                               filePath,
+                               method_names[i],
+                               types[i],
+                               arguments[i]
+                               );
                }
             }
          } else {
@@ -378,14 +400,11 @@ public class Busqueda {
        try {
            File miFile = new File(filePath);
            if(miFile.isFile() ) {
+           System.out.println(String.format("\n%s\n", ANSI_CYAN + filePath + ANSI_RESET));
                for(int i=0; i<options.length; ++i) {
-                   if(options[i].contains("/")) {
+                   if(options[i].contains("/") && options[i].endsWith("/")) {
                        String sentence = options[i].replace("/", "");
-                       int cantidad = this.CantidaConcurrency(filePath, sentence);
-                       if(cantidad > 0) {
-                           this.ConcurrencyFormat(filePath, sentence, cantidad);
-                           this.BuscarSentencia(filePath, sentence);
-                       }
+                       this.BuscarSentencia(filePath, sentence);
                    }
                }
            }
