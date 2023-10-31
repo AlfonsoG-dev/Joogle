@@ -7,6 +7,6 @@ $CreateJarFile = "jar -cfm joogle.jar Manifesto.txt -C bin ."
 #just for testing purposes
 $JavaCommand = "java -cp ./bin ./src/App.java -f ./src/App.java " + '/""/'
 #execute the commands
-$RunCommand = "$Compile" + " && " + "$JavaCommand"
+$RunCommand = "$Compile" + " && " + "$JavaCommand" + " && " + "$CreateJarFile"
 
 Invoke-Expression $RunCommand
