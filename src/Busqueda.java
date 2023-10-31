@@ -14,9 +14,21 @@ public class Busqueda {
      * CLI options
      */
    private String[] options;
+   /**
+    * color amarillo para los resultados
+    */
    private final String ANSI_YELLOW = "\u001B[33m";
+   /**
+    * color cyan para el path del archivo
+    */
    private final String ANSI_CYAN = "\u001B[46m";
+   /**
+    * color rojo para los valores numéricos
+    */
    private final String ANSI_RED = "\u001B[41m";
+   /**
+    * quitar color para los resultados no exactos
+    */
    private final String ANSI_RESET = "\u001B[0m";
    /**
     * constructor
