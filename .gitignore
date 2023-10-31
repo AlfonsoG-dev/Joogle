@@ -2,8 +2,13 @@
 *.class
 **bin/
 
+# Docs files
+**Docs/
+
 # Log file
 *.log
+# execute files
+*.exe
 
 # BlueJ files
 *.ctxt
