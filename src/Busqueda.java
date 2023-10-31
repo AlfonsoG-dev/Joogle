@@ -14,7 +14,10 @@ public class Busqueda {
      * CLI options
      */
    private String[] options;
-
+   private final String ANSI_YELLOW = "\u001B[33m";
+   private final String ANSI_CYAN = "\u001B[46m";
+   private final String ANSI_RED = "\u001B[41m";
+   private final String ANSI_RESET = "\u001B[0m";
    /**
     * constructor
     */
@@ -248,11 +251,15 @@ public class Busqueda {
     * @param type: tipo de retorno del método
     * @param argument: argumentos del método
     */
-   private void BusquedaFormat(String filePath, String method_name, String type, String argument) {
+   private void BusquedaFormat(String filePath, String method_name, String type, String argument, int nivelIgualdad) {
       String build = "";
       int lineNumber = this.GetLineNumber(filePath, method_name);
       if(lineNumber != -1) {
-          build = build + "| " + lineNumber + " | " + method_name + " :: " + type + " => " + argument + "\n";
+          if(nivelIgualdad == 1) {
+              build = ANSI_YELLOW + build + "| " + ANSI_RESET + ANSI_RED + lineNumber + ANSI_RESET + ANSI_YELLOW + " | " + method_name + " :: " + type + " => " + argument + ANSI_RESET + "\n";
+          } else {
+              build = build + "| " + lineNumber + " | " + method_name + " :: " + type + " => " + argument + "\n";
+          }
       } else {
           build = build + "| " + "unknow" + " | " + method_name + " :: " + type + " => " + argument + "\n";
       }
@@ -274,10 +281,11 @@ public class Busqueda {
            if (sentencia.equals("")) {
                m = method_names.length;
            } else {
-              String type = types[i].replace("=>", "").trim();
-              String s_type = sentencia.split("=>")[0].trim();
-              String s_arg = sentencia.split("=>")[1].trim();
-              if (type.contains(s_type) || arguments[i].trim().contains(s_arg)) {
+              String type = types[i].replace(" ", "").toLowerCase();
+              String s_type = sentencia.split("=>")[0].replace(" ", "").toLowerCase();
+              String s_arg = sentencia.split("=>")[1].replace(" ", "").toLowerCase();
+              String args = arguments[i].replace(" ", "").toLowerCase();
+              if (type.contains(s_type) || args.contains(s_arg)) {
                   ++m;
               }
            }
@@ -292,9 +300,9 @@ public class Busqueda {
     * @param filePath: ruta del archivo a leer
     * @param sentencia: sentencia a buscar
     */
-   private void ConcurrencyFormat(String filePath, String sentencia) {
-       System.out.println(String.format("\n %s \n", filePath));
-       System.out.println(String.format("Resultados: %s\n", this.CantidaConcurrency(filePath, sentencia)));
+   private void ConcurrencyFormat(String filePath, String sentencia, int cantidad) {
+       System.out.println(String.format("\n%s\n", ANSI_CYAN + filePath + ANSI_RESET));
+       System.out.println(String.format("Resultados: %s\n", ANSI_RED + cantidad + ANSI_RESET));
    }
    /**
     * busca la sentencia según el tipo de retorno y los argumentos
@@ -310,13 +318,16 @@ public class Busqueda {
          if (miFile.exists()) {
             for(int i = 0; i < method_names.length; ++i) {
                if (sentencia.equals("")) {
-                  this.BusquedaFormat(filePath, method_names[i], types[i], arguments[i]);
+                  this.BusquedaFormat(filePath, method_names[i], types[i], arguments[i], 1);
                } else {
-                  String type = types[i].replace("=>", "").trim().toLowerCase();
-                  String s_type = sentencia.split("=>")[0].trim().toLowerCase();
-                  String s_arg = sentencia.split("=>")[1].trim().toLowerCase();
-                  if (type.contains(s_type) || arguments[i].toLowerCase().trim().contains(s_arg)) {
-                     this.BusquedaFormat(filePath, method_names[i], types[i], arguments[i]);
+                  String type = types[i].replace(" ", "").toLowerCase();
+                  String s_type = sentencia.split("=>")[0].replace(" ", "").toLowerCase();
+                  String s_arg = sentencia.split("=>")[1].replace(" ", "").toLowerCase();
+                  String args = arguments[i].replace(" ", "").toLowerCase();
+                  if (type.contains(s_type) && args.contains(s_arg)) {
+                     this.BusquedaFormat(filePath, method_names[i], types[i], arguments[i], 1);
+                  } else if(type.contains(s_type) || args.contains(s_arg)) {
+                     this.BusquedaFormat(filePath, method_names[i], types[i], arguments[i], 0);
                   }
                }
             }
@@ -324,7 +335,7 @@ public class Busqueda {
             System.out.println("el archivo no existe");
          }
       } catch (Exception var11) {
-          //
+          //System.err.println(var11);
       }
 
    }
@@ -352,12 +363,22 @@ public class Busqueda {
     * @param filePath: ruta del archivo a leer
     */
    public void SearchInFile(String filePath) {
-       for(int i=0; i<options.length; ++i) {
-           if(options[i].contains("/")) {
-               String sentence = options[i].replace("/", "");
-               this.ConcurrencyFormat(filePath, sentence);
-               this.BuscarSentencia(filePath, sentence);
+       try {
+           File miFile = new File(filePath);
+           if(miFile.isFile() ) {
+               for(int i=0; i<options.length; ++i) {
+                   if(options[i].contains("/")) {
+                       String sentence = options[i].replace("/", "");
+                       int cantidad = this.CantidaConcurrency(filePath, sentence);
+                       if(cantidad > 0) {
+                           this.ConcurrencyFormat(filePath, sentence, cantidad);
+                           this.BuscarSentencia(filePath, sentence);
+                       }
+                   }
+               }
            }
+       } catch(Exception e) {
+           System.out.println(e);
        }
    }
    /**
