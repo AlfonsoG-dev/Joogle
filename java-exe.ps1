@@ -1,5 +1,5 @@
 #class to compile
-$Clases = " ./src/*.java"
+$Clases = " ./src/*.java ./src/Utils/*.java"
 #compile program and save the .class data in bin
 $Compile = "javac -d ./bin" + "$Clases"
 #create jar file
