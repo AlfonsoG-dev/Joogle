@@ -138,8 +138,10 @@ public class Busqueda {
             String datos = rem.split("\\(")[0];
             if(datos.contains(";") == false) {
                 String[] separate = datos.split(" ");
-                if(this.TokenAccesorList().contains(separate[1])) {
-                    separate[1] = separate[2];
+                for(int s=0; s<separate.length-1; ++s) {
+                    if(this.TokenAccesorList().contains(separate[s]) == false) {
+                        separate[1] = separate[s];
+                    }
                 }
             build += separate[1] + "\n";
             }
@@ -354,11 +356,10 @@ public class Busqueda {
         String[] method_names = this.GetMethodName(filePath).split("\n");
         String[] types = this.CompareToReturnType(filePath, sentencia).split("\n");
         String[] arguments = this.CompareToArguments(filePath, sentencia).split("\n");
-        String[] ar = this.GetArguments(filePath).split("\n");
         try {
             File miFile = new File(filePath);
             if (miFile.exists()) {
-                for(int i = 0; i < ar.length; ++i) {
+                for(int i = 0; i < method_names.length; ++i) {
                     if (sentencia.equals("")) {
                         this.BusquedaFormat(
                         filePath,
