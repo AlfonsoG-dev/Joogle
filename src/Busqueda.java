@@ -21,6 +21,7 @@ public class Busqueda {
     */
     private final String ANSI_RESET = "\u001B[0m";
     /**
+     * utiliades para crear la busqueda
      */
     private BusquedaUtil utils;
     /**
@@ -28,30 +29,30 @@ public class Busqueda {
     */
     public Busqueda(String[] nOptions) {
         this.options = nOptions;
-        utils = new BusquedaUtil();
+        this.utils = new BusquedaUtil();
     }
     /**
     * busca la sentencia según el tipo de retorno y los argumentos
     * @param filePath: ruta del archivo a leer
     * @param sentencia: sentencia a buscar
     */
-    private void BuscarSentencia(String filePath, String sentencia) {
+    public void BuscarSentencia(String filePath, String sentencia) {
         try {
-            String[] method_names = utils.GetMethodName(filePath).split("\n");
-            String[] types = utils.CompareToReturnType(filePath, sentencia).split("\n");
-            String[] arguments = utils.CompareToArguments(filePath, sentencia).split("\n");
+            String[] method_names = this.utils.GetMethodName(filePath).split("\n");
+            String[] types = this.utils.CompareToReturnType(filePath, sentencia).split("\n");
+            String[] arguments = this.utils.CompareToArguments(filePath, sentencia).split("\n");
             File miFile = new File(filePath);
             if (miFile.exists()) {
                 for(int i = 0; i < method_names.length; ++i) {
                     if (sentencia.equals("")) {
-                        utils.BusquedaFormat(
+                        this.utils.BusquedaFormat(
                         filePath,
                         method_names[i],
                         types[i],
                         arguments[i]
                         );
                     } else {
-                        utils.BusquedaFormat(
+                        this.utils.BusquedaFormat(
                         filePath,
                         method_names[i],
                         types[i],
@@ -74,7 +75,7 @@ public class Busqueda {
     * @throws IOException: error al buscar los archivos del directorio
     * @return String con la ruta de los archivos
     */
-    private String GetFilesFromDirectory(File[] miFiles) throws IOException {
+    public String GetFilesFromDirectory(File[] miFiles) throws IOException {
         String fileName = "";
         for(File f: miFiles) {
             if(f.isFile()) {

@@ -24,7 +24,7 @@ public class BusquedaUtil {
     * tokens a ignorar en la busqueda
     * @return lista de tokens a ignorar
     */
-    private ArrayList<String> TokenAccesorList() {
+    public ArrayList<String> TokenAccesorList() {
         String[] tokens = new String[]{"public", "private", "protected", "final", "abstract", "static", "record", "class", "interface"};
         ArrayList<String> lista = new ArrayList<String>();
         for(String t: tokens) {
@@ -37,7 +37,7 @@ public class BusquedaUtil {
     * @param filePath: ruta del archivo a leer
     * @return String con los datos del archivo
     */
-    private String GetTextFromFile(String filePath) {
+    public String GetTextFromFile(String filePath) {
         String build = "";
         FileReader miReader = null;
         BufferedReader miBufferReader = null;
@@ -76,7 +76,7 @@ public class BusquedaUtil {
     * @param filePath: ruta del archivo a leer
     * @return String con las lineas en donde hay métodos
     */
-    private String GetSentences(String filePath) {
+    public String GetSentences(String filePath) {
         String[] fileLines = this.GetTextFromFile(filePath).split("\n");
         String lines = "";
         for(String fl: fileLines) {
@@ -112,7 +112,7 @@ public class BusquedaUtil {
     * @param filePath: ruta del archivo a leer
     * @return String con el tipo de retorno del método
     */
-    private String GetReturnType(String filePath) {
+    public String GetReturnType(String filePath) {
         String build = "";
         String[] partition = this.GetSentences(filePath).split("\n");
         for(String p: partition) {
@@ -135,7 +135,7 @@ public class BusquedaUtil {
     * @param filePath: ruta del archivo a leer
     * @return String con los argumentos del método
     */
-    private String GetArguments(String filePath) {
+    public String GetArguments(String filePath) {
         String[] sentences = this.GetSentences(filePath).split("\n");
         String nombres = "", tipos = "";
         for(String s: sentences) {
@@ -174,7 +174,7 @@ public class BusquedaUtil {
     * @param sentencia: sentencia a buscar
     * @return String con la sentencia completa del método buscado
     */
-    private String LocalizarMetodo(String filePath, String sentencia) {
+    public String LocalizarMetodo(String filePath, String sentencia) {
         String build = "";
         String[] partition = this.GetSentences(filePath).split("\n");
 
@@ -193,7 +193,7 @@ public class BusquedaUtil {
     * @param sentence: sentencia a buscar
     * @return número de linea del método buscado
     */
-    private int GetLineNumber(String filePath, String sentence) {
+    public int GetLineNumber(String filePath, String sentence) {
         String[] fileLines = this.GetTextFromFile(filePath).split("\n");
         String lines = "";
         for(String fl: fileLines) {
@@ -242,7 +242,7 @@ public class BusquedaUtil {
     * @param cantidad: cantidad de veces que se encuentra el valor
     * @param tipo: tipo de valor repetido
     */
-    private void ConcurrencyFormat(int cantidad, String tipo) {
+    public void ConcurrencyFormat(int cantidad, String tipo) {
         System.out.println(String.format("%s : %s", tipo, ANSI_RED + cantidad + ANSI_RESET) + "\n");
     }
     /**
