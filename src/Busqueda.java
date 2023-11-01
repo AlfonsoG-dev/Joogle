@@ -2,7 +2,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.LineNumberReader;
 import java.util.ArrayList;
 
 /**
@@ -41,7 +40,7 @@ public class Busqueda {
     * @return lista de tokens a ignorar
     */
     private ArrayList<String> TokenAccesorList() {
-        String[] tokens = new String[]{"public", "private", "protected", "final", "abstract", "static", "record", "class", "interface", "extends", "implements"};
+        String[] tokens = new String[]{"public", "private", "protected", "final", "abstract", "static", "record", "class", "interface"};
         ArrayList<String> lista = new ArrayList<String>();
         for(String t: tokens) {
             lista.add(t);
@@ -54,21 +53,16 @@ public class Busqueda {
     * @return String con los datos del archivo
     */
     private String GetTextFromFile(String filePath) {
-        String sentencia = "";
         String build = "";
         FileReader miReader = null;
         BufferedReader miBufferReader = null;
         try {
             miReader = new FileReader(filePath);
             miBufferReader = new BufferedReader(miReader);
+            int i=1;
             while(miBufferReader.ready()) {
-                sentencia += miBufferReader.readLine() + "\n";
-            }
-            String[] datos = sentencia.split("\n");
-            for(String d: datos) {
-                if(d.contains(")") || d.contains("{") || d.endsWith("\n")) {
-                    build += d.trim() + "\n";
-                }
+                build += i + ":" + miBufferReader.readLine() + "\n";
+                ++i;
             }
         } catch (Exception var48) {
             System.err.println(var48);
@@ -98,16 +92,20 @@ public class Busqueda {
     * @return String con las lineas en donde hay métodos
     */
     private String GetSentences(String filePath) {
-        String build = "";
-        String[] partition = this.GetTextFromFile(filePath).split("\n");
-        for(String p: partition) {
-            for(String t: this.TokenAccesorList()) {
-                if(p.startsWith(t)) {
-                    build += p.replace("{", "").trim() +"\n";
+        String[] fileLines = this.GetTextFromFile(filePath).split("\n");
+        String lines = "";
+        for(String fl: fileLines) {
+            String[] numeros_fl = fl.replace("}", "").split(":");
+            if(numeros_fl.length == 2) {
+                String valores = numeros_fl[1].trim();
+                for(String t: this.TokenAccesorList()) {
+                    if(valores.startsWith(t) && valores.contains(")") || valores.endsWith("\n")) {
+                        lines += valores.replace("{", "").trim() + "\n";
+                    }
                 }
             }
         }
-        return build;
+        return lines;
     }
     /**
     * genera un String con los métodos del archivo
@@ -220,46 +218,31 @@ public class Busqueda {
     * @return número de linea del método buscado
     */
     private int GetLineNumber(String filePath, String sentence) {
-        FileReader miReader = null;
-        LineNumberReader miLineReader = null;
-        int resultado = -1;
-
-        try {
-            miReader = new FileReader(filePath);
-            miLineReader = new LineNumberReader(miReader);
-            String localizar = this.LocalizarMetodo(filePath, sentence).replace(";", "");
-
-            while(miLineReader.read() != -1) {
-                if (miLineReader.readLine().contains(localizar)) {
-                    resultado = miLineReader.getLineNumber();
+        String[] fileLines = this.GetTextFromFile(filePath).split("\n");
+        String lines = "";
+        for(String fl: fileLines) {
+            String[] numeros_fl = fl.replace("}", "").split(":");
+            if(numeros_fl.length == 2) {
+                String valores = numeros_fl[1].trim();
+                for(String t: this.TokenAccesorList()) {
+                    if(valores.startsWith(t) && valores.contains(")") || valores.endsWith("\n")) {
+                        lines += numeros_fl[0] + ":" + valores.replace("{", "").trim() + "\n";
+                    }
                 }
             }
-        } catch (Exception var19) {
-            //System.err.println(var19);
-        } finally {
-            if (miReader != null) {
-                try {
-                    miReader.close();
-                } catch (Exception var18) {
-                    System.err.println(var18);
-                } finally {
-                    miReader = null;
-                }
-            }
-
-            if (miLineReader != null) {
-                try {
-                    miLineReader.close();
-                } catch (Exception var17) {
-                    System.err.println(var17);
-                } finally {
-                    miLineReader = null;
-                }
-            }
-
         }
-
-        return resultado;
+        int res = 0;
+        String[] separate = lines.split("\n");
+        for(String fl: separate) {
+            String[] numeros_fl = fl.replace("}", "").split(":");
+            if(numeros_fl.length == 2) {
+                String valores = numeros_fl[1].trim();
+                if(this.LocalizarMetodo(filePath, sentence).equals(valores)) {
+                    res = Integer.parseInt(numeros_fl[0]);
+                }
+            }
+        }
+        return res;
     }
     /**
     * da el formato de respuesta a la busqueda
