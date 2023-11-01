@@ -287,36 +287,15 @@ public class BusquedaUtil {
         for(int i=0; i<sentences.length; ++i) {
             String s = sentences[i];
             if(st.equals("")) {
-                result += ANSI_YELLOW + s + ANSI_RESET + "\n";
+                result += s + "\n";
                 ++r;
             } 
             if(s.replace(" ", "").toLowerCase().equals(st)) {
                 result += ANSI_YELLOW + s + ANSI_RESET + "\n";
                 ++r;
+            } else {
+                result += s + "\n";
             }
-            if(s.replace(" ", "").toLowerCase().contains(",") && st.contains(",")) {
-                String[] coma = s.split(",");
-                String[] stComa = st.split(",");
-                for(int c=0; c<stComa.length; ++c) {
-                    if(coma[c].replace(" ", "").toLowerCase().equals(stComa[c])) {
-                        coma[c] = ANSI_YELLOW + coma[c] + ANSI_RESET;
-                    }
-                }
-                String m = "";
-                for(String c: coma) {
-                    if(c.contains("(")) {
-                        m += c;
-                    }
-                    if(c.contains(")")) {
-                        m += ", " + c +";";
-                    }
-                }
-                String[] rm = m.split(";");
-                for(String comas: rm) {
-                    result += comas + "\n";
-                }
-                ++r;
-            } 
         }
         this.ConcurrencyFormat(r, "Arguments");
         return result;
