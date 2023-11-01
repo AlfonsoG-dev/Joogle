@@ -113,17 +113,14 @@ public class Busqueda {
     * @return String con los métodos del archivo
     */
     private String GetMethodName(String filePath) {
-        String build = "";
-        String[] partition = this.GetSentences(filePath).split("\n");
-        for(String p: partition) {
-            String rem = p.replace(";", "").trim();
-            String[] datos = rem.split("\\(");
-            for(int i=0; i<datos.length-1; ++i) {
-                String[] separate = datos[i].split(" ");
-                build += separate[separate.length-1].trim() +"\n";
-            }
+        String[] sentences = this.GetSentences(filePath).split("\n");
+        String nombres = "";
+        for(String s: sentences) {
+            String[] separate = s.split("\\(");
+            String[] methods = separate[0].split(" ");
+            nombres += methods[methods.length-1].trim() + "\n";
         }
-        return build;
+        return nombres;
     }
     /**
     * genera un String con el tipo de retorno del método
@@ -154,45 +151,37 @@ public class Busqueda {
     * @return String con los argumentos del método
     */
     private String GetArguments(String filePath) {
-        String build = "";
-        String method_names = "";
-        String[] partition = this.GetSentences(filePath).split("\n");
-        for(String p: partition) {
-            String[] rem = p.split("\\(");
-            if(rem.length > 1) {
-                method_names += "(" + rem[1] + ";";
-            }
+        String[] sentences = this.GetSentences(filePath).split("\n");
+        String nombres = "", tipos = "";
+        for(String s: sentences) {
+            String[] separate = s.split("\\(");
+            tipos += "(" +  separate[1].trim() + "\n";
         }
-
-        String[] validate = method_names.split(";");
-        for(int i=0; i<validate.length; ++i) {
-            if(validate[i].contains(",")) {
-                String args = validate[i].split("\\)")[0] + ")";
-                String[] comas = args.split(",");
-                String b = "( ";
-                for(int c=0; c<comas.length; ++c) {
-                    String separate = comas[c].replace("(", "").replace(")", "").trim();
-                    String sp = separate.split(" ")[0];
-                    b += sp + ", ";
+        String[] argumentos = tipos.split("\n");
+        for(String a: argumentos) {
+            if(a.contains(",")) {
+                String[] ars = a.split(",");
+                String args = "(";
+                for(String at: ars) {
+                    String tipe = at.replace("(", "").replace(")", "").trim();
+                    String[] separate = tipe.split(" ");
+                    args += separate[0] + ", ";
                 }
-                String clean_sp = b.substring(0, b.length()-2) + " )";
-                build += clean_sp + "\n";
+                String clean_args = args.substring(0, args.length()-2) + ")";
+                nombres += clean_args + "\n";
             } else {
-                String[] d = validate[i].split(" ");
-                String l = "";
-                if(d[0].contains(")") == true) {
-                    d[0] = "()";
-                    l += d[0];
+                String[] separate = a.split(" ");
+                String args = "";
+                if(separate.length > 1) {
+                    args += separate[0] + ")";
+                } else {
+                    args += separate[0];
                 }
-                else if(d[0].contains(")") == false) {
-                    d[0] = d[0] + ")";
-                    l += d[0];
-                }
-                validate[i] = l;
-                build += validate[i].replace("(", "( ").replace(")", " )") + "\n";
+                nombres += args + "\n";
             }
         }
-        return build;
+        String fNombres = nombres.replace("(", "( ").replace(")", " )");
+        return fNombres;
     }
     /**
     * genera un string con la sentencia completa según el método buscado
