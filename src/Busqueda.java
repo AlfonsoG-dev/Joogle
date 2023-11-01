@@ -36,10 +36,10 @@ public class Busqueda {
     * @param sentencia: sentencia a buscar
     */
     private void BuscarSentencia(String filePath, String sentencia) {
-        String[] method_names = utils.GetMethodName(filePath).split("\n");
-        String[] types = utils.CompareToReturnType(filePath, sentencia).split("\n");
-        String[] arguments = utils.CompareToArguments(filePath, sentencia).split("\n");
         try {
+            String[] method_names = utils.GetMethodName(filePath).split("\n");
+            String[] types = utils.CompareToReturnType(filePath, sentencia).split("\n");
+            String[] arguments = utils.CompareToArguments(filePath, sentencia).split("\n");
             File miFile = new File(filePath);
             if (miFile.exists()) {
                 for(int i = 0; i < method_names.length; ++i) {
@@ -93,7 +93,7 @@ public class Busqueda {
     public void SearchInFile(String filePath) {
         try {
             File miFile = new File(filePath);
-            if(miFile.isFile() ) {
+            if(miFile.isFile() && miFile.getName().contains(".java")) {
                 System.out.println(String.format("\n%s\n", ANSI_CYAN + filePath + ANSI_RESET));
                 for(int i=0; i<options.length; ++i) {
                     if(options[i].contains("/") && options[i].endsWith("/")) {
@@ -116,9 +116,7 @@ public class Busqueda {
             if(miFile.isDirectory()) {
                 File[] files = miFile.listFiles();
                 for(File f: files) {
-                    if(f.getName().contains(".java")) {
-                        this.SearchInFile(f.getCanonicalPath());
-                    }
+                    this.SearchInFile(f.getCanonicalPath());
                 }
             }
         } catch(Exception e) {
@@ -137,9 +135,7 @@ public class Busqueda {
                 filesName = this.GetFilesFromDirectory(miFile.listFiles());
                 String[] partition = filesName.split("\n");
                 for(String p: partition) {
-                    if(p.contains(".java")) {
-                        this.SearchInFile(p);
-                    }
+                    this.SearchInFile(p);
                 }
             }
         } catch(Exception e) {
