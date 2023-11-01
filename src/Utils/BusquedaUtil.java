@@ -294,6 +294,25 @@ public class BusquedaUtil {
                 result += ANSI_YELLOW + s + ANSI_RESET + "\n";
                 ++r;
             } else {
+                if(s.contains(",")) {
+                    String cS = s.replace(" ", "") + ";";
+                    String[] pares = cS.split(";");
+                    String[] comas = pares[0].split(",");
+                    String cFormat = "";
+                    if(st.contains(",")) {
+                        String[] cSt = st.replace(" ", "").split(",");
+                        for(int c=0; c<comas.length; ++c) {
+                            for(int cs=0; cs<cSt.length; ++cs) {
+                                if(comas[c].replace(")", "").contains(cSt[cs].replace(")", ""))) {
+                                    comas[c] = ANSI_YELLOW + comas[c] + ANSI_RESET;
+                                }
+                            }
+                            cFormat += comas[c] + ", ";
+                        }
+                    }
+                    String ccFormat = cFormat.substring(0, cFormat.length()-2);
+                    s = ccFormat;
+                }
                 result += s + "\n";
             }
         }
