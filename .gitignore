@@ -2,9 +2,6 @@
 *.class
 **bin/
 
-# Docs files
-**Docs/
-
 # Log file
 *.log
 # execute files
