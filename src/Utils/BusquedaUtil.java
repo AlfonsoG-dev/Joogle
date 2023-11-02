@@ -29,7 +29,7 @@ public class BusquedaUtil {
     * @return lista de tokens a ignorar
     */
     public ArrayList<String> TokenAccesorList() {
-        String[] tokens = new String[]{"public", "private", "protected", "final", "abstract", "static", "class", "interface"};
+        String[] tokens = new String[]{"public", "private", "protected", "final", "abstract", "static", "record", "class", "interface"};
         ArrayList<String> lista = new ArrayList<String>();
         for(String t: tokens) {
             lista.add(t);
@@ -102,14 +102,16 @@ public class BusquedaUtil {
     * @return String con los métodos del archivo
     */
     public String GetMethodName(String filePath) {
-        String[] sentences = this.GetSentences(filePath).split("\n");
-        String nombres = "";
-        for(String s: sentences) {
-            String[] separate = s.split("\\(");
-            String[] methods = separate[0].split(" ");
-            nombres += methods[methods.length-1].trim() + "\n";
+        String build = "";
+        String[] partition = this.GetSentences(filePath).split("\n");
+        for(String p: partition) {
+            String[] datos = p.split("\\(");
+            for(int i=0; i<datos.length-1; ++i) {
+                String[] separate = datos[i].split(" ");
+                build += separate[separate.length-1].trim() +"\n";
+            }
         }
-        return nombres;
+        return build;
     }
     /**
     * genera un String con el tipo de retorno del método
@@ -120,21 +122,17 @@ public class BusquedaUtil {
         String build = "";
         String[] partition = this.GetSentences(filePath).split("\n");
         for(String p: partition) {
-            String rem = p.trim() + ";";
+            String rem = p.trim();
             String datos = rem.split("\\(")[0];
             if(datos.contains(";") == false) {
                 String[] separate = datos.split(" ");
-                for(int s=1; s<separate.length-1; ++s) {
-                    if(this.TokenAccesorList().contains(separate[s]) == false) {
-                        if(separate[s].contains(",")) {
-                            separate[s] = separate[s].concat(" " + separate[s+1]);
-                            separate[s+1] = ";";
-                        }
-                        if(separate[s] != ";") {
-                            build += separate[s] +"\n";
-                        }
-                    }
+                if(this.TokenAccesorList().contains(separate[1])) {
+                    separate[1] = separate[2];
                 }
+                if(separate[1].contains(",")) {
+                    separate[1] = separate[1].concat(" " + separate[2]);
+                }
+                build += separate[1] + "\n";
             }
         }
         return build;
