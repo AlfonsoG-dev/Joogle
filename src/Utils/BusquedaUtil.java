@@ -21,11 +21,15 @@ public class BusquedaUtil {
     */
     private final String ANSI_RESET = "\u001B[0m";
     /**
+     * color con linea baja
+     */
+    private static final String GREEN_UNDERLINED = "\033[4;32m";
+    /**
     * tokens a ignorar en la busqueda
     * @return lista de tokens a ignorar
     */
     public ArrayList<String> TokenAccesorList() {
-        String[] tokens = new String[]{"public", "private", "protected", "final", "abstract", "static", "record", "class", "interface"};
+        String[] tokens = new String[]{"public", "private", "protected", "final", "abstract", "static", "class", "interface"};
         ArrayList<String> lista = new ArrayList<String>();
         for(String t: tokens) {
             lista.add(t);
@@ -120,12 +124,17 @@ public class BusquedaUtil {
             String datos = rem.split("\\(")[0];
             if(datos.contains(";") == false) {
                 String[] separate = datos.split(" ");
-                for(int s=0; s<separate.length-1; ++s) {
+                for(int s=1; s<separate.length-1; ++s) {
                     if(this.TokenAccesorList().contains(separate[s]) == false) {
-                        separate[1] = separate[s];
+                        if(separate[s].contains(",")) {
+                            separate[s] = separate[s].concat(" " + separate[s+1]);
+                            separate[s+1] = ";";
+                        }
+                        if(separate[s] != ";") {
+                            build += separate[s] +"\n";
+                        }
                     }
                 }
-            build += separate[1] + "\n";
             }
         }
         return build;
@@ -277,43 +286,46 @@ public class BusquedaUtil {
     * @return lista de datos modificados con el color
     */
     public String CompareToArguments(String filePath, String sentence) {
-        String st = sentence;
-        if(sentence.equals("") == false) {
+        String st = "";
+        if(sentence.contains("=>")) {
             st = sentence.split("=>")[1].replace(" ", "").toLowerCase();
         }
         String[] sentences = this.GetArguments(filePath).split("\n");
         String result = "";
         int r = 0;
         for(int i=0; i<sentences.length; ++i) {
-            String s = sentences[i];
+            String s = sentences[i].replace(" ", "").toLowerCase();
             if(st.equals("")) {
-                result += s + "\n";
+                result += sentences[i] + "\n";
                 ++r;
-            } 
-            if(s.replace(" ", "").toLowerCase().equals(st)) {
-                result += ANSI_YELLOW + s + ANSI_RESET + "\n";
+            } else if(s.equals(st)) {
+                result += GREEN_UNDERLINED + sentences[i] + ANSI_RESET + "\n";
                 ++r;
             } else {
-                if(s.contains(",")) {
-                    String cS = s.replace(" ", "") + ";";
-                    String[] pares = cS.split(";");
-                    String[] comas = pares[0].split(",");
-                    String cFormat = "";
-                    if(st.contains(",")) {
-                        String[] cSt = st.replace(" ", "").split(",");
-                        for(int c=0; c<comas.length; ++c) {
-                            for(int cs=0; cs<cSt.length; ++cs) {
-                                if(comas[c].replace(")", "").contains(cSt[cs].replace(")", ""))) {
-                                    comas[c] = ANSI_YELLOW + comas[c] + ANSI_RESET;
-                                }
+                if(s.contains(",") && st.contains(",")) {
+                    String[] comas = sentences[i].split(",");
+                    String[] sComas = st.split(",");
+                    String cB = "";
+                    for(int c=0; c<comas.length; ++c) {
+                        for(int sc=0; sc<sComas.length; ++sc) {
+                            if(comas[c].replace(" ", "").replace(")", "").toLowerCase().equals(sComas[sc].replace(")", ""))) {
+                                comas[c] = ANSI_YELLOW + comas[c] + ANSI_RESET;
                             }
-                            cFormat += comas[c] + ", ";
                         }
+                        cB += comas[c] + ", ";
                     }
-                    String ccFormat = cFormat.substring(0, cFormat.length()-2);
-                    s = ccFormat;
+                    sentences[i] = cB.substring(0, cB.length()-2);
+                } else if(st.contains(",")) {
+                    String sComa = st.split(",")[0];
+                    String comas = s.split(",")[0];
+                    String cB = "";
+                    if(comas.equals(sComa + ")")) {
+                        comas = ANSI_YELLOW + comas + ANSI_RESET;
+                    }
+                    cB += comas + ", ";
+                    sentences[i] = cB.substring(0, cB.length()-2);
                 }
-                result += s + "\n";
+                result += sentences[i] + "\n";
             }
         }
         this.ConcurrencyFormat(r, "Arguments");
