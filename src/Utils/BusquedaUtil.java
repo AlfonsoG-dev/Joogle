@@ -330,10 +330,10 @@ public class BusquedaUtil {
                 result += sentences[i] + "\n";
                 ++r;
             } else if(s.equals(st)) {
-                result += ANSI_RESET + GREEN_UNDERLINED + sentences[i] + ANSI_RESET + "\n";
+                result += GREEN_UNDERLINED + sentences[i] + ANSI_RESET + "\n";
                 ++r;
             } else if(this.CompareCharToChar(s, st) > 6) {
-                result += ANSI_RESET + ANSI_YELLOW + sentences[i] + ANSI_RESET + "\n";
+                result += ANSI_YELLOW + sentences[i] + ANSI_RESET + "\n";
                 ++r;
             } else {
                 if(s.contains(",") && st.contains(",")) {
@@ -342,7 +342,7 @@ public class BusquedaUtil {
                     String cB = "";
                     for(int c=0; c<comas.length; ++c) {
                         for(int sc=0; sc<sComas.length; ++sc) {
-                            if(comas[c].replace(" ", "").replace(")", "").toLowerCase().equals(sComas[sc].replace(")", "")) || this.CompareCharToChar(comas[c], sComas[sc]) > 1) {
+                            if(comas[c].replace(" ", "").replace(")", "").toLowerCase().equals(sComas[sc].replace(")", "")) || this.CompareCharToChar(comas[c], sComas[sc]) > 2) {
                                 comas[c] = ANSI_YELLOW + comas[c] + ANSI_RESET;
                             }
                         }
@@ -353,7 +353,7 @@ public class BusquedaUtil {
                     String sComa = st.split(",")[0];
                     String comas = s.split(",")[0];
                     String cB = "";
-                    if(comas.equals(sComa + ")") || this.CompareCharToChar(comas, sComa) != -1) {
+                    if(comas.equals(sComa + ")") || this.CompareCharToChar(comas, sComa) > 2) {
                         comas = ANSI_YELLOW + comas + ANSI_RESET;
                     }
                     cB += comas + ", ";
