@@ -265,16 +265,10 @@ public class BusquedaUtil {
         try {
             for(int i=0; i<s.length(); ++i) {
                 for(int j=s.length()-1; j>0; --j) {
-                    if(f.charAt(i) == s.charAt(i)) {
+                    if(f.charAt(i) == s.charAt(i) || f.charAt(j) == s.charAt(j)) {
                         ++r;
                     }
-                    else if(f.charAt(j) == s.charAt(j)) {
-                        ++r;
-                    }
-                    else if(f.charAt(j) == s.charAt(i)) {
-                        ++r;
-                    }
-                    else if(f.charAt(i) == s.charAt(j)){
+                    if(s.charAt(i) == f.charAt(i) || s.charAt(j) == f.charAt(j)) {
                         ++r;
                     }
                 }
@@ -300,7 +294,7 @@ public class BusquedaUtil {
             if(st.equals("")) {
                 result += ANSI_YELLOW + s + ANSI_RESET + "\n";
                 ++r;
-            } else if(this.CompareCharToChar(s, st) > 1) {
+            } else if(this.CompareCharToChar(s, st) > 2) {
                 result += ANSI_YELLOW + s + ANSI_RESET + "\n";
                 ++r;
             } else {
