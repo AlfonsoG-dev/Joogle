@@ -326,7 +326,7 @@ public class BusquedaUtil {
             } else if(s.equals(st)) {
                 result += GREEN_UNDERLINED + sentences[i] + ANSI_RESET + "\n";
                 ++r;
-            } else if(this.CompareCharToChar(s, st) > 6) {
+            } else if(this.CompareCharToChar(s, st) > 2) {
                 result += ANSI_YELLOW + sentences[i] + ANSI_RESET + "\n";
                 ++r;
             } else {
