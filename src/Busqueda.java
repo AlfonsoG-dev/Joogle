@@ -156,18 +156,24 @@ public class Busqueda {
             for(int i=0; i<options.length; ++i) {
                 if(options[i].contains("-d")) {
                     directory = options[i+1];
-                    String searchSentence = options[i+2];
-                    this.SearcInDirectory(directory, searchSentence);
+                    if(options[i+2].contains("/")) {
+                        String searchSentence = options[i+2];
+                        this.SearcInDirectory(directory, searchSentence);
+                    }
                 }
                 if(options[i].contains("-f")) {
                     fileName = options[i+1];
-                    String searchSentence = options[i+2];
-                    this.SearchInFile(fileName, searchSentence);
+                    if(options[i+2].contains("/")) {
+                        String searchSentence = options[i+2];
+                        this.SearchInFile(fileName, searchSentence);
+                    }
                 }
                 if(options[i].contains("-D")) {
                     directorys = options[i+1];
-                    String searchSentence = options[i+2];
-                    this.SearcInDirectorys(directorys, searchSentence);
+                    if(options[i+2].contains("/")) {
+                        String searchSentence = options[i+2];
+                        this.SearcInDirectorys(directorys, searchSentence);
+                    }
                 }
             }
         } catch(Exception e) {
