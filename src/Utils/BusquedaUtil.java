@@ -347,10 +347,10 @@ public class BusquedaUtil {
                     }
                     sentences[i] = cB.substring(0, cB.length()-2);
                 } else if(st.contains(",")) {
-                    String sComa = st.split(",")[0];
-                    String comas = s.split(",")[0];
+                    String sComa = sentence.split(",")[0];
+                    String comas = sentences[i].split(",")[0];
                     String cB = "";
-                    if(comas.equals(sComa + ")") || this.CompareCharToChar(comas, sComa) > 2) {
+                    if(comas.replace(" ", "").toLowerCase().equals(sComa.replace(" ", "").toLowerCase() + ")") || this.CompareCharToChar(comas, sComa) > 2) {
                         comas = ANSI_YELLOW + comas + ANSI_RESET;
                     }
                     cB += comas + ", ";
