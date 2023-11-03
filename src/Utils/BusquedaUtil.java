@@ -28,7 +28,7 @@ public class BusquedaUtil {
     * tokens a ignorar en la busqueda
     * @return lista de tokens a ignorar
     */
-    public ArrayList<String> TokenAccesorList() {
+    public ArrayList<String> TokenList() {
         String[] tokens = new String[]{"public", "private", "protected", "final", "abstract", "static", "record", "class", "interface"};
         ArrayList<String> lista = new ArrayList<String>();
         for(String t: tokens) {
@@ -87,7 +87,7 @@ public class BusquedaUtil {
             String[] numeros_fl = fl.replace("}", "").split(":");
             if(numeros_fl.length == 2) {
                 String valores = numeros_fl[1].trim();
-                for(String t: this.TokenAccesorList()) {
+                for(String t: this.TokenList()) {
                     if(valores.startsWith(t) && valores.contains(")") || valores.endsWith("\n")) {
                         lines += valores.replace("{", "").trim() + "\n";
                     }
@@ -126,7 +126,7 @@ public class BusquedaUtil {
             String datos = rem.split("\\(")[0];
             if(datos.contains(";") == false) {
                 String[] separate = datos.split(" ");
-                if(this.TokenAccesorList().contains(separate[1])) {
+                if(this.TokenList().contains(separate[1])) {
                     separate[1] = separate[2];
                 }
                 if(separate[1].contains(",")) {
@@ -207,7 +207,7 @@ public class BusquedaUtil {
             String[] numeros_fl = fl.replace("}", "").split(":");
             if(numeros_fl.length == 2) {
                 String valores = numeros_fl[1].trim();
-                for(String t: this.TokenAccesorList()) {
+                for(String t: this.TokenList()) {
                     if(valores.startsWith(t) && valores.contains(")") || valores.endsWith("\n")) {
                         lines += numeros_fl[0] + ":" + valores.replace("{", "").trim() + "\n";
                     }
@@ -234,13 +234,13 @@ public class BusquedaUtil {
     * @param type: tipo de retorno del método
     * @param argument: argumentos del método
     */
-    public void BusquedaFormat(String filePath, String method_name, String type, String argument) {
+    public void BusquedaFormat(String filePath, String methodName, String type, String argument) {
         String build = "";
-        int lineNumber = this.GetLineNumber(filePath, method_name);
+        int lineNumber = this.GetLineNumber(filePath, methodName);
         if(lineNumber != -1) {
-            build = build + "| " + ANSI_RED + lineNumber + ANSI_RESET + " | " + method_name + " :: " + type + " => " + argument + "\n";
+            build = build + "| " + ANSI_RED + lineNumber + ANSI_RESET + " | " + methodName + " :: " + type + " => " + argument + "\n";
         } else {
-            build = build + "| " + "unknow" + " | " + method_name + " :: " + type + " => " + argument + "\n";
+            build = build + "| " + "unknow" + " | " + methodName + " :: " + type + " => " + argument + "\n";
         }
         System.out.println(build);
     }

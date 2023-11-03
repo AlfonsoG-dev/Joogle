@@ -8,7 +8,7 @@ class App {
      */
     public static void main(String[] args) {
         Busqueda miBusqueda = new Busqueda(args);
-        miBusqueda.GetFilesFromPath();
+        miBusqueda.OrganizeSearchOptions();
     }
 }
 
