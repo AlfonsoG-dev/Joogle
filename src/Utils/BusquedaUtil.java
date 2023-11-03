@@ -253,6 +253,39 @@ public class BusquedaUtil {
         System.out.println(String.format("%s : %s", tipo, ANSI_RED + cantidad + ANSI_RESET) + "\n");
     }
     /**
+     * comparar letra por letra para distinguir la más parecida
+     * @param first: primera letra a comparar
+     * @param second: letra para comparar
+     * @return el número de coincidencias entre las letras
+     */
+    public int CompareCharToChar(String first, String second) {
+        int r = 0;
+        String f = first.replace(" ", "").toLowerCase();
+        String s = second.replace(" ", "").toLowerCase();
+        try {
+            for(int i=0; i<s.length(); ++i) {
+                for(int j=s.length()-1; j>0; --j) {
+                    if(f.charAt(i) == s.charAt(i)) {
+                        ++r;
+                    }
+                    else if(f.charAt(j) == s.charAt(j)) {
+                        ++r;
+                    }
+                    else if(f.charAt(j) == s.charAt(i)) {
+                        ++r;
+                    }
+                    else if(f.charAt(i) == s.charAt(j)){
+                        ++r;
+                    }
+                }
+            }
+        } catch(Exception e) {
+            //
+        }
+        int resultado = r/s.length();
+        return resultado;
+    }
+    /**
     * modifica los datos para que solo aquellos que tengan el mismo valor se pinten de cierto color
     * @param filePath: archivo a leer
     * @param sentence: sentencia buscada
@@ -267,7 +300,7 @@ public class BusquedaUtil {
             if(st.equals("")) {
                 result += ANSI_YELLOW + s + ANSI_RESET + "\n";
                 ++r;
-            } else if(s.toLowerCase().equals(st)) {
+            } else if(this.CompareCharToChar(s, st) > 1) {
                 result += ANSI_YELLOW + s + ANSI_RESET + "\n";
                 ++r;
             } else {
@@ -297,7 +330,10 @@ public class BusquedaUtil {
                 result += sentences[i] + "\n";
                 ++r;
             } else if(s.equals(st)) {
-                result += GREEN_UNDERLINED + sentences[i] + ANSI_RESET + "\n";
+                result += ANSI_RESET + GREEN_UNDERLINED + sentences[i] + ANSI_RESET + "\n";
+                ++r;
+            } else if(this.CompareCharToChar(s, st) > 6) {
+                result += ANSI_RESET + ANSI_YELLOW + sentences[i] + ANSI_RESET + "\n";
                 ++r;
             } else {
                 if(s.contains(",") && st.contains(",")) {
@@ -306,7 +342,7 @@ public class BusquedaUtil {
                     String cB = "";
                     for(int c=0; c<comas.length; ++c) {
                         for(int sc=0; sc<sComas.length; ++sc) {
-                            if(comas[c].replace(" ", "").replace(")", "").toLowerCase().equals(sComas[sc].replace(")", ""))) {
+                            if(comas[c].replace(" ", "").replace(")", "").toLowerCase().equals(sComas[sc].replace(")", "")) || this.CompareCharToChar(comas[c], sComas[sc]) > 1) {
                                 comas[c] = ANSI_YELLOW + comas[c] + ANSI_RESET;
                             }
                         }
@@ -317,7 +353,7 @@ public class BusquedaUtil {
                     String sComa = st.split(",")[0];
                     String comas = s.split(",")[0];
                     String cB = "";
-                    if(comas.equals(sComa + ")")) {
+                    if(comas.equals(sComa + ")") || this.CompareCharToChar(comas, sComa) != -1) {
                         comas = ANSI_YELLOW + comas + ANSI_RESET;
                     }
                     cB += comas + ", ";
