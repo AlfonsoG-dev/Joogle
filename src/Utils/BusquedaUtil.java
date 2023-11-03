@@ -294,6 +294,9 @@ public class BusquedaUtil {
             if(st.equals("")) {
                 result += ANSI_YELLOW + s + ANSI_RESET + "\n";
                 ++r;
+            } else if(s.equals(st)) {
+                result += GREEN_UNDERLINED + s + ANSI_RESET + "\n";
+                ++r;
             } else if(this.CompareCharToChar(s, st) > 2) {
                 result += ANSI_YELLOW + s + ANSI_RESET + "\n";
                 ++r;
