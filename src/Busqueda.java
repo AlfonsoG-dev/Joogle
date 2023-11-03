@@ -93,7 +93,7 @@ public class Busqueda {
                 for(int i = 0; i < methodNames.length; ++i) {
                     if (sentencia.equals("")) {
                         format.formatoBusquedaSentencia(
-                        utils.GetLineNumber(filePath, sentencia),
+                        utils.GetLineNumber(filePath, methodNames[i]),
                         filePath,
                         methodNames[i],
                         types[i],
@@ -101,7 +101,7 @@ public class Busqueda {
                         );
                     } else {
                         format.formatoBusquedaSentencia(
-                        utils.GetLineNumber(filePath, sentencia),
+                        utils.GetLineNumber(filePath, methodNames[i]),
                         filePath,
                         methodNames[i],
                         types[i],
