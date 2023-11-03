@@ -286,7 +286,7 @@ public class BusquedaUtil {
     * @return lista de datos modificados con el color
     */
     public String CompareToReturnType(String filePath, String sentence) {
-        String st = sentence.split("=>")[0].trim().toLowerCase();
+        String st = sentence.split("=>")[0].replace(" ", "").toLowerCase();
         String[] sentences = this.GetReturnType(filePath).split("\n");
         String result = "";
         int r = 0;
@@ -294,7 +294,7 @@ public class BusquedaUtil {
             if(st.equals("")) {
                 result += ANSI_YELLOW + s + ANSI_RESET + "\n";
                 ++r;
-            } else if(s.equals(st)) {
+            } else if(s.toLowerCase().replace(" ", "").equals(st) || this.CompareCharToChar(s, st) > 6) {
                 result += GREEN_UNDERLINED + s + ANSI_RESET + "\n";
                 ++r;
             } else if(this.CompareCharToChar(s, st) > 2) {
@@ -326,7 +326,7 @@ public class BusquedaUtil {
             if(st.equals("")) {
                 result += sentences[i] + "\n";
                 ++r;
-            } else if(s.equals(st)) {
+            } else if(s.equals(st) || this.CompareCharToChar(s, st) > 10) {
                 result += GREEN_UNDERLINED + sentences[i] + ANSI_RESET + "\n";
                 ++r;
             } else if(this.CompareCharToChar(s, st) > 2) {
