@@ -298,7 +298,6 @@ public class BusquedaUtil {
                 result += GREEN_UNDERLINED + s + ANSI_RESET + "\n";
                 ++r;
             } else if(this.CompareCharToChar(s, st) > 2) {
-                System.out.println(this.CompareCharToChar(s, st) +  "=====");
                 result += ANSI_YELLOW + s + ANSI_RESET + "\n";
                 ++r;
             } else {
