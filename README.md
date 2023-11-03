@@ -17,6 +17,8 @@
 - [x] search the sentence within a file.
 - [x] search the sentence within a directory.
 - [x] search the sentence within all directories of the given directory
+- [x] list all the files with the `.java` extensión
+- [x] list all the méthods in the given directory
 
 ## Usage
 
@@ -24,6 +26,14 @@
 >>- to search within a java file you specify the file
 ```shell
 java -jar joogle.jar -f App.java /""/
+```
+>- to list all the files wiht the `.java` extensión
+```shell
+java -jar joogle.jar -lf .\src\
+```
+>- to list all the méthods within the given directory
+```shell
+java -jar joogle.jar -lm .\src\
 ```
 >>- to search within a directory you specify the directory
 >>>- the search only includes the `.java` files within that directory
