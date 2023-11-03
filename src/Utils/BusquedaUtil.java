@@ -1,7 +1,9 @@
 package Utils;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -9,13 +11,12 @@ import java.util.ArrayList;
  */
 public class BusquedaUtil {
     /**
+     */
+    private BusquedaFormat format;
+    /**
     * color amarillo para los resultados
     */
     private final String ANSI_YELLOW = "\u001B[33m";
-    /**
-    * color rojo para los valores numéricos
-    */
-    private final String ANSI_RED = "\u001B[41m";
     /**
     * quitar color para los resultados no exactos
     */
@@ -24,6 +25,12 @@ public class BusquedaUtil {
      * color con linea baja
      */
     private static final String GREEN_UNDERLINED = "\033[4;32m";
+    /**
+     * constructor
+     */
+    public BusquedaUtil() {
+        format = new BusquedaFormat();
+    }
     /**
     * tokens a ignorar en la busqueda
     * @return lista de tokens a ignorar
@@ -35,6 +42,25 @@ public class BusquedaUtil {
             lista.add(t);
         }
         return lista;
+    }
+    /**
+    * genera un String con la ruta de los archivos dentro de los directorios
+    * <br> pre: </br> busca dentro de los directorios un archivo; si el hijo es directorio ingresa y busca los archivos
+    * @param miFiles: los archivos dentro del directorio designado
+    * @throws IOException: error al buscar los archivos del directorio
+    * @return String con la ruta de los archivos
+    */
+    public String GetFilesFromDirectory(File[] miFiles) throws IOException {
+        String fileName = "";
+        for(File f: miFiles) {
+            if(f.isFile() && f.getName().contains(".java")) {
+                fileName += f.getCanonicalPath() + "\n";
+            }
+            if(f.isDirectory()) {
+                fileName += this.GetFilesFromDirectory(f.listFiles()) + "\n";
+            }
+        }
+        return fileName;
     }
     /**
     * Genera un String con los valores del archivo
@@ -228,31 +254,6 @@ public class BusquedaUtil {
         return res;
     }
     /**
-    * da el formato de respuesta a la busqueda
-    * @param filePath: ruta del archivo a leer
-    * @param method_name: nombre del método a mostrar como respuesta
-    * @param type: tipo de retorno del método
-    * @param argument: argumentos del método
-    */
-    public void BusquedaFormat(String filePath, String methodName, String type, String argument) {
-        String build = "";
-        int lineNumber = this.GetLineNumber(filePath, methodName);
-        if(lineNumber != -1) {
-            build = build + "| " + ANSI_RED + lineNumber + ANSI_RESET + " | " + methodName + " :: " + type + " => " + argument + "\n";
-        } else {
-            build = build + "| " + "unknow" + " | " + methodName + " :: " + type + " => " + argument + "\n";
-        }
-        System.out.println(build);
-    }
-    /**
-    * da formato a la cantidad de respuestas encontradas
-    * @param cantidad: cantidad de veces que se encuentra el valor
-    * @param tipo: tipo de valor repetido
-    */
-    public void ConcurrencyFormat(int cantidad, String tipo) {
-        System.out.println(String.format("%s : %s", tipo, ANSI_RED + cantidad + ANSI_RESET) + "\n");
-    }
-    /**
      * comparar letra por letra para distinguir la más parecida
      * @param first: primera letra a comparar
      * @param second: letra para comparar
@@ -304,7 +305,7 @@ public class BusquedaUtil {
                 result += s + "\n";
             }
         }
-        ConcurrencyFormat(r, "ReturnType");
+        format.ConcurrencyFormat(r, "ReturnType");
         return result;
     }
     /**
@@ -359,7 +360,7 @@ public class BusquedaUtil {
                 result += sentences[i] + "\n";
             }
         }
-        this.ConcurrencyFormat(r, "Arguments");
+        format.ConcurrencyFormat(r, "Arguments");
         return result;
     }
 }
