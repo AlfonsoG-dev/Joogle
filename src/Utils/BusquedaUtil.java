@@ -297,7 +297,7 @@ public class BusquedaUtil {
             } else if(s.toLowerCase().replace(" ", "").equals(st) || this.CompareCharToChar(s, st) > 10) {
                 result += GREEN_UNDERLINED + s + ANSI_RESET + "\n";
                 ++r;
-            } else if(this.CompareCharToChar(s, st) > 6) {
+            } else if(this.CompareCharToChar(s, st) > 2) {
                 System.out.println(this.CompareCharToChar(s, st) +  "=====");
                 result += ANSI_YELLOW + s + ANSI_RESET + "\n";
                 ++r;
@@ -330,7 +330,7 @@ public class BusquedaUtil {
             } else if(s.equals(st) || this.CompareCharToChar(s, st) > 12) {
                 result += GREEN_UNDERLINED + sentences[i] + ANSI_RESET + "\n";
                 ++r;
-            } else if(this.CompareCharToChar(s, st) > 6) {
+            } else if(this.CompareCharToChar(s, st) > 2) {
                 result += ANSI_YELLOW + sentences[i] + ANSI_RESET + "\n";
                 ++r;
             } else {
@@ -340,7 +340,7 @@ public class BusquedaUtil {
                     String cB = "";
                     for(int c=0; c<comas.length; ++c) {
                         for(int sc=0; sc<sComas.length; ++sc) {
-                            if(comas[c].replace(" ", "").replace(")", "").toLowerCase().equals(sComas[sc].replace(")", "")) || this.CompareCharToChar(comas[c], sComas[sc]) > 6) {
+                            if(comas[c].replace(" ", "").replace(")", "").toLowerCase().equals(sComas[sc].replace(")", "")) || this.CompareCharToChar(comas[c], sComas[sc]) > 2) {
                                 comas[c] = ANSI_YELLOW + comas[c] + ANSI_RESET;
                             }
                         }
@@ -351,7 +351,7 @@ public class BusquedaUtil {
                     String sComa = st.split(",")[0];
                     String comas = s.split(",")[0];
                     String cB = "";
-                    if(comas.equals(sComa + ")") || this.CompareCharToChar(comas, sComa) > 6) {
+                    if(comas.equals(sComa + ")") || this.CompareCharToChar(comas, sComa) > 2) {
                         comas = ANSI_YELLOW + comas + ANSI_RESET;
                     }
                     cB += comas + ", ";
