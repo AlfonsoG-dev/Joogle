@@ -39,10 +39,10 @@ java -jar joogle.jar -lf .\src\
 ```shell
 java -jar joogle.jar -lm .\src\
 ```
->>- if you want to know the content of the method you need to especify the name of the file and the method
+>>- if you want to know the content of the method you need to especify the name of the directory and the method
 >>>- this will output the code block of that method
 ```shell
-java -jar joogle.jar -lm .\src\App.java /"main"/
+java -jar joogle.jar -lm .\src\ /"main"/
 ```
 
 >- to list all the TODO's in the current proyect
