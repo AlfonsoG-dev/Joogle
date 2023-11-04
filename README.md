@@ -19,6 +19,7 @@
 - [x] search the sentence within all directories of the given directory
 - [x] list all the files with the `.java` extensión
 - [x] list all the méthods in the given directory
+- [x] list all the TODO in the current proyect
 
 ## Usage
 
