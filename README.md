@@ -36,6 +36,10 @@ java -jar joogle.jar -lf .\src\
 ```shell
 java -jar joogle.jar -lm .\src\
 ```
+>- to list all the TODO's in the current proyect
+```shell
+java -jar joogle.jar -lt .\src\
+```
 >>- to search within a directory you specify the directory
 >>>- the search only includes the `.java` files within that directory
 ```shell
@@ -80,7 +84,11 @@ java -jar joogle.jar -f App.java -d ./OtherProyect/ /"void => ()"/
 ```shell
 java -jar joogle.jar -f App.java /""/ -d ./OtherProyect/ /"void => ()"/
 ```
-
+>- if you want aditional information in the CLI
+```shell
+java -jar joogle.jar --h
+```
+>>- this will output the each one of the CLI options
 
 ---------
 
