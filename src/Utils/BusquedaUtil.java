@@ -1,105 +1,31 @@
 package Utils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
+import Visual.BusquedaFormat;
+import Visual.Colores;
 
 /**
  * métodos especiales para ayudar a crear la busqueda
  */
 public class BusquedaUtil {
     /**
+     * formato visual para la busqueda
      */
     private BusquedaFormat format;
     /**
-    * color amarillo para los resultados
-    */
-    private final String ANSI_YELLOW = "\u001B[33m";
-    /**
-    * quitar color para los resultados no exactos
-    */
-    private final String ANSI_RESET = "\u001B[0m";
-    /**
-     * color con linea baja
+     * manipulación del archivo
      */
-    private static final String GREEN_UNDERLINED = "\033[4;32m";
+    private FileUtils fileUtils;
+    /**
+     * manipulación de texto
+     */
+    private TextUtils textUtils;
     /**
      * constructor
      */
     public BusquedaUtil() {
         format = new BusquedaFormat();
-    }
-    /**
-    * tokens a ignorar en la busqueda
-    * @return lista de tokens a ignorar
-    */
-    public ArrayList<String> TokenList() {
-        String[] tokens = new String[]{"public", "private", "protected", "final", "abstract", "static", "record", "class", "interface"};
-        ArrayList<String> lista = new ArrayList<String>();
-        for(String t: tokens) {
-            lista.add(t);
-        }
-        return lista;
-    }
-    /**
-    * genera un String con la ruta de los archivos dentro de los directorios
-    * <br> pre: </br> busca dentro de los directorios un archivo; si el hijo es directorio ingresa y busca los archivos
-    * @param miFiles: los archivos dentro del directorio designado
-    * @throws IOException: error al buscar los archivos del directorio
-    * @return String con la ruta de los archivos
-    */
-    public String GetFilesFromDirectory(File[] miFiles) throws IOException {
-        String fileName = "";
-        for(File f: miFiles) {
-            if(f.isFile() && f.getName().contains(".java")) {
-                fileName += f.getCanonicalPath() + "\n";
-            }
-            if(f.isDirectory()) {
-                fileName += this.GetFilesFromDirectory(f.listFiles()) + "\n";
-            }
-        }
-        return fileName;
-    }
-    /**
-    * Genera un String con los valores del archivo
-    * @param filePath: ruta del archivo a leer
-    * @return String con los datos del archivo
-    */
-    public String GetTextFromFile(String filePath) {
-        String build = "";
-        FileReader miReader = null;
-        BufferedReader miBufferReader = null;
-        try {
-            miReader = new FileReader(filePath);
-            miBufferReader = new BufferedReader(miReader);
-            int i=1;
-            while(miBufferReader.ready()) {
-                build += i + ":" + miBufferReader.readLine() + "\n";
-                ++i;
-            }
-        } catch (Exception var48) {
-            System.err.println(var48);
-        } finally {
-            if(miReader != null) {
-                try {
-                    miReader.close();
-                } catch(Exception e) {
-                    System.err.println(e);
-                }
-            }
-            if(miBufferReader != null) {
-                try {
-                    miBufferReader.close();
-                } catch(Exception e) {
-                    System.err.println(e);
-                } finally {
-                    miBufferReader = null;
-                }
-            }
-        }
-        return build;
+        fileUtils = new FileUtils();
+        textUtils = new TextUtils();
     }
     /**
      * da el contexto del método, es decir, el bloque de codigo dentro del método buscado
@@ -107,8 +33,8 @@ public class BusquedaUtil {
      * @param sentencia: método buscado
      */
     public String GetMethodContext(String filePath, String sentencia) {
-        String[] fileLines = this.GetSentences(filePath).split("\n");
-        String buscada = this.GetLineNumber(filePath, sentencia) + ":" + this.LocalizarMetodo(filePath, sentencia);
+        String[] fileLines = textUtils.GetSentences(filePath).split("\n");
+        String buscada = GetLineNumber(filePath, sentencia) + ":" + LocalizarMetodo(filePath, sentencia);
         String conNumLinea = "";
         int inicial = Integer.parseInt(buscada.split(":")[0]);
         int end = 0;
@@ -121,7 +47,7 @@ public class BusquedaUtil {
             }
         }
         String respuesta = "";
-        String[] fileText = this.GetTextFromFile(filePath).split("\n");
+        String[] fileText = fileUtils.GetTextFromFile(filePath).split("\n");
         if(end != -1) {
             for(int i=inicial-1; i<end-1; ++i) {
                 System.out.println(fileText[i].split(":")[1]);
@@ -139,40 +65,19 @@ public class BusquedaUtil {
      * @return true si el archivo tiene sentencias todo, false de lo contrario
      */
     public boolean GetTodoSentences(String filePath) {
-        String[] fileLines = this.GetTextFromFile(filePath).split("\n");
+        String[] fileLines = fileUtils.GetTextFromFile(filePath).split("\n");
         boolean exists = false;
         for(String fl: fileLines) {
             String[] numerosFl = fl.split(":");
             for(int i=1; i<numerosFl.length; ++i) {
                 String valores = numerosFl[i].trim().replace("*", "").replace("/", "").replace(" ", "").replace("}", "");
                 if(valores.toLowerCase().equals("TODO".toLowerCase())) {
-                    System.out.println(ANSI_YELLOW + filePath + ANSI_RESET + ":" + fl.replace(":", ""));
+                    System.out.println(Colores.ANSI_YELLOW + filePath + Colores.ANSI_RESET + ":" + fl.replace(":", ""));
                     exists = true;
                 }
             }
         }
         return exists;
-    }
-    /**
-    * genera un String con las sentencias que indican un método
-    * @param filePath: ruta del archivo a leer
-    * @return String con las lineas en donde hay métodos
-    */
-    public String GetSentences(String filePath) {
-        String[] fileLines = this.GetTextFromFile(filePath).split("\n");
-        String lines = "";
-        for(String fl: fileLines) {
-            String[] numeros_fl = fl.replace("}", "").split(":");
-            if(numeros_fl.length == 2) {
-                String valores = numeros_fl[1].trim();
-                for(String t: this.TokenList()) {
-                    if(valores.startsWith(t) && valores.contains(")") || valores.endsWith("\n")) {
-                        lines += valores.replace("{", "").trim() + "\n";
-                    }
-                }
-            }
-        }
-        return lines;
     }
     /**
     * genera un String con los métodos del archivo
@@ -181,7 +86,7 @@ public class BusquedaUtil {
     */
     public String GetMethodName(String filePath) {
         String build = "";
-        String[] partition = this.GetSentences(filePath).split("\n");
+        String[] partition = textUtils.GetSentences(filePath).split("\n");
         for(String p: partition) {
             String[] datos = p.split("\\(");
             for(int i=0; i<datos.length-1; ++i) {
@@ -198,13 +103,13 @@ public class BusquedaUtil {
     */
     public String GetReturnType(String filePath) {
         String build = "";
-        String[] partition = this.GetSentences(filePath).split("\n");
+        String[] partition = textUtils.GetSentences(filePath).split("\n");
         for(String p: partition) {
             String rem = p.trim();
             String datos = rem.split("\\(")[0];
             if(datos.contains(";") == false) {
                 String[] separate = datos.split(" ");
-                if(this.TokenList().contains(separate[1])) {
+                if(fileUtils.TokenList().contains(separate[1])) {
                     separate[1] = separate[2];
                 }
                 if(separate[1].contains(",")) {
@@ -221,7 +126,7 @@ public class BusquedaUtil {
     * @return String con los argumentos del método
     */
     public String GetArguments(String filePath) {
-        String[] sentences = this.GetSentences(filePath).split("\n");
+        String[] sentences = textUtils.GetSentences(filePath).split("\n");
         String nombres = "", tipos = "";
         for(String s: sentences) {
             String[] separate = s.split("\\(");
@@ -261,7 +166,7 @@ public class BusquedaUtil {
     */
     public String LocalizarMetodo(String filePath, String sentencia) {
         String build = "";
-        String[] partition = this.GetSentences(filePath).split("\n");
+        String[] partition = textUtils.GetSentences(filePath).split("\n");
 
         for(String p: partition) {
             String r = sentencia.trim().replace("::", "");
@@ -279,13 +184,13 @@ public class BusquedaUtil {
     * @return número de linea del método buscado
     */
     public int GetLineNumber(String filePath, String sentence) {
-        String[] fileLines = this.GetTextFromFile(filePath).split("\n");
+        String[] fileLines = fileUtils.GetTextFromFile(filePath).split("\n");
         String lines = "";
         for(String fl: fileLines) {
             String[] numeros_fl = fl.replace("}", "").split(":");
             if(numeros_fl.length == 2) {
                 String valores = numeros_fl[1].trim();
-                for(String t: this.TokenList()) {
+                for(String t: fileUtils.TokenList()) {
                     if(valores.startsWith(t) && valores.contains(")") || valores.endsWith("\n")) {
                         lines += numeros_fl[0] + ":" + valores.replace("{", "").trim() + "\n";
                     }
@@ -298,39 +203,12 @@ public class BusquedaUtil {
             String[] numeros_fl = fl.replace("}", "").split(":");
             if(numeros_fl.length == 2) {
                 String valores = numeros_fl[1].trim();
-                if(this.LocalizarMetodo(filePath, sentence).equals(valores)) {
+                if(LocalizarMetodo(filePath, sentence).equals(valores)) {
                     res = Integer.parseInt(numeros_fl[0]);
                 }
             }
         }
         return res;
-    }
-    /**
-     * comparar letra por letra para distinguir la más parecida
-     * @param first: primera letra a comparar
-     * @param second: letra para comparar
-     * @return el número de coincidencias entre las letras
-     */
-    public int CompareCharToChar(String first, String second) {
-        int r = 0;
-        String f = first.replace(" ", "").toLowerCase();
-        String s = second.replace(" ", "").toLowerCase();
-        try {
-            for(int i=0; i<s.length(); ++i) {
-                for(int j=s.length()-1; j>0; --j) {
-                    if(f.charAt(i) == s.charAt(i) || f.charAt(j) == s.charAt(j)) {
-                        ++r;
-                    }
-                    if(s.charAt(i) == f.charAt(i) || s.charAt(j) == f.charAt(j)) {
-                        ++r;
-                    }
-                }
-            }
-        } catch(Exception e) {
-            //
-        }
-        int resultado = r/s.length();
-        return resultado;
     }
     /**
     * modifica los datos para que solo aquellos que tengan el mismo valor se pinten de cierto color
@@ -340,18 +218,18 @@ public class BusquedaUtil {
     */
     public String CompareToReturnType(String filePath, String sentence) {
         String st = sentence.split("=>")[0].replace(" ", "").toLowerCase();
-        String[] sentences = this.GetReturnType(filePath).split("\n");
+        String[] sentences = GetReturnType(filePath).split("\n");
         String result = "";
         int r = 0;
         for(String s: sentences) {
             if(st.equals("")) {
-                result += ANSI_YELLOW + s + ANSI_RESET + "\n";
+                result += Colores.ANSI_YELLOW + s + Colores.ANSI_RESET + "\n";
                 ++r;
-            } else if(s.toLowerCase().replace(" ", "").equals(st) || this.CompareCharToChar(s, st) > 10) {
-                result += GREEN_UNDERLINED + s + ANSI_RESET + "\n";
+            } else if(s.toLowerCase().replace(" ", "").equals(st) || textUtils.CompareCharToChar(s, st) > 10) {
+                result += Colores.GREEN_UNDERLINED + s + Colores.ANSI_RESET + "\n";
                 ++r;
-            } else if(this.CompareCharToChar(s, st) > 2) {
-                result += ANSI_YELLOW + s + ANSI_RESET + "\n";
+            } else if(textUtils.CompareCharToChar(s, st) > 2) {
+                result += Colores.ANSI_YELLOW + s + Colores.ANSI_RESET + "\n";
                 ++r;
             } else {
                 result += s + "\n";
@@ -371,7 +249,7 @@ public class BusquedaUtil {
         if(sentence.contains("=>")) {
             st = sentence.split("=>")[1].replace(" ", "").toLowerCase();
         }
-        String[] sentences = this.GetArguments(filePath).split("\n");
+        String[] sentences = GetArguments(filePath).split("\n");
         String result = "";
         int r = 0;
         for(int i=0; i<sentences.length; ++i) {
@@ -380,10 +258,10 @@ public class BusquedaUtil {
                 result += sentences[i] + "\n";
                 ++r;
             } else if(s.equals(st)) {
-                result += GREEN_UNDERLINED + sentences[i] + ANSI_RESET + "\n";
+                result += Colores.GREEN_UNDERLINED + sentences[i] + Colores.ANSI_RESET + "\n";
                 ++r;
-            } else if(this.CompareCharToChar(s, st) > 2) {
-                result += ANSI_YELLOW + sentences[i] + ANSI_RESET + "\n";
+            } else if(textUtils.CompareCharToChar(s, st) > 2) {
+                result += Colores.ANSI_YELLOW + sentences[i] + Colores.ANSI_RESET + "\n";
                 ++r;
             } else {
                 if(s.contains(",") && st.contains(",")) {
@@ -392,8 +270,8 @@ public class BusquedaUtil {
                     String cB = "";
                     for(int c=0; c<comas.length; ++c) {
                         for(int sc=0; sc<sComas.length; ++sc) {
-                            if(comas[c].replace(" ", "").replace(")", "").toLowerCase().equals(sComas[sc].replace(")", "")) || this.CompareCharToChar(comas[c], sComas[sc]) > 2) {
-                                comas[c] = ANSI_YELLOW + comas[c] + ANSI_RESET;
+                            if(comas[c].replace(" ", "").replace(")", "").toLowerCase().equals(sComas[sc].replace(")", "")) || textUtils.CompareCharToChar(comas[c], sComas[sc]) > 2) {
+                                comas[c] = Colores.ANSI_YELLOW + comas[c] + Colores.ANSI_RESET;
                             }
                         }
                         cB += comas[c] + ", ";
@@ -403,8 +281,8 @@ public class BusquedaUtil {
                     String sComa = sentence.split(",")[0];
                     String comas = sentences[i].split(",")[0];
                     String cB = "";
-                    if(comas.replace(" ", "").toLowerCase().equals(sComa.replace(" ", "").toLowerCase() + ")") || this.CompareCharToChar(comas, sComa) > 2) {
-                        comas = ANSI_YELLOW + comas + ANSI_RESET;
+                    if(comas.replace(" ", "").toLowerCase().equals(sComa.replace(" ", "").toLowerCase() + ")") || textUtils.CompareCharToChar(comas, sComa) > 2) {
+                        comas = Colores.ANSI_YELLOW + comas + Colores.ANSI_RESET;
                     }
                     cB += comas + ", ";
                     sentences[i] = cB.substring(0, cB.length()-2);

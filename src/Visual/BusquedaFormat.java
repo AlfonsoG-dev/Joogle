@@ -1,26 +1,9 @@
-package Utils;
+package Visual;
 
+/**
+ * clase para dar formato al resultado de la busqueda
+ */
 public final class BusquedaFormat {
-    /**
-    * color rojo para los valores numéricos
-    */
-    private final String ANSI_RED = "\u001B[41m";
-    /**
-    * color cyan para el path del archivo
-    */
-    private final String ANSI_CYAN = "\u001B[46m";
-    /**
-    * quitar color para los resultados no exactos
-    */
-    private final String ANSI_RESET = "\u001B[0m";
-    /**
-    * color amarillo para los resultados
-    */
-    private final String ANSI_YELLOW = "\u001B[33m";
-    /**
-     * color para link de file
-     */
-    public static final String RED_UNDERLINED = "\033[4;31m";
     /**
      * constructor
      */
@@ -36,7 +19,7 @@ public final class BusquedaFormat {
     public void formatoBusquedaSentencia(int lineNumber, String filePath, String methodName, String type, String argument) {
         String build = "";
         if(lineNumber != -1) {
-            build = "| " + ANSI_RED + lineNumber + ANSI_RESET + " | " + methodName + " :: " + type + " => " + argument + "\n";
+            build = "| " + Colores.ANSI_RED + lineNumber + Colores.ANSI_RESET + " | " + methodName + " :: " + type + " => " + argument + "\n";
         } else {
             build = "| " + "unknow" + " | " + methodName + " :: " + type + " => " + argument + "\n";
         }
@@ -48,13 +31,13 @@ public final class BusquedaFormat {
      */
     public void formatoBusquedaFiles(String fileName) {
         String[] name = fileName.split("\\\\");
-        name[name.length-1] = ANSI_CYAN + name[name.length-1] + ANSI_RESET;
+        name[name.length-1] = Colores.ANSI_CYAN + name[name.length-1] + Colores.ANSI_RESET;
         String build = "", cBuild = "";
         for(String n:name) {
             build += n +"\\";
         }
         cBuild = build.substring(0, build.length()-2);
-        System.out.println(String.format(">- %s", ANSI_YELLOW + cBuild + ANSI_RESET + "\n"));
+        System.out.println(String.format(">- %s", Colores.ANSI_YELLOW + cBuild + Colores.ANSI_RESET + "\n"));
     }
     /**
      * da el formato de respuesta a la busqueda de métodos
@@ -62,8 +45,8 @@ public final class BusquedaFormat {
      * @para lineNumber: numéro de linea en el que se encuentra el método
      */
     public void formatoBusquedaMethod(String fileName, String methodName, int lineNumber) {
-        String fLine = RED_UNDERLINED + fileName + ANSI_RESET  + ":" + ANSI_YELLOW + lineNumber + ANSI_RESET;
-        System.out.println(String.format("%s >- %s", fLine, ANSI_YELLOW + methodName + ANSI_RESET + "\n"));
+        String fLine = Colores.RED_UNDERLINED + fileName + Colores.ANSI_RESET  + ":" + Colores.ANSI_YELLOW + lineNumber + Colores.ANSI_RESET;
+        System.out.println(String.format("%s >- %s", fLine, Colores.ANSI_YELLOW + methodName + Colores.ANSI_RESET + "\n"));
     }
     /**
     * da formato a la cantidad de respuestas encontradas
@@ -71,6 +54,6 @@ public final class BusquedaFormat {
     * @param tipo: tipo de valor repetido
     */
     public void ConcurrencyFormat(int cantidad, String tipo) {
-        System.out.println(String.format("%s : %s", tipo, ANSI_RED + cantidad + ANSI_RESET) + "\n");
+        System.out.println(String.format("%s : %s", tipo, Colores.ANSI_RED + cantidad + Colores.ANSI_RESET) + "\n");
     }
 }

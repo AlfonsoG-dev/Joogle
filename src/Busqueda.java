@@ -1,7 +1,9 @@
 import java.io.File;
 
 import Utils.BusquedaUtil;
-import Utils.BusquedaFormat;
+import Visual.BusquedaFormat;
+import Utils.FileUtils;
+import Visual.Colores;
 
 /**
  * clase para buscar métodos dentro de clases de java
@@ -13,31 +15,24 @@ public class Busqueda {
     */
     private String[] options;
     /**
-    * color cyan para el path del archivo
-    */
-    private final String ANSI_CYAN = "\u001B[46m";
-    /**
-     * color para link de file
-     */
-    public static final String RED_UNDERLINED = "\033[4;31m";
-    /**
-    * quitar color para los resultados no exactos
-    */
-    private final String ANSI_RESET = "\u001B[0m";
-    /**
      * utiliades para crear la busqueda
      */
     private BusquedaUtil utils;
     /**
+     * formato visual para la busqueda
      */
      private BusquedaFormat format;
+     /**
+      */
+     private FileUtils fileUtils;
     /**
     * constructor
     */
     public Busqueda(String[] nOptions) {
-        this.options = nOptions;
-        this.utils = new BusquedaUtil();
+        options = nOptions;
+        utils = new BusquedaUtil();
         format = new BusquedaFormat();
+        fileUtils = new FileUtils();
     }
     /**
      * buscar "todos" en el proyecto
@@ -47,18 +42,20 @@ public class Busqueda {
         try {
             File miFile = new File(filePath);
             if(miFile.isFile()) {
-                if(utils.GetTodoSentences(miFile.getCanonicalPath()) == true) {
-                    //
+                if(utils.GetTodoSentences(miFile.getCanonicalPath()) == false) {
+                    System.err.println("\n\t NO TIENE TODO POR EL MOMENTO \n");
+                } else {
+                    utils.GetTodoSentences(miFile.getCanonicalPath());
                 }
             } else {
-                String[] fileNames = utils.GetFilesFromDirectory(miFile.listFiles()).split("\n");
+                String[] fileNames = fileUtils.GetFilesFromDirectories(miFile.listFiles()).split("\n");
                 for(String fn: fileNames) {
                     BuscarTODO(fn);
                 }
             }
 
         } catch(Exception e) {
-            System.err.println(e);
+            //System.err.println(e);
         }
     }
     /**
@@ -68,11 +65,9 @@ public class Busqueda {
     public void BuscarFiles(String filePath) {
         try {
             File miFile = new File(filePath);
-            if(miFile.isFile()) {
-                format.formatoBusquedaFiles(filePath);
-            } else {
-                String[] fileNames = utils.GetFilesFromDirectory(miFile.listFiles()).split("\n");
-                for(String fn: fileNames) {
+            String[] fileNames = fileUtils.GetFilesFromDirectories(miFile.listFiles()).split("\n");
+            for(String fn: fileNames) {
+                if(fn.equals("") == false) {
                     format.formatoBusquedaFiles(fn);
                 }
             }
@@ -91,7 +86,7 @@ public class Busqueda {
             String filesName = "";
             File miFile = new File(filePath);
             if(miFile.isDirectory() && cSentence.equals("")) {
-                filesName = utils.GetFilesFromDirectory(miFile.listFiles());
+                filesName = fileUtils.GetFilesFromDirectories(miFile.listFiles());
                 String[] partition = filesName.split("\n");
                 for(String p: partition) {
                     String[] metodos = utils.GetMethodName(p).split("\n");
@@ -117,9 +112,9 @@ public class Busqueda {
     */
     public void BuscarSentencia(String filePath, String sentencia) {
         try {
-            String[] methodNames = this.utils.GetMethodName(filePath).split("\n");
-            String[] types = this.utils.CompareToReturnType(filePath, sentencia).split("\n");
-            String[] arguments = this.utils.CompareToArguments(filePath, sentencia).split("\n");
+            String[] methodNames = utils.GetMethodName(filePath).split("\n");
+            String[] types = utils.CompareToReturnType(filePath, sentencia).split("\n");
+            String[] arguments = utils.CompareToArguments(filePath, sentencia).split("\n");
             File miFile = new File(filePath);
             if (miFile.exists()) {
                 for(int i = 0; i < methodNames.length; ++i) {
@@ -158,9 +153,9 @@ public class Busqueda {
         try {
             File miFile = new File(filePath);
             if(miFile.isFile() && miFile.getName().contains(".java")) {
-                System.out.println(String.format("\n%s\n", ANSI_CYAN + filePath + ANSI_RESET));
+                System.out.println(String.format("\n%s\n", Colores.ANSI_CYAN + filePath + Colores.ANSI_RESET));
                 String sentence = searchSentence.replace("/", "");
-                this.BuscarSentencia(filePath, sentence);
+                BuscarSentencia(filePath, sentence);
             }
         } catch(Exception e) {
             System.out.println(e);
@@ -174,11 +169,9 @@ public class Busqueda {
     public void SearcInDirectory(String directory, String searchSentence) {
         try {
             File miFile = new File(directory);
-            if(miFile.isDirectory()) {
-                File[] files = miFile.listFiles();
-                for(File f: files) {
-                    this.SearchInFile(f.getCanonicalPath(), searchSentence);
-                }
+            String[] fileNames = fileUtils.GetFilesFromDirectory(miFile.listFiles()).split("\n");
+            for(String fn: fileNames) {
+                SearchInFile(fn, searchSentence);
             }
         } catch(Exception e) {
             System.err.println(e);
@@ -189,17 +182,18 @@ public class Busqueda {
     * @param directorys: directorys del directory designado
     * @param searchSentence: sentencia a buscar
     */
-    public void SearcInDirectorys(String directorys, String searchSentence) {
+    public void SearcInDirectories(String directorys, String searchSentence) {
         try {
             String filesName = "";
             File miFile = new File(directorys);
             if(miFile.isDirectory()) {
-                filesName = utils.GetFilesFromDirectory(miFile.listFiles());
+                filesName = fileUtils.GetFilesFromDirectories(miFile.listFiles());
                 String[] partition = filesName.split("\n");
                 for(String p: partition) {
-                    this.SearchInFile(p, searchSentence);
+                    SearchInFile(p, searchSentence);
                 }
             }
+
         } catch(Exception e) {
             System.err.println(e);
         }
@@ -223,26 +217,26 @@ public class Busqueda {
                     case "-f":
                         fileName = options[i+1];
                         if((i+2) < options.length) {
-                            this.SearchInFile(fileName, options[i+2]);
+                            SearchInFile(fileName, options[i+2]);
                         } else {
-                            this.SearchInFile(fileName, "");
+                            SearchInFile(fileName, "");
                         }
                         break;
                     case "-d":
                         directory = options[i+1];
                         if((i+2) < options.length) {
-                            this.SearcInDirectory(directory, options[i+2]);
+                            SearcInDirectory(directory, options[i+2]);
                         } else {
-                            this.SearcInDirectory(directory, "");
+                            SearcInDirectory(directory, "");
                         }
                         break;
                     case "-D":
                         directorys = options[i+1];
                         if((i+2) < options.length) {
                             String searchSentence = options[i+2];
-                            this.SearcInDirectorys(directorys, searchSentence);
+                            SearcInDirectories(directorys, searchSentence);
                         } else {
-                            this.SearcInDirectorys(directorys, "");
+                            SearcInDirectories(directorys, "");
                         }
                         break;
                     case "-lf":
@@ -276,7 +270,7 @@ public class Busqueda {
                 }
             }
         } catch(Exception e) {
-            System.err.println(RED_UNDERLINED + e.toString().toUpperCase() + ANSI_RESET);
+            System.err.println(Colores.RED_UNDERLINED + e.toString().toUpperCase() + Colores.ANSI_RESET);
         }
     }
 }
