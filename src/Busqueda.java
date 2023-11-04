@@ -44,8 +44,6 @@ public class Busqueda {
             if(miFile.isFile()) {
                 if(utils.GetTodoSentences(miFile.getCanonicalPath()) == false) {
                     System.err.println("\n\t NO TIENE TODO POR EL MOMENTO \n");
-                } else {
-                    utils.GetTodoSentences(miFile.getCanonicalPath());
                 }
             } else {
                 String[] fileNames = fileUtils.GetFilesFromDirectories(miFile.listFiles()).split("\n");
@@ -81,11 +79,14 @@ public class Busqueda {
      * @param sentence: sentencia a buscar
      */
     public void BuscarMethods(String filePath, String sentence) {
+        //TODO: buscar por numero de linea inicial
         try {
             String cSentence = sentence.replace("/", "");
             String filesName = "";
             File miFile = new File(filePath);
-            if(miFile.isDirectory() && cSentence.equals("")) {
+            if(miFile.exists() && miFile.isFile() && cSentence.equals("") == false) {
+                utils.GetMethodContext(miFile.getCanonicalPath(), cSentence);
+            } else if(miFile.exists() && miFile.isDirectory() && cSentence.equals("")) {
                 filesName = fileUtils.GetFilesFromDirectories(miFile.listFiles());
                 String[] partition = filesName.split("\n");
                 for(String p: partition) {
@@ -95,9 +96,6 @@ public class Busqueda {
                         format.formatoBusquedaMethod(p, m, line);
                     }
                 }
-            }
-            if(miFile.isFile() && cSentence.equals("") == false) {
-                utils.GetMethodContext(miFile.getCanonicalPath(), cSentence);
             } else {
                 System.out.println("debes seleccionar un archivo con extension .java");
             }

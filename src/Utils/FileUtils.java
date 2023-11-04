@@ -27,16 +27,12 @@ public record FileUtils() {
      * @param files: los archivos dentro del directorio
      * @return string con la ruta de los archivos
      */
-    public String GetFilesFromDirectory(File[] files) {
+    public String GetFilesFromDirectory(File[] files) throws IOException {
         String fileNames = "";
-        try {
-            for(File f: files) {
-                if(f.isFile() && f.getName().contains(".java")) {
-                    fileNames += f.getCanonicalPath() + "\n";
-                }
+        for(File f: files) {
+            if(f.isFile() && f.getName().contains(".java")) {
+                fileNames += f.getCanonicalPath() + "\n";
             }
-        } catch(Exception e) {
-            //
         }
         return fileNames;
     }
@@ -47,19 +43,15 @@ public record FileUtils() {
     * @throws IOException: error al buscar los archivos del directorio
     * @return String con la ruta de los archivos
     */
-    public String GetFilesFromDirectories(File[] miFiles) {
+    public String GetFilesFromDirectories(File[] miFiles) throws IOException {
         String fileName = "";
-        try {
-            for(File f: miFiles) {
-                if(f.isFile() && f.getName().contains(".java")) {
-                    fileName += f.getCanonicalPath() + "\n";
-                }
-                if(f.isDirectory()) {
-                    fileName += this.GetFilesFromDirectories(f.listFiles()) + "\n";
-                }
+        for(File f: miFiles) {
+            if(f.isFile() && f.getName().contains(".java")) {
+                fileName += f.getCanonicalPath() + "\n";
             }
-        } catch(Exception e) {
-            //
+            if(f.isDirectory()) {
+                fileName += this.GetFilesFromDirectories(f.listFiles()) + "\n";
+            }
         }
         return fileName;
     }
