@@ -77,18 +77,18 @@ java -jar joogle.jar -f App.java /"void => ()"/
 ```shell
 java -jar joogle.jar -f App.java -d ./OtherProyect/ /"void => ()"/
 ```
->>- if you combine the CLI options remember to set the search sentence the same for both of the CLI options
-
->- if you indicate a different search for each one of the CLI options
->>- the output can be a little bit confusing
+>>- if you combine the CLI options in the current state of the proyect you cant do it.
 ```shell
-java -jar joogle.jar -f App.java /""/ -d ./OtherProyect/ /"void => ()"/
+java -jar joogle.jar -f app.java -f other.java /""/
 ```
+>>- it will output: `use --h for more information about the CLI options`
+>>- if you give the search sentence to each one of the CLI options, it will output the first one.
+
 >- if you want aditional information in the CLI
+>>- this will output the each one of the CLI options
 ```shell
 java -jar joogle.jar --h
 ```
->>- this will output the each one of the CLI options
 
 ---------
 
