@@ -48,12 +48,14 @@ public class Busqueda {
             } else {
                 String[] fileNames = fileUtils.GetFilesFromDirectories(miFile.listFiles()).split("\n");
                 for(String fn: fileNames) {
-                    BuscarTODO(fn);
+                    if(fn.isEmpty() == false) {
+                        BuscarTODO(fn);
+                    }
                 }
             }
 
         } catch(Exception e) {
-            //System.err.println(e);
+            System.err.println(e);
         }
     }
     /**
@@ -65,7 +67,7 @@ public class Busqueda {
             File miFile = new File(filePath);
             String[] fileNames = fileUtils.GetFilesFromDirectories(miFile.listFiles()).split("\n");
             for(String fn: fileNames) {
-                if(fn.equals("") == false) {
+                if(fn.isEmpty() == false) {
                     format.formatoBusquedaFiles(fn);
                 }
             }
@@ -79,25 +81,25 @@ public class Busqueda {
      * @param sentence: sentencia a buscar
      */
     public void BuscarMethods(String filePath, String sentence) {
-        //TODO: buscar por numero de linea inicial
         try {
             String cSentence = sentence.replace("/", "");
-            String filesName = "";
             File miFile = new File(filePath);
-            if(miFile.exists() && miFile.isFile() && cSentence.equals("") == false) {
+            if(miFile.isFile() && cSentence.equals("") == false) {
                 utils.GetMethodContext(miFile.getCanonicalPath(), cSentence);
-            } else if(miFile.exists() && miFile.isDirectory() && cSentence.equals("")) {
-                filesName = fileUtils.GetFilesFromDirectories(miFile.listFiles());
-                String[] partition = filesName.split("\n");
-                for(String p: partition) {
-                    String[] metodos = utils.GetMethodName(p).split("\n");
-                    for(String m: metodos) {
-                        int line = utils.GetLineNumber(p, m + "::");
-                        format.formatoBusquedaMethod(p, m, line);
+            } else if(miFile.isFile() && cSentence.equals("")) {
+                String[] metodos = utils.GetMethodName(filePath).split("\n");
+                for(String m: metodos) {
+                    int lineNumber = utils.GetLineNumber(miFile.getCanonicalPath(), m + "::");
+                    format.formatoBusquedaMethod(miFile.getCanonicalPath(), m, lineNumber);
+                }
+            }
+            else if(miFile.isDirectory()) {
+                String[] filesName = fileUtils.GetFilesFromDirectories(miFile.listFiles()).split("\n");
+                for(String fn: filesName) {
+                    if(fn.isEmpty() == false ) {
+                        this.BuscarMethods(fn, cSentence);
                     }
                 }
-            } else {
-                System.out.println("debes seleccionar un archivo con extension .java");
             }
         } catch(Exception e) {
             //
@@ -199,8 +201,10 @@ public class Busqueda {
     /**
     * organiza la forma en la que se ejecutan los argumentos de la consola;
     *  -f es para buscar la sentencia dentro de un archivo 
-    *  -d es para buscar la sentencia dentro de los archivos del directory designado, solo se tienen en cuenta los archivos no directorios
-    *  -D es para buscar la sentencia dentro de los archivos del directory designado si el directorio tiene más directorios se busca tambien dentro de ellos
+    *  -d es para buscar la sentencia dentro de los archivos del directory designado,
+    *  solo se tienen en cuenta los archivos no directorios
+    *  -D es para buscar la sentencia dentro de los archivos del directory designado,
+    *  si el directorio tiene más directorios se busca tambien dentro de ellos
     *  -lf listar los archivos que tienen como extensión .java
     *  -lm listar los métodos del archivo
     *  -lt listart todos los todos en el proyecto
@@ -254,12 +258,16 @@ public class Busqueda {
                         break;
                     case "--h":
                         System.out.println("Opciones para joogle");
-                        System.out.println("-f para buscar dentro de un archivo:\t seguido de /\"\"/ para buscar una sentencia");
-                        System.out.println("-d para buscar dentro de un directorio:\t seguido de /\"\"/ para buscar una sentencia");
-                        System.out.println("-D para buscar dentro de todos los directorios:\t seguido de /\"\"/ para buscar una sentencia");
+                        System.out.println("-f para buscar dentro de un archivo:" + 
+                                "\t seguido de /\"\"/ para buscar una sentencia");
+                        System.out.println("-d para buscar dentro de un directorio:" + 
+                                "\t seguido de /\"\"/ para buscar una sentencia");
+                        System.out.println("-D para buscar dentro de todos los directorios:" + 
+                                "\t seguido de /\"\"/ para buscar una sentencia");
                         System.out.println("-lf para listar todos los archivos .java:\t seguido del directorio");
                         System.out.println("-lm para listar todos los métodos del proyecto:\t seguido del directorio");
-                        System.out.println("\t si seleccionas un archivo y adicionas el nombre del metodo se retorna el bloque de codigo de ese metodo");
+                        System.out.println("\t si seleccionas un archivo y adicionas el nombre" + 
+                                " del metodo se retorna el bloque de codigo de ese metodo");
                         System.out.println("-lt para listar todos los TODO del proyecto:\t seguido del directorio");
                         break;
                     default: 

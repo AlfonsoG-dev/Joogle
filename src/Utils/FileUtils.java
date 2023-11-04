@@ -15,7 +15,9 @@ public record FileUtils() {
     * @return lista de tokens a ignorar
     */
     public ArrayList<String> TokenList() {
-        String[] tokens = new String[]{"public", "private", "protected", "final", "abstract", "static", "record", "class", "interface"};
+        String[] tokens = new String[] {
+            "public", "private", "protected", "final", "abstract", "static", "record", "class", "interface"
+        };
         ArrayList<String> lista = new ArrayList<String>();
         for(String t: tokens) {
             lista.add(t);

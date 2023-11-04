@@ -27,7 +27,8 @@ public class TextUtils {
             if(numeros_fl.length == 2) {
                 String valores = numeros_fl[1].trim();
                 for(String t: fileUtils.TokenList()) {
-                    if(valores.startsWith(t) && valores.contains(")") || valores.endsWith("\n")) {
+                    if(valores.startsWith(t) && valores.contains(")")
+                            || valores.endsWith("\n")) {
                         lines += valores.replace("{", "").trim() + "\n";
                     }
                 }

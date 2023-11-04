@@ -270,7 +270,8 @@ public class BusquedaUtil {
                     String cB = "";
                     for(int c=0; c<comas.length; ++c) {
                         for(int sc=0; sc<sComas.length; ++sc) {
-                            if(comas[c].replace(" ", "").replace(")", "").toLowerCase().equals(sComas[sc].replace(")", "")) || textUtils.CompareCharToChar(comas[c], sComas[sc]) > 2) {
+                            if(comas[c].replace(" ", "").replace(")", "").toLowerCase().equals(sComas[sc].replace(")", "")) 
+                                    || textUtils.CompareCharToChar(comas[c], sComas[sc]) > 2) {
                                 comas[c] = Colores.ANSI_YELLOW + comas[c] + Colores.ANSI_RESET;
                             }
                         }
@@ -281,7 +282,8 @@ public class BusquedaUtil {
                     String sComa = sentence.split(",")[0];
                     String comas = sentences[i].split(",")[0];
                     String cB = "";
-                    if(comas.replace(" ", "").toLowerCase().equals(sComa.replace(" ", "").toLowerCase() + ")") || textUtils.CompareCharToChar(comas, sComa) > 2) {
+                    if(comas.replace(" ", "").toLowerCase().equals(sComa.replace(" ", "").toLowerCase() + ")") 
+                            || textUtils.CompareCharToChar(comas, sComa) > 2) {
                         comas = Colores.ANSI_YELLOW + comas + Colores.ANSI_RESET;
                     }
                     cB += comas + ", ";

@@ -19,7 +19,8 @@ public final class BusquedaFormat {
     public void formatoBusquedaSentencia(int lineNumber, String filePath, String methodName, String type, String argument) {
         String build = "";
         if(lineNumber != -1) {
-            build = "| " + Colores.ANSI_RED + lineNumber + Colores.ANSI_RESET + " | " + methodName + " :: " + type + " => " + argument + "\n";
+            build = "| " + Colores.ANSI_RED + lineNumber + Colores.ANSI_RESET + " | " + methodName +
+                " :: " + type + " => " + argument + "\n";
         } else {
             build = "| " + "unknow" + " | " + methodName + " :: " + type + " => " + argument + "\n";
         }
@@ -45,8 +46,10 @@ public final class BusquedaFormat {
      * @para lineNumber: numéro de linea en el que se encuentra el método
      */
     public void formatoBusquedaMethod(String fileName, String methodName, int lineNumber) {
-        String fLine = Colores.RED_UNDERLINED + fileName + Colores.ANSI_RESET  + ":" + Colores.ANSI_YELLOW + lineNumber + Colores.ANSI_RESET;
-        System.out.println(String.format("%s >- %s", fLine, Colores.ANSI_YELLOW + methodName + Colores.ANSI_RESET + "\n"));
+        String fLine = Colores.RED_UNDERLINED + fileName + Colores.ANSI_RESET  +
+            ":" + Colores.ANSI_YELLOW + lineNumber + Colores.ANSI_RESET;
+        System.out.println(String.format("%s >- %s", fLine, Colores.ANSI_YELLOW +
+                    methodName + Colores.ANSI_RESET + "\n"));
     }
     /**
     * da formato a la cantidad de respuestas encontradas
