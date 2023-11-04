@@ -49,7 +49,7 @@ public class BusquedaUtil {
             }
         }
         String respuesta = "";
-        String[] fileText = fileUtils.GetTextFromFile(filePath).split("\n");
+        String[] fileText = fileUtils.GetCleanTextFromFile(filePath).split("\n");
         if(end != -1) {
             for(int i=inicial-1; i<end-1; ++i) {
                 System.out.println(fileText[i]);

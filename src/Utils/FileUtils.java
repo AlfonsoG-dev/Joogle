@@ -58,9 +58,9 @@ public record FileUtils() {
         return fileName;
     }
     /**
-    * Genera un String con los valores del archivo
+    * Genera un String con los valores del archivo con numero de linea
     * @param filePath: ruta del archivo a leer
-    * @return String con los datos del archivo
+    * @return String con los datos del archivo con numero de linea
     */
     public String GetTextFromFile(String filePath) {
         String build = "";
@@ -73,6 +73,43 @@ public record FileUtils() {
             while(miBufferReader.ready()) {
                 build += i + ":" + miBufferReader.readLine() + "\n";
                 ++i;
+            }
+        } catch (Exception var48) {
+            System.err.println(var48);
+        } finally {
+            if(miReader != null) {
+                try {
+                    miReader.close();
+                } catch(Exception e) {
+                    System.err.println(e);
+                }
+            }
+            if(miBufferReader != null) {
+                try {
+                    miBufferReader.close();
+                } catch(Exception e) {
+                    System.err.println(e);
+                } finally {
+                    miBufferReader = null;
+                }
+            }
+        }
+        return build;
+    }
+    /**
+     * genera un String con los valores del archivo sin numero de linea
+     * @param filePath: ruta del archivo a leer
+     * @return String con los datos del archivo sin numero de linea
+     */
+    public String GetCleanTextFromFile(String filePath) {
+        String build = "";
+        FileReader miReader = null;
+        BufferedReader miBufferReader = null;
+        try {
+            miReader = new FileReader(filePath);
+            miBufferReader = new BufferedReader(miReader);
+            while(miBufferReader.ready()) {
+                build += miBufferReader.readLine() + "\n";
             }
         } catch (Exception var48) {
             System.err.println(var48);
