@@ -17,6 +17,10 @@ public class Busqueda {
     */
     private final String ANSI_CYAN = "\u001B[46m";
     /**
+     * color para link de file
+     */
+    public static final String RED_UNDERLINED = "\033[4;31m";
+    /**
     * quitar color para los resultados no exactos
     */
     private final String ANSI_RESET = "\u001B[0m";
@@ -34,6 +38,28 @@ public class Busqueda {
         this.options = nOptions;
         this.utils = new BusquedaUtil();
         format = new BusquedaFormat();
+    }
+    /**
+     * buscar "todos" en el proyecto
+     * @param filePath: archivo a leer las sentencias todo
+     */
+    public void BuscarTODO(String filePath) {
+        try {
+            File miFile = new File(filePath);
+            if(miFile.isFile()) {
+                if(utils.GetTodoSentences(miFile.getCanonicalPath()) == true) {
+                    //
+                }
+            } else {
+                String[] fileNames = utils.GetFilesFromDirectory(miFile.listFiles()).split("\n");
+                for(String fn: fileNames) {
+                    BuscarTODO(fn);
+                }
+            }
+
+        } catch(Exception e) {
+            System.err.println(e);
+        }
     }
     /**
      * buscar la ruta de los archivos dentro del proyecto
@@ -179,46 +205,61 @@ public class Busqueda {
     *  -D es para buscar la sentencia dentro de los archivos del directory designado si el directorio tiene más directorios se busca tambien dentro de ellos
     *  -lf listar los archivos que tienen como extensión .java
     *  -lm listar los métodos del archivo
-    *  -Lm listar todos los métodos del archivo
+    *  -lt listart todos los todos en el proyecto
     */
     public void OrganizeSearchOptions() {
         try {
             String directory = "";
             String fileName = "";
             String directorys = "";
-            for(int i=0; i<options.length; ++i) {
-                if(options[i].contains("-d")) {
-                    directory = options[i+1];
-                    if(options[i+2].contains("/")) {
-                        String searchSentence = options[i+2];
-                        this.SearcInDirectory(directory, searchSentence);
-                    }
-                }
-                if(options[i].contains("-f")) {
-                    fileName = options[i+1];
-                    if(options[i+2].contains("/")) {
-                        String searchSentence = options[i+2];
-                        this.SearchInFile(fileName, searchSentence);
-                    }
-                }
-                if(options[i].contains("-D")) {
-                    directorys = options[i+1];
-                    if(options[i+2].contains("/")) {
-                        String searchSentence = options[i+2];
-                        this.SearcInDirectorys(directorys, searchSentence);
-                    }
-                }
-                if(options[i].contains("-lf")) {
-                    directorys = options[i+1];
-                    BuscarFiles(directorys);
-                }
-                if(options[i].contains("lm")) {
-                    directorys = options[i+1];
-                    BuscarMethods(directorys);
+            outter: for(int i=0; i<options.length; ++i) {
+                switch(options[i]) {
+                    case "-f":
+                        fileName = options[i+1];
+                        if(options[i+2].contains("/")) {
+                            this.SearchInFile(fileName, options[i+2]);
+                        }
+                        break;
+                    case "-d":
+                        directory = options[i+1];
+                        if(options[i+2].contains("/")) {
+                            this.SearcInDirectory(directory, options[i+2]);
+                        }
+                        break;
+                    case "-D":
+                        directorys = options[i+1];
+                        if(options[i+2].contains("/")) {
+                            String searchSentence = options[i+2];
+                            this.SearcInDirectorys(directorys, searchSentence);
+                        }
+                        break;
+                    case "-lf":
+                        directorys = options[i+1];
+                        BuscarFiles(directorys);
+                        break;
+                    case "-lm":
+                        directorys = options[i+1];
+                        BuscarMethods(directorys);
+                        break;
+                    case "-lt":
+                        BuscarTODO(options[i+1]);
+                        break;
+                    case "--h":
+                        System.out.println("Opciones para joogle");
+                        System.out.println("-f para buscar dentro de un archivo:\t seguido de /\"\"/ para buscar una sentencia");
+                        System.out.println("-d para buscar dentro de un directorio:\t seguido de /\"\"/ para buscar una sentencia");
+                        System.out.println("-D para buscar dentro de todos los directorios:\t seguido de /\"\"/ para buscar una sentencia");
+                        System.out.println("-lf para listar todos los archivos .java:\t seguido del directorio");
+                        System.out.println("-lm para listar todos los métodos del proyecto:\t seguido del directorio");
+                        System.out.println("-lt para listar todos los TODO del proyecto:\t seguido del directorio");
+                        break;
+                    default: 
+                        System.out.println("utilize el comando --h para mas informacion");
+                        break outter;
                 }
             }
         } catch(Exception e) {
-            System.err.println(e);
+            System.err.println(RED_UNDERLINED + e.toString().toUpperCase() + ANSI_RESET);
         }
     }
 }

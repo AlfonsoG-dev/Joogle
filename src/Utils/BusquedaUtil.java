@@ -102,6 +102,26 @@ public class BusquedaUtil {
         return build;
     }
     /**
+     * genera un string con las sentencias que sean "todos"
+     * @param filePath: archivo a leer
+     * @return true si el archivo tiene sentencias todo, false de lo contrario
+     */
+    public boolean GetTodoSentences(String filePath) {
+        String[] fileLines = this.GetTextFromFile(filePath).split("\n");
+        boolean exists = false;
+        for(String fl: fileLines) {
+            String[] numerosFl = fl.split(":");
+            for(int i=1; i<numerosFl.length; ++i) {
+                String valores = numerosFl[i].trim().replace("*", "").replace("/", "").replace(" ", "").replace("}", "");
+                if(valores.toLowerCase().equals("TODO".toLowerCase())) {
+                    System.out.println(ANSI_YELLOW + filePath + ANSI_RESET + ":" + fl.replace(":", ""));
+                    exists = true;
+                }
+            }
+        }
+        return exists;
+    }
+    /**
     * genera un String con las sentencias que indican un método
     * @param filePath: ruta del archivo a leer
     * @return String con las lineas en donde hay métodos
