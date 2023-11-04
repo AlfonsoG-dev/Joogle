@@ -21,6 +21,10 @@ public record Colores() {
     */
     public static final String ANSI_YELLOW = "\u001B[33m";
     /**
+     * color amarillo con under-linea 
+     */
+    public static final String YELLOW_UNDERLINED = "\033[4;33m";
+    /**
      * color con linea baja
      */
     public static final String GREEN_UNDERLINED = "\033[4;32m";

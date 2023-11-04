@@ -9,6 +9,17 @@ public final class BusquedaFormat {
      */
     public BusquedaFormat() { }
     /**
+     * da formato de muestra a la busqueda del contexto de un metodo
+     */
+    public void formatoPresentFilename(String fileName, int lineNumber) {
+        String build = "";
+        if(lineNumber > -1) {
+            build = Colores.YELLOW_UNDERLINED + fileName + Colores.ANSI_RESET + ":" + Colores.RED_UNDERLINED +
+                lineNumber + Colores.ANSI_RESET + "\n";
+        }
+        System.out.println(build);
+    }
+    /**
     * da el formato de respuesta a la busqueda
     * @param lineNumber: linea en la que se encuentra la respuesta
     * @param filePath: ruta del archivo a leer

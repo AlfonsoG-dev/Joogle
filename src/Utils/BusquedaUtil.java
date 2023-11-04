@@ -42,7 +42,9 @@ public class BusquedaUtil {
             conNumLinea = GetLineNumber(filePath, fileLines[i]) + ":" + fileLines[i];
             if(conNumLinea.equals(buscada) && (i+1) < fileLines.length) {
                 end = GetLineNumber(filePath, fileLines[i+1]);
+                format.formatoPresentFilename(filePath, inicial);
             } else if(conNumLinea.equals(buscada) && (i+1) >= fileLines.length) {
+                format.formatoPresentFilename(filePath, inicial);
                 end = -1;
             }
         }
