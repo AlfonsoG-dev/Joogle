@@ -85,11 +85,12 @@ public class Busqueda {
      * @param filePath: ruta a leer
      * @param sentence: sentencia a buscar
      */
-    public void BuscarMethods(String filePath) {
+    public void BuscarMethods(String filePath, String sentence) {
         try {
+            String cSentence = sentence.replace("/", "");
             String filesName = "";
             File miFile = new File(filePath);
-            if(miFile.isDirectory()) {
+            if(miFile.isDirectory() && cSentence.equals("")) {
                 filesName = utils.GetFilesFromDirectory(miFile.listFiles());
                 String[] partition = filesName.split("\n");
                 for(String p: partition) {
@@ -99,6 +100,11 @@ public class Busqueda {
                         format.formatoBusquedaMethod(p, m, line);
                     }
                 }
+            }
+            if(miFile.isFile() && cSentence.equals("") == false) {
+                utils.GetMethodContext(miFile.getCanonicalPath(), cSentence);
+            } else {
+                System.out.println("debes seleccionar un archivo con extension .java");
             }
         } catch(Exception e) {
             //
@@ -216,21 +222,27 @@ public class Busqueda {
                 switch(options[i]) {
                     case "-f":
                         fileName = options[i+1];
-                        if(options[i+2].contains("/")) {
+                        if((i+2) < options.length) {
                             this.SearchInFile(fileName, options[i+2]);
+                        } else {
+                            this.SearchInFile(fileName, "");
                         }
                         break;
                     case "-d":
                         directory = options[i+1];
-                        if(options[i+2].contains("/")) {
+                        if((i+2) < options.length) {
                             this.SearcInDirectory(directory, options[i+2]);
+                        } else {
+                            this.SearcInDirectory(directory, "");
                         }
                         break;
                     case "-D":
                         directorys = options[i+1];
-                        if(options[i+2].contains("/")) {
+                        if((i+2) < options.length) {
                             String searchSentence = options[i+2];
                             this.SearcInDirectorys(directorys, searchSentence);
+                        } else {
+                            this.SearcInDirectorys(directorys, "");
                         }
                         break;
                     case "-lf":
@@ -239,7 +251,11 @@ public class Busqueda {
                         break;
                     case "-lm":
                         directorys = options[i+1];
-                        BuscarMethods(directorys);
+                        if((i+2) < options.length) {
+                            BuscarMethods(directorys, options[i+2]);
+                        } else {
+                            BuscarMethods(directorys, "");
+                        }
                         break;
                     case "-lt":
                         BuscarTODO(options[i+1]);
@@ -251,6 +267,7 @@ public class Busqueda {
                         System.out.println("-D para buscar dentro de todos los directorios:\t seguido de /\"\"/ para buscar una sentencia");
                         System.out.println("-lf para listar todos los archivos .java:\t seguido del directorio");
                         System.out.println("-lm para listar todos los métodos del proyecto:\t seguido del directorio");
+                        System.out.println("\t si seleccionas un archivo y adicionas el nombre del metodo se retorna el bloque de codigo de ese metodo");
                         System.out.println("-lt para listar todos los TODO del proyecto:\t seguido del directorio");
                         break;
                     default: 

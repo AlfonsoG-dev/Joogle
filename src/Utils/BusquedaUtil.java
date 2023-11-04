@@ -102,6 +102,38 @@ public class BusquedaUtil {
         return build;
     }
     /**
+     * da el contexto del método, es decir, el bloque de codigo dentro del método buscado
+     * @param filePath: archivo a leer
+     * @param sentencia: método buscado
+     */
+    public String GetMethodContext(String filePath, String sentencia) {
+        String[] fileLines = this.GetSentences(filePath).split("\n");
+        String buscada = this.GetLineNumber(filePath, sentencia) + ":" + this.LocalizarMetodo(filePath, sentencia);
+        String conNumLinea = "";
+        int inicial = Integer.parseInt(buscada.split(":")[0]);
+        int end = 0;
+        for(int i=0; i<fileLines.length; ++i) {
+            conNumLinea = GetLineNumber(filePath, fileLines[i]) + ":" + fileLines[i];
+            if(conNumLinea.equals(buscada) && (i+1) < fileLines.length) {
+                end = GetLineNumber(filePath, fileLines[i+1]);
+            } else if(conNumLinea.equals(buscada) && (i+1) >= fileLines.length) {
+                end = -1;
+            }
+        }
+        String respuesta = "";
+        String[] fileText = this.GetTextFromFile(filePath).split("\n");
+        if(end != -1) {
+            for(int i=inicial-1; i<end-1; ++i) {
+                System.out.println(fileText[i].split(":")[1]);
+            }
+        } else {
+            for(int i=inicial-1; i<fileText.length; ++i) {
+                System.out.println(fileText[i].split(":")[1]);
+            }
+        }
+        return respuesta;
+    }
+    /**
      * genera un string con las sentencias que sean "todos"
      * @param filePath: archivo a leer
      * @return true si el archivo tiene sentencias todo, false de lo contrario
