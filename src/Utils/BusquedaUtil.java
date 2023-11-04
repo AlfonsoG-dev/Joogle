@@ -50,11 +50,11 @@ public class BusquedaUtil {
         String[] fileText = fileUtils.GetTextFromFile(filePath).split("\n");
         if(end != -1) {
             for(int i=inicial-1; i<end-1; ++i) {
-                System.out.println(fileText[i].split(":")[1]);
+                System.out.println(fileText[i]);
             }
         } else {
             for(int i=inicial-1; i<fileText.length; ++i) {
-                System.out.println(fileText[i].split(":")[1]);
+                System.out.println(fileText[i]);
             }
         }
         return respuesta;
