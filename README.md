@@ -3,6 +3,8 @@
 >- Developed with Java
 
 ![expected output](./docs/expected_output.png)
+-------
+![expected output_lm](./docs/expected_output_lm.png)
 
 ## Dependencies 
 >- [Java 17](https://www.oracle.com/es/java/technologies/downloads/#jdk17-windows)
@@ -17,6 +19,7 @@
 - [x] search the sentence within a file.
 - [x] search the sentence within a directory.
 - [x] search the sentence within all directories of the given directory
+- [x] output the code block of the given method
 - [x] list all the files with the `.java` extensión
 - [x] list all the méthods in the given directory
 - [x] list all the TODO in the current proyect
@@ -36,6 +39,12 @@ java -jar joogle.jar -lf .\src\
 ```shell
 java -jar joogle.jar -lm .\src\
 ```
+>>- if you want to know the content of the method you need to especify the name of the file and the method
+>>>- this will output the code block of that method
+```shell
+java -jar joogle.jar -lm .\src\App.java /"main"/
+```
+
 >- to list all the TODO's in the current proyect
 ```shell
 java -jar joogle.jar -lt .\src\
