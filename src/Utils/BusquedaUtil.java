@@ -244,7 +244,7 @@ public class BusquedaUtil {
                 result += format.SetColorSentence(sentences[i], Colores.GREEN_UNDERLINED) + "\n";
                 ++r;
             } else if(textUtils.CompareCharToChar(s, st) > 2) {
-                result += format.SetColorSentence(sentences[i], Colores.ANSI_YELLOW);
+                result += format.SetColorSentence(sentences[i], Colores.ANSI_YELLOW) + "\n";
                 ++r;
             } else {
                 if(s.contains(",") && st.contains(",")) {
