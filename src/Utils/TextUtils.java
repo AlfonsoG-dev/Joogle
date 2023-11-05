@@ -20,17 +20,14 @@ public class TextUtils {
     * @return String con las lineas en donde hay métodos
     */
     public String GetSentences(String filePath) {
-        String[] fileLines = fileUtils.GetTextFromFile(filePath).split("\n");
+        String[] fileLines = fileUtils.GetCleanTextFromFile(filePath).split("\n");
         String lines = "";
         for(String fl: fileLines) {
-            String[] numeros_fl = fl.replace("}", "").split(":");
-            if(numeros_fl.length == 2) {
-                String valores = numeros_fl[1].trim();
-                for(String t: fileUtils.TokenList()) {
-                    if(valores.startsWith(t) && valores.contains(")")
-                            || valores.endsWith("\n")) {
-                        lines += valores.replace("{", "").trim() + "\n";
-                    }
+            String valores = fl.trim();
+            for(String t: fileUtils.TokenList()) {
+                if(valores.startsWith(t) && valores.contains(")")
+                        || valores.endsWith("\n")) {
+                    lines += valores.replace("{", "").trim() + "\n";
                 }
             }
         }
