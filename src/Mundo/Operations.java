@@ -2,6 +2,10 @@ package Mundo;
 
 import Visual.Colores;
 import Utils.OperationUtils;
+
+/**
+ * clase para organizar las operaciones según las opciones dadas por el usuario
+ */
 public final class Operations {
     /**
     * CLI options
