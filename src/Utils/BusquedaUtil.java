@@ -51,25 +51,9 @@ public class BusquedaUtil {
         String respuesta = "";
         String[] fileText = fileUtils.GetCleanTextFromFile(filePath).split("\n");
         if(end != -1) {
-            for(int i=inicial-1; i<end-1; ++i) {
-                if(fileText[i].trim().startsWith("/*") || fileText[i].trim().startsWith("/**") ||
-                        fileText[i].trim().startsWith("*") || fileText[i].trim().startsWith("//")) {
-                    fileText[i] = "";
-                }
-                if(fileText[i].equals("") == false) {
-                    System.out.println(fileText[i]);
-                }
-            }
+            System.out.println(textUtils.DeleteComments(fileText, inicial, end));
         } else {
-            for(int i=inicial-1; i<fileText.length; ++i) {
-                if(fileText[i].trim().startsWith("/*") || fileText[i].trim().startsWith("/**") ||
-                        fileText[i].trim().startsWith("*") || fileText[i].trim().startsWith("//")) {
-                    fileText[i] = "";
-                }
-                if(fileText[i].equals("") == false) {
-                    System.out.println(fileText[i]);
-                }
-            }
+            System.out.println(textUtils.DeleteComments(fileText, inicial, fileText.length));
         }
         return respuesta;
     }
@@ -79,16 +63,13 @@ public class BusquedaUtil {
      * @return true si el archivo tiene sentencias todo, false de lo contrario
      */
     public boolean GetTodoSentences(String filePath) {
-        String[] fileLines = fileUtils.GetTextFromFile(filePath).split("\n");
+        String[] fileLines = fileUtils.GetCleanTextFromFile(filePath).split("\n");
         boolean exists = false;
         for(String fl: fileLines) {
-            String[] numerosFl = fl.split(":");
-            for(int i=1; i<numerosFl.length; ++i) {
-                String valores = numerosFl[i].trim().replace("*", "").replace("/", "").replace(" ", "").replace("}", "");
-                if(valores.toLowerCase().equals("TODO".toLowerCase())) {
-                    System.out.println(Colores.ANSI_YELLOW + filePath + Colores.ANSI_RESET + ":" + fl.replace(":", ""));
-                    exists = true;
-                }
+            String valores = fl.trim().replace("*", "").replace("/", "").replace(" ", "").replace("}", "");
+            if(valores.toLowerCase().equals("TODO".toLowerCase())) {
+                System.out.println(format.SetColorSentence(filePath, Colores.ANSI_YELLOW) + ":" + fl.replace(":", ""));
+                exists = true;
             }
         }
         return exists;
@@ -198,21 +179,8 @@ public class BusquedaUtil {
     * @return número de linea del método buscado
     */
     public int GetLineNumber(String filePath, String sentence) {
-        String[] fileLines = fileUtils.GetTextFromFile(filePath).split("\n");
-        String lines = "";
-        for(String fl: fileLines) {
-            String[] numeros_fl = fl.replace("}", "").split(":");
-            if(numeros_fl.length == 2) {
-                String valores = numeros_fl[1].trim();
-                for(String t: fileUtils.TokenList()) {
-                    if(valores.startsWith(t) && valores.contains(")") || valores.endsWith("\n")) {
-                        lines += numeros_fl[0] + ":" + valores.replace("{", "").trim() + "\n";
-                    }
-                }
-            }
-        }
+        String[] separate = textUtils.GetSentecesWithLineNumber(filePath).split("\n");
         int res = 0;
-        String[] separate = lines.split("\n");
         for(String fl: separate) {
             String[] numeros_fl = fl.replace("}", "").split(":");
             if(numeros_fl.length == 2) {
@@ -237,13 +205,14 @@ public class BusquedaUtil {
         int r = 0;
         for(String s: sentences) {
             if(st.equals("")) {
-                result += Colores.ANSI_YELLOW + s + Colores.ANSI_RESET + "\n";
+                result += format.SetColorSentence(s, Colores.ANSI_YELLOW) + "\n";
                 ++r;
-            } else if(s.toLowerCase().replace(" ", "").equals(st) || textUtils.CompareCharToChar(s, st) > 10) {
-                result += Colores.GREEN_UNDERLINED + s + Colores.ANSI_RESET + "\n";
+            } else if(s.toLowerCase().replace(" ", "").equals(st) ||
+                    textUtils.CompareCharToChar(s, st) > 10) {
+                result += format.SetColorSentence(s, Colores.GREEN_UNDERLINED) + "\n";
                 ++r;
             } else if(textUtils.CompareCharToChar(s, st) > 2) {
-                result += Colores.ANSI_YELLOW + s + Colores.ANSI_RESET + "\n";
+                result += format.SetColorSentence(sentence, Colores.ANSI_YELLOW) + "\n";
                 ++r;
             } else {
                 result += s + "\n";
@@ -272,10 +241,10 @@ public class BusquedaUtil {
                 result += sentences[i] + "\n";
                 ++r;
             } else if(s.equals(st)) {
-                result += Colores.GREEN_UNDERLINED + sentences[i] + Colores.ANSI_RESET + "\n";
+                result += format.SetColorSentence(sentences[i], Colores.GREEN_UNDERLINED) + "\n";
                 ++r;
             } else if(textUtils.CompareCharToChar(s, st) > 2) {
-                result += Colores.ANSI_YELLOW + sentences[i] + Colores.ANSI_RESET + "\n";
+                result += format.SetColorSentence(sentences[i], Colores.ANSI_YELLOW);
                 ++r;
             } else {
                 if(s.contains(",") && st.contains(",")) {
@@ -286,7 +255,7 @@ public class BusquedaUtil {
                         for(int sc=0; sc<sComas.length; ++sc) {
                             if(comas[c].replace(" ", "").replace(")", "").toLowerCase().equals(sComas[sc].replace(")", "")) 
                                     || textUtils.CompareCharToChar(comas[c], sComas[sc]) > 2) {
-                                comas[c] = Colores.ANSI_YELLOW + comas[c] + Colores.ANSI_RESET;
+                                comas[c] = format.SetColorSentence(comas[c], Colores.ANSI_YELLOW);
                             }
                         }
                         cB += comas[c] + ", ";
@@ -298,7 +267,7 @@ public class BusquedaUtil {
                     String cB = "";
                     if(comas.replace(" ", "").toLowerCase().equals(sComa.replace(" ", "").toLowerCase() + ")") 
                             || textUtils.CompareCharToChar(comas, sComa) > 2) {
-                        comas = Colores.ANSI_YELLOW + comas + Colores.ANSI_RESET;
+                        comas = format.SetColorSentence(comas, Colores.ANSI_YELLOW);
                     }
                     cB += comas + ", ";
                     sentences[i] = cB.substring(0, cB.length()-2);

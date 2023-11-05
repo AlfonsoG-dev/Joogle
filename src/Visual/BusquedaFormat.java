@@ -3,11 +3,13 @@ package Visual;
 /**
  * clase para dar formato al resultado de la busqueda
  */
-public final class BusquedaFormat {
+public record BusquedaFormat() {
     /**
-     * constructor
      */
-    public BusquedaFormat() { }
+    public String SetColorSentence(String sentence, String color) {
+        String res = String.format("%s", color  + sentence + Colores.ANSI_RESET);
+        return res;
+    }
     /**
      * da formato de muestra a la busqueda del contexto de un metodo
      */

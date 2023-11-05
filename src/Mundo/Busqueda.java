@@ -149,7 +149,7 @@ public class Busqueda {
         try {
             File miFile = new File(filePath);
             if(miFile.isFile() && miFile.getName().contains(".java")) {
-                System.out.println(String.format("\n%s\n", Colores.ANSI_CYAN + filePath + Colores.ANSI_RESET));
+                System.out.println(String.format("\n%s\n", format.SetColorSentence(filePath, Colores.ANSI_CYAN)));
                 String sentence = searchSentence.replace("/", "");
                 BuscarSentencia(filePath, sentence);
             }
