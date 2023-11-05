@@ -45,7 +45,7 @@ public record BusquedaFormat() {
      */
     public void formatoBusquedaFiles(String fileName) {
         String[] name = fileName.split("\\\\");
-        name[name.length-1] = Colores.ANSI_CYAN + name[name.length-1] + Colores.ANSI_RESET;
+        name[name.length-1] = Colores.RED_UNDERLINED + name[name.length-1] + Colores.ANSI_RESET;
         String build = "", cBuild = "";
         for(String n:name) {
             build += n +"\\";
