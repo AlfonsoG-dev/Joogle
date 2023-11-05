@@ -1,3 +1,4 @@
+package Mundo;
 import java.io.File;
 
 import Utils.BusquedaUtil;
@@ -10,10 +11,6 @@ import Visual.Colores;
  * EJM: String => (int, boolean)
  */
 public class Busqueda {
-    /**
-    * CLI options
-    */
-    private String[] options;
     /**
      * utiliades para crear la busqueda
      */
@@ -28,8 +25,7 @@ public class Busqueda {
     /**
     * constructor
     */
-    public Busqueda(String[] nOptions) {
-        options = nOptions;
+    public Busqueda() {
         utils = new BusquedaUtil();
         format = new BusquedaFormat();
         fileUtils = new FileUtils();

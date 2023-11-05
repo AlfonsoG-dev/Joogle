@@ -1,3 +1,4 @@
+import Mundo.Operations;
 /**
  * clase main de ejecución
  */
@@ -7,8 +8,8 @@ class App {
      * @param args: argumentos de la consola
      */
     public static void main(String[] args) {
-        Busqueda miBusqueda = new Busqueda(args);
-        miBusqueda.OrganizeSearchOptions();
+        Operations miOperation = new Operations(args);
+        miOperation.OrganizeSearchOptions();
     }
 }
 
