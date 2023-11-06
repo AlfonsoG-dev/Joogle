@@ -38,9 +38,7 @@ public class Busqueda {
         try {
             File miFile = new File(filePath);
             if(miFile.isFile()) {
-                if(utils.GetTodoSentences(miFile.getCanonicalPath()) == false) {
-                    System.err.println("\n\t NO TIENE TODO POR EL MOMENTO \n");
-                }
+                utils.GetTodoSentences(miFile.getPath());
             } else {
                 String[] fileNames = fileUtils.GetFilesFromDirectories(miFile.listFiles()).split("\n");
                 for(String fn: fileNames) {

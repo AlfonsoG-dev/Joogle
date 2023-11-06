@@ -64,17 +64,19 @@ public class BusquedaUtil {
      * @param filePath: archivo a leer
      * @return true si el archivo tiene sentencias todo, false de lo contrario
      */
-    public boolean GetTodoSentences(String filePath) {
+    public void GetTodoSentences(String filePath) {
         String[] fileLines = fileUtils.GetCleanTextFromFile(filePath).split("\n");
-        boolean exists = false;
-        for(String fl: fileLines) {
-            String valores = fl.trim().replace("*", "").replace("/", "").replace(" ", "").replace("}", "");
-            if(valores.toLowerCase().equals("TODO".toLowerCase())) {
-                System.out.println(format.SetColorSentence(filePath, Colores.ANSI_YELLOW) + ":" + fl.replace(":", ""));
-                exists = true;
+        boolean existe = false;
+        for(int i=0; i<fileLines.length; ++i) {
+            String valores = fileLines[i].trim();
+            if(valores.startsWith("// TODO:") || valores.startsWith("* TODO:")) {
+                System.out.println(format.SetColorSentence(filePath, Colores.ANSI_YELLOW) + ":" + i + fileLines[i]);
+                existe = true;
             }
         }
-        return exists;
+        if(existe == false) {
+            System.err.println("\n\t NO TIENE TODO POR EL MOMENTO \n");
+        }
     }
     /**
     * genera un String con los métodos del archivo
