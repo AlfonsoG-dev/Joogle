@@ -50,9 +50,11 @@ public class BusquedaUtil {
         }
         String respuesta = "";
         String[] fileText = fileUtils.GetCleanTextFromFile(filePath).split("\n");
-        if(end != -1) {
+        if(end != -1 &&
+                textUtils.DeleteComments(fileText, inicial, end).isEmpty() == false) {
             System.out.println(textUtils.DeleteComments(fileText, inicial, end));
-        } else {
+        } else if(end == -1 &&
+                textUtils.DeleteComments(fileText, inicial, fileText.length).isEmpty() == false) {
             System.out.println(textUtils.DeleteComments(fileText, inicial, fileText.length));
         }
         return respuesta;
