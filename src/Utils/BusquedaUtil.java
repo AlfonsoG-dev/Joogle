@@ -212,7 +212,7 @@ public class BusquedaUtil {
                 result += format.SetColorSentence(s, Colores.ANSI_YELLOW) + "\n";
                 ++r;
             } else if(s.toLowerCase().replace(" ", "").equals(st) ||
-                    textUtils.CompareCharToChar(s, st) > 10) {
+                    textUtils.CompareCharToChar(s, st) >= 3) {
                 result += format.SetColorSentence(s, Colores.GREEN_UNDERLINED) + "\n";
                 ++r;
             } else if(textUtils.CompareCharToChar(s, st) > 2) {

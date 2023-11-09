@@ -81,24 +81,20 @@ public class TextUtils {
      * @return el número de coincidencias entre las letras
      */
     public int CompareCharToChar(String first, String second) {
+        String n1 = first.toLowerCase();
+        String n2 = second.toLowerCase();
         int r = 0;
-        String f = first.replace(" ", "").toLowerCase();
-        String s = second.replace(" ", "").toLowerCase();
         try {
-            for(int i=0; i<s.length(); ++i) {
-                for(int j=s.length()-1; j>0; --j) {
-                    if(f.charAt(i) == s.charAt(i) || f.charAt(j) == s.charAt(j)) {
-                        ++r;
-                    }
-                    if(s.charAt(i) == f.charAt(i) || s.charAt(j) == f.charAt(j)) {
+            for(char fn: n1.toCharArray()) {
+                for(char sn: n2.toCharArray()) {
+                    if(fn == sn) {
                         ++r;
                     }
                 }
             }
         } catch(Exception e) {
-            //
+            System.err.println(e.getLocalizedMessage());
         }
-        int resultado = r/s.length();
-        return resultado;
+        return r;
     }
 }
