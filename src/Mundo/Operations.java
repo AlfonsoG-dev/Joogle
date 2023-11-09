@@ -1,10 +1,8 @@
 package Mundo;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
-import Visual.Colores;
+import Interfaz.Options;
 import Utils.OperationUtils;
+import Visual.Colores;
 
 /**
  * clase para organizar las operaciones según las opciones dadas por el usuario
@@ -68,75 +66,6 @@ public final class Operations {
             }
         } catch(Exception e) {
             System.err.println(Colores.RED_UNDERLINED + e.toString().toUpperCase() + Colores.ANSI_RESET);
-        }
-    }
-    /**
-     * panel de opciones cuando no se da una por CLI
-     */
-    public void OrganizeInputptions() {
-        try {
-            BufferedReader mio = new BufferedReader(new InputStreamReader(System.in));
-            System.out.print(Colores.GREEN_UNDERLINED + "!press enter¡" + Colores.ANSI_RESET);
-            while(mio.readLine().equals("-q") == false) {
-                Busqueda mia = new Busqueda();
-                System.out.print("[operation]: ");
-                switch(mio.readLine()) {
-                    case "-f":
-                        System.out.print("[file]: ");
-                        String f = mio.readLine();
-                        System.out.print("[sentence]: ");
-                        String s = mio.readLine();
-                        mia.SearchInFile(f, s);
-                        break;
-                    case "-d":
-                        System.out.print("[directory]: ");
-                        String dir = mio.readLine();
-                        System.out.print("[sentence]: ");
-                        String ds = mio.readLine();
-                        mia.SearcInDirectory(dir, ds);
-                        break;
-                    case "-D":
-                        System.out.print("[directory]: ");
-                        String dirD = mio.readLine();
-                        System.out.print("[sentence]: ");
-                        String dsD = mio.readLine();
-                        mia.SearcInDirectory(dirD, dsD);
-                        break;
-                    case "-lf":
-                        System.out.print("[directory]: ");
-                        String fd = mio.readLine();
-                        mia.BuscarFiles(fd);
-                        break;
-                    case "-lt":
-                        System.out.print("[directory]: ");
-                        String d = mio.readLine();
-                        mia.BuscarTODO(d);
-                        break;
-                    case "-lm":
-                        System.out.print("[file]: ");
-                        String fl = mio.readLine();
-                        System.out.print("[sentece]: ");
-                        String sl = mio.readLine();
-                        mia.BuscarMethods(fl, sl);
-                        break;
-                    case "--h":
-                        System.out.println("Opciones para joogle");
-                        System.out.println("-f para buscar dentro de un archivo:" + 
-                                "\t seguido de /\"\"/ para buscar una sentencia");
-                        System.out.println("-d para buscar dentro de un directorio:" + 
-                                "\t seguido de /\"\"/ para buscar una sentencia");
-                        System.out.println("-D para buscar dentro de todos los directorios:" + 
-                                "\t seguido de /\"\"/ para buscar una sentencia");
-                        System.out.println("-lf para listar todos los archivos .java:\t seguido del directorio");
-                        System.out.println("-lm para listar todos los métodos del proyecto:\t seguido del directorio");
-                        System.out.println("\t si seleccionas un archivo y adicionas el nombre" + 
-                                " del metodo se retorna el bloque de codigo de ese metodo");
-                        System.out.println("-lt para listar todos los TODO del proyecto:\t seguido del directorio");
-                        break;
-                }
-                System.out.println(Colores.GREEN_UNDERLINED + "use -q to quit or --h for help" + Colores.ANSI_RESET);
-            }
-        } catch(Exception e) {
         }
     }
 }

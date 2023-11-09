@@ -1,4 +1,5 @@
 import Mundo.Operations;
+import Interfaz.Options;
 /**
  * clase main de ejecución
  */
@@ -9,8 +10,9 @@ class Joogle {
      */
     public static void main(String[] args) {
         Operations operation = new Operations(args);
+        Options mOptions = new Options();
         if(args.length == 0) {
-            operation.OrganizeInputptions();
+            mOptions.OrganizeInputptions();
         } else {
             operation.OrganizeCLIOptions();
         }
