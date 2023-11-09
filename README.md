@@ -23,6 +23,7 @@
 - [x] list all the files with the `.java` extensión
 - [x] list all the méthods in the given directory
 - [x] list all the TODO in the current proyect
+- [x] input type panel if you not give CLI option
 
 ## Usage
 
