@@ -32,7 +32,8 @@ public record BusquedaFormat() {
     public void formatoBusquedaSentencia(int lineNumber, String filePath, String methodName, String type, String argument) {
         String build = "";
         if(lineNumber != -1) {
-            build = "| " + Colores.RED_UNDERLINED +  filePath + Colores.ANSI_RESET + ":" + Colores.YELLOW_UNDERLINED + lineNumber + Colores.ANSI_RESET + " | " + methodName +
+            build = "| " + Colores.RED_UNDERLINED +  filePath + Colores.ANSI_RESET + ":" + Colores.YELLOW_UNDERLINED +
+                lineNumber + Colores.ANSI_RESET + " | " + methodName +
                 " :: " + type + " => " + argument + "\n";
         } else {
             build = "| " + "unknow" + " | " + methodName + " :: " + type + " => " + argument + "\n";
