@@ -16,7 +16,7 @@ public record FileUtils() {
     */
     public ArrayList<String> TokenList() {
         String[] tokens = new String[] {
-            "public", "private", "protected", "final", "abstract", "static", "record", "class", "interface"
+            "public", "private", "protected", "final", "abstract", "static", "record", "class", "interface", "enum"
         };
         ArrayList<String> lista = new ArrayList<String>();
         for(String t: tokens) {
