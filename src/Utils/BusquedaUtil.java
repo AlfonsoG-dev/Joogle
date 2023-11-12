@@ -87,10 +87,12 @@ public class BusquedaUtil {
         String build = "";
         String[] partition = textUtils.GetSentences(filePath).split("\n");
         for(String p: partition) {
-            String[] datos = p.split("\\(");
-            for(int i=0; i<datos.length-1; ++i) {
-                String[] separate = datos[i].split(" ");
-                build += separate[separate.length-1].trim() +"\n";
+            if(p.contains(";") == false) {
+                String[] datos = p.split("\\(");
+                for(int i=0; i<datos.length-1; ++i) {
+                    String[] separate = datos[i].split(" ");
+                    build += separate[separate.length-1].trim() +"\n";
+                }
             }
         }
         return build;
@@ -104,16 +106,18 @@ public class BusquedaUtil {
         String[] sentences = textUtils.GetSentences(filePath).split("\n");
         String tipes = "";
         for(String s: sentences) {
-            String[] methods = s.split("\\(");
-            String[] spaces = methods[0].split(" ");
-            for(int i=0; i<spaces.length; ++i) {
-                if(spaces.length == 2) {
-                    spaces[0] = spaces[1];
-                } else if(fileUtils.TokenList().contains(spaces[0])) {
-                    spaces[0] = spaces[i];
+            if(s.contains(";") == false) {
+                String[] methods = s.split("\\(");
+                String[] spaces = methods[0].split(" ");
+                for(int i=0; i<spaces.length; ++i) {
+                    if(spaces.length == 2) {
+                        spaces[0] = spaces[1];
+                    } else if(fileUtils.TokenList().contains(spaces[0])) {
+                        spaces[0] = spaces[i];
+                    }
                 }
+                tipes += spaces[0] + "\n";
             }
-            tipes += spaces[0] + "\n";
         }
         return tipes;
     }
@@ -126,8 +130,10 @@ public class BusquedaUtil {
         String[] sentences = textUtils.GetSentences(filePath).split("\n");
         String nombres = "", tipos = "";
         for(String s: sentences) {
-            String[] separate = s.split("\\(");
-            tipos += "(" +  separate[1].trim() + "\n";
+            if(s.contains(";") == false) {
+                String[] separate = s.split("\\(");
+                tipos += "(" +  separate[1].trim() + "\n";
+            }
         }
         String[] argumentos = tipos.split("\n");
         for(String a: argumentos) {
