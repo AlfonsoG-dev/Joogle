@@ -1,6 +1,5 @@
 package Mundo;
 
-import Interfaz.Options;
 import Utils.OperationUtils;
 import Visual.Colores;
 
