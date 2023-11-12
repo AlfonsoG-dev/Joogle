@@ -33,7 +33,7 @@ public record FileUtils() {
         String fileNames = "";
         for(File f: files) {
             if(f.isFile() && f.getName().contains(".java")) {
-                fileNames += f.getCanonicalPath() + "\n";
+                fileNames += f.getPath() + "\n";
             }
         }
         return fileNames;
@@ -49,7 +49,7 @@ public record FileUtils() {
         String fileName = "";
         for(File f: miFiles) {
             if(f.isFile() && f.getName().contains(".java")) {
-                fileName += f.getCanonicalPath() + "\n";
+                fileName += f.getPath() + "\n";
             }
             if(f.isDirectory()) {
                 fileName += this.GetFilesFromDirectories(f.listFiles()) + "\n";
