@@ -83,7 +83,7 @@ public class Busqueda {
             } else if(miFile.isFile() && cSentence.equals("")) {
                 String[] metodos = utils.GetMethodName(filePath).split("\n");
                 for(String m: metodos) {
-                    int lineNumber = utils.GetLineNumber(miFile.getCanonicalPath(), m + "::");
+                    int lineNumber = utils.GetLineNumber(miFile.getCanonicalPath(), m);
                     format.formatoBusquedaMethod(miFile.getCanonicalPath(), m, lineNumber);
                 }
             }

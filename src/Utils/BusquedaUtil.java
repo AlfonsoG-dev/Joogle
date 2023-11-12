@@ -110,6 +110,9 @@ public class BusquedaUtil {
                 String[] methods = s.split("\\(");
                 String[] spaces = methods[0].split(" ");
                 for(int i=0; i<spaces.length; ++i) {
+                    if(spaces[1].contains(",")) {
+                        spaces[0] = spaces[1].concat(" " + spaces[2]);
+                    }
                     if(spaces.length == 2) {
                         spaces[0] = spaces[1];
                     } else if(fileUtils.TokenList().contains(spaces[0])) {
@@ -172,12 +175,14 @@ public class BusquedaUtil {
         String[] partition = textUtils.GetSentences(filePath).split("\n");
 
         for(String p: partition) {
-            String r = sentencia.trim().replace("::", "");
-            if (p.toLowerCase().contains(r.toLowerCase().trim())) {
-                build = p;
+            String r = sentencia.trim().toLowerCase();
+            String[] methods = p.replace("}", "").split("\\(");
+            String[] spaces = methods[0].split(" ");
+            String name = spaces[spaces.length-1].toLowerCase();
+            if (name.contains(r)) {
+                build = p.replace("}", "");
             }
         }
-
         return build;
     }
     /**
@@ -191,7 +196,7 @@ public class BusquedaUtil {
         int res = 0;
         for(String fl: separate) {
             String[] numeros_fl = fl.replace("}", "").split(":");
-            if(numeros_fl.length == 2) {
+            for(int i=1; i<numeros_fl.length; ++i) {
                 String valores = numeros_fl[1].trim();
                 if(LocalizarMetodo(filePath, sentence).equals(valores)) {
                     res = Integer.parseInt(numeros_fl[0]);
