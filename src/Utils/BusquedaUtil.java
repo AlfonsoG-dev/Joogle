@@ -101,23 +101,21 @@ public class BusquedaUtil {
     * @return String con el tipo de retorno del método
     */
     public String GetReturnType(String filePath) {
-        String build = "";
-        String[] partition = textUtils.GetSentences(filePath).split("\n");
-        for(String p: partition) {
-            String rem = p.trim();
-            String datos = rem.split("\\(")[0];
-            if(datos.contains(";") == false) {
-                String[] separate = datos.split(" ");
-                if(fileUtils.TokenList().contains(separate[1])) {
-                    separate[1] = separate[2];
+        String[] sentences = textUtils.GetSentences(filePath).split("\n");
+        String tipes = "";
+        for(String s: sentences) {
+            String[] methods = s.split("\\(");
+            String[] spaces = methods[0].split(" ");
+            for(int i=0; i<spaces.length; ++i) {
+                if(spaces.length == 2) {
+                    spaces[0] = spaces[1];
+                } else if(fileUtils.TokenList().contains(spaces[0])) {
+                    spaces[0] = spaces[i];
                 }
-                if(separate[1].contains(",")) {
-                    separate[1] = separate[1].concat(" " + separate[2]);
-                }
-                build += separate[1] + "\n";
             }
+            tipes += spaces[0] + "\n";
         }
-        return build;
+        return tipes;
     }
     /**
     * genera un String con los argumentos que recibe el método
