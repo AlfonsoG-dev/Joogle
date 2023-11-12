@@ -220,7 +220,7 @@ public class BusquedaUtil {
                 result += format.SetColorSentence(s, Colores.GREEN_UNDERLINED) + "\n";
                 ++r;
             } else if(textUtils.CompareCharToChar(s, st) > st.length()) {
-                result += format.SetColorSentence(sentence, Colores.ANSI_YELLOW) + "\n";
+                result += format.SetColorSentence(s, Colores.ANSI_YELLOW) + "\n";
                 ++r;
             } else {
                 result += s + "\n";
