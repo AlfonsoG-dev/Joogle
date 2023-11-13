@@ -63,6 +63,9 @@ public class TextUtils {
      */
     public String DeleteComments(String[] fileText, int inicial, int end) {
         String res = "";
+        if(end == 0) {
+            res += fileText[inicial-1] + "\n";
+        }
         for(int i=inicial-1; i<end-1; ++i) {
             if(fileText[i].trim().startsWith("/*") || fileText[i].trim().startsWith("/**") ||
                     fileText[i].trim().startsWith("*") || fileText[i].trim().startsWith("//")) {
