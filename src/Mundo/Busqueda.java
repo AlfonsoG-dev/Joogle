@@ -49,7 +49,7 @@ public class Busqueda {
             }
 
         } catch(Exception e) {
-            System.err.println(e);
+            System.err.println(e.getLocalizedMessage());
         }
     }
     /**
@@ -66,7 +66,7 @@ public class Busqueda {
                 }
             }
         } catch(Exception e) {
-            System.err.println(e);
+            System.err.println(e.getLocalizedMessage());
         }
     }
     /**
@@ -133,8 +133,8 @@ public class Busqueda {
             } else {
                 System.out.println("el archivo no existe");
             }
-        } catch (Exception var11) {
-            //System.err.println(var11);
+        } catch (Exception e) {
+            System.err.println(e.getLocalizedMessage());
         }
 
     }
@@ -152,7 +152,7 @@ public class Busqueda {
                 BuscarSentencia(filePath, sentence);
             }
         } catch(Exception e) {
-            System.out.println(e);
+            System.out.println(e.getLocalizedMessage());
         }
     }
     /**
@@ -168,7 +168,7 @@ public class Busqueda {
                 SearchInFile(fn, searchSentence);
             }
         } catch(Exception e) {
-            System.err.println(e);
+            System.err.println(e.getLocalizedMessage());
         }
     }
     /**
@@ -189,7 +189,7 @@ public class Busqueda {
             }
 
         } catch(Exception e) {
-            System.err.println(e);
+            System.err.println(e.getLocalizedMessage());
         }
     }
 }

@@ -132,7 +132,7 @@ public class BusquedaUtil {
         for(MethodModel mt: partition) {
             String r = sentencia.trim().toLowerCase();
             if(mt.GetMethodName().toLowerCase().contains(r)) {
-                build = mt.getMethod();
+                build = mt.getSentences();
             }
         }
         return build;

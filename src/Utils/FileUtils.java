@@ -74,8 +74,8 @@ public record FileUtils() {
                 build += i + ":" + miBufferReader.readLine() + "\n";
                 ++i;
             }
-        } catch (Exception var48) {
-            System.err.println(var48);
+        } catch (Exception e) {
+            System.err.println(e);
         } finally {
             if(miReader != null) {
                 try {
@@ -111,8 +111,8 @@ public record FileUtils() {
             while(miBufferReader.ready()) {
                 build += miBufferReader.readLine() + "\n";
             }
-        } catch (Exception var48) {
-            System.err.println(var48);
+        } catch (Exception e) {
+            System.err.println(e);
         } finally {
             if(miReader != null) {
                 try {

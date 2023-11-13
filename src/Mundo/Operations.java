@@ -64,7 +64,7 @@ public final class Operations {
                 }
             }
         } catch(Exception e) {
-            System.err.println(Colores.RED_UNDERLINED + e.toString().toUpperCase() + Colores.ANSI_RESET);
+            System.err.println(Colores.RED_UNDERLINED + e.getLocalizedMessage() + Colores.ANSI_RESET);
         }
     }
 }

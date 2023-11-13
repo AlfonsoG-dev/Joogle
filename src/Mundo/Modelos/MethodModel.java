@@ -7,18 +7,18 @@ import Utils.FileUtils;
 public final class MethodModel {
 
     private final static  FileUtils fileUtils =  new FileUtils();
-    private String metodo;
+    private String sentence;
     private int lineNumber;
     public MethodModel(String nMetodo, int nLineNumber) {
-        metodo = nMetodo;
+        sentence = nMetodo;
         lineNumber = nLineNumber;
     }
 
     /**
      * metodos
      */
-    public String getMethod() {
-        return metodo;
+    public String getSentences() {
+        return sentence;
     }
     /**
      * numero de linea 
@@ -31,7 +31,7 @@ public final class MethodModel {
      */
     public String GetMethodName() {
         String build = "";
-        String[] partition = metodo.split("\n");
+        String[] partition = sentence.split("\n");
         for(String p: partition) {
             String[] datos = p.split("\\(");
             for(int i=0; i<datos.length-1; ++i) {
