@@ -6,7 +6,7 @@ import Utils.FileUtils;
  */
 public final class MethodModel {
 
-    private final static  FileUtils fileUtils =  new FileUtils();
+    private final static FileUtils fileUtils = new FileUtils();
     private String sentence;
     private int lineNumber;
     public MethodModel(String nMetodo, int nLineNumber) {
@@ -103,7 +103,14 @@ public final class MethodModel {
         String nombres = "", tipos = "";
         for(String s: sentences) {
             String[] separate = s.split("\\(");
-            tipos += "(" +  separate[1].trim() + "\n";
+            String[] partition = separate[1].split("\\)");
+            String args = "";
+            if(partition.length == 0) {
+                args  = ")";
+            } else {
+                args = partition[0] + ")";
+            }
+            tipos += "(" +  args.trim() + "\n";
         }
         String[] argumentos = tipos.split("\n");
         for(String a: argumentos) {
