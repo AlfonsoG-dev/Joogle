@@ -71,8 +71,9 @@ public class BusquedaUtil {
         String[] fileLines = fileUtils.GetCleanTextFromFile(filePath).split("\n");
         boolean existe = false;
         for(int i=0; i<fileLines.length; ++i) {
-            String valores = fileLines[i].trim();
-            if(valores.trim().startsWith("//TODO:") || valores.trim().startsWith("*TODO:")) {
+            String valores = fileLines[i].replace(" ", "");
+            if(valores.contains("//TODO:") || valores.contains("*TODO:") ||
+                    valores.contains("TODO")) {
                 System.out.println(format.SetColorSentence(filePath, Colores.ANSI_YELLOW) + ":" + i + fileLines[i]);
                 existe = true;
             }
