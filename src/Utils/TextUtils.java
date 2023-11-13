@@ -1,5 +1,9 @@
 package Utils;
 
+import java.util.ArrayList;
+
+import Mundo.Modelos.MethodModel;
+
 /**
  * clase para manipular texto
  */
@@ -38,8 +42,9 @@ public class TextUtils {
      * @param filePath: ruta del archivo a leer
      * @return String con las lineas y su numero de linea
      */
-    public String GetSentecesWithLineNumber(String filePath) {
+    public ArrayList<MethodModel> listMethods(String filePath) {
         String[] fileLines = fileUtils.GetTextFromFile(filePath).split("\n");
+        ArrayList<MethodModel> methods = new ArrayList<>();
         String lines = "";
         for(String fl: fileLines) {
             String[] numeros_fl = fl.replace("}", "").split(":");
@@ -47,12 +52,13 @@ public class TextUtils {
                 String valores = numeros_fl[1].trim();
                 for(String t: fileUtils.TokenList()) {
                     if(valores.startsWith(t) && valores.contains(")") || valores.endsWith("\n")) {
-                        lines += numeros_fl[0] + ":" + valores.replace("{", "").trim() + "\n";
+                        lines = valores.replace("{", "").trim();
+                        methods.add(new MethodModel(lines, Integer.parseInt(numeros_fl[0])));
                     }
                 }
             }
         }
-        return lines;
+        return methods;
     }
     /**
      * elimina los comentarios del texto

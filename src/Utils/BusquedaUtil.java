@@ -1,5 +1,8 @@
 package Utils;
 
+import java.util.ArrayList;
+
+import Mundo.Modelos.MethodModel;
 import Visual.BusquedaFormat;
 import Visual.Colores;
 
@@ -34,14 +37,14 @@ public class BusquedaUtil {
      */
     public String GetMethodContext(String filePath, String sentencia) {
         String[] fileLines = textUtils.GetSentences(filePath).split("\n");
-        String buscada = GetLineNumber(filePath, sentencia) + ":" + LocalizarMetodo(filePath, sentencia);
+        int inicial = GetLineNumber(filePath, sentencia);
+        String buscada = inicial + ":" + LocalizarMetodo(filePath, sentencia);
         String conNumLinea = "";
-        int inicial = Integer.parseInt(buscada.split(":")[0]);
         int end = 0;
         for(int i=0; i<fileLines.length; ++i) {
-            conNumLinea = GetLineNumber(filePath, fileLines[i]) + ":" + fileLines[i];
+            conNumLinea = GetLineNumber(filePath, MethodModel.getNameOfMethods(fileLines[i])) + ":" + fileLines[i];
             if(conNumLinea.equals(buscada) && (i+1) < fileLines.length) {
-                end = GetLineNumber(filePath, fileLines[i+1]);
+                end = GetLineNumber(filePath, MethodModel.getNameOfMethods(fileLines[i+1]));
                 format.formatoPresentFilename(filePath, inicial);
             } else if(conNumLinea.equals(buscada) && (i+1) >= fileLines.length) {
                 format.formatoPresentFilename(filePath, inicial);
@@ -87,11 +90,7 @@ public class BusquedaUtil {
         String build = "";
         String[] partition = textUtils.GetSentences(filePath).split("\n");
         for(String p: partition) {
-            String[] datos = p.split("\\(");
-            for(int i=0; i<datos.length-1; ++i) {
-                String[] separate = datos[i].split(" ");
-                build += separate[separate.length-1].trim() +"\n";
-            }
+            build += MethodModel.getNameOfMethods(p);
         }
         return build;
     }
@@ -100,23 +99,11 @@ public class BusquedaUtil {
     * @param filePath: ruta del archivo a leer
     * @return String con el tipo de retorno del método
     */
-    public String GetReturnType(String filePath) {
+    private String GetReturnType(String filePath) {
         String[] sentences = textUtils.GetSentences(filePath).split("\n");
         String tipes = "";
         for(String s: sentences) {
-            String[] methods = s.split("\\(");
-            String[] spaces = methods[0].split(" ");
-            for(int i=0; i<spaces.length; ++i) {
-                if(spaces[1].contains(",")) {
-                    spaces[0] = spaces[1].concat(" " + spaces[2]);
-                }
-                if(spaces.length == 2) {
-                    spaces[0] = spaces[1];
-                } else if(fileUtils.TokenList().contains(spaces[0])) {
-                    spaces[0] = spaces[i];
-                }
-            }
-            tipes += spaces[0] + "\n";
+            tipes += MethodModel.getReturnType(s);
         }
         return tipes;
     }
@@ -125,38 +112,13 @@ public class BusquedaUtil {
     * @param filePath: ruta del archivo a leer
     * @return String con los argumentos del método
     */
-    public String GetArguments(String filePath) {
+    private String GetArguments(String filePath) {
         String[] sentences = textUtils.GetSentences(filePath).split("\n");
-        String nombres = "", tipos = "";
+        String arguments = "";
         for(String s: sentences) {
-            String[] separate = s.split("\\(");
-            tipos += "(" +  separate[1].trim() + "\n";
+            arguments += MethodModel.getArguments(s);
         }
-        String[] argumentos = tipos.split("\n");
-        for(String a: argumentos) {
-            if(a.contains(",")) {
-                String[] ars = a.split(",");
-                String args = "(";
-                for(String at: ars) {
-                    String tipe = at.replace("(", "").replace(")", "").trim();
-                    String[] separate = tipe.split(" ");
-                    args += separate[0] + ", ";
-                }
-                String clean_args = args.substring(0, args.length()-2) + ")";
-                nombres += clean_args + "\n";
-            } else {
-                String[] separate = a.split(" ");
-                String args = "";
-                if(separate.length > 1) {
-                    args += separate[0] + ")";
-                } else {
-                    args += separate[0];
-                }
-                nombres += args + "\n";
-            }
-        }
-        String fNombres = nombres.replace("(", "( ").replace(")", " )");
-        return fNombres;
+        return arguments;
     }
     /**
     * genera un string con la sentencia completa según el método buscado
@@ -166,15 +128,11 @@ public class BusquedaUtil {
     */
     public String LocalizarMetodo(String filePath, String sentencia) {
         String build = "";
-        String[] partition = textUtils.GetSentences(filePath).split("\n");
-
-        for(String p: partition) {
+        ArrayList<MethodModel> partition = textUtils.listMethods(filePath);
+        for(MethodModel mt: partition) {
             String r = sentencia.trim().toLowerCase();
-            String[] methods = p.replace("}", "").split("\\(");
-            String[] spaces = methods[0].split(" ");
-            String name = spaces[spaces.length-1].toLowerCase();
-            if (name.contains(r)) {
-                build = p.replace("}", "");
+            if(mt.GetMethodName().toLowerCase().contains(r)) {
+                build = mt.getMethod();
             }
         }
         return build;
@@ -186,15 +144,11 @@ public class BusquedaUtil {
     * @return número de linea del método buscado
     */
     public int GetLineNumber(String filePath, String sentence) {
-        String[] separate = textUtils.GetSentecesWithLineNumber(filePath).split("\n");
+        ArrayList<MethodModel> separate = textUtils.listMethods(filePath);
         int res = 0;
-        for(String fl: separate) {
-            String[] numeros_fl = fl.replace("}", "").split(":");
-            for(int i=1; i<numeros_fl.length; ++i) {
-                String valores = numeros_fl[1].trim();
-                if(LocalizarMetodo(filePath, sentence).equals(valores)) {
-                    res = Integer.parseInt(numeros_fl[0]);
-                }
+        for(MethodModel mt: separate) {
+            if(mt.GetMethodName().toLowerCase().contains(sentence.toLowerCase())) {
+                res = mt.getLineNumber();
             }
         }
         return res;
