@@ -33,26 +33,39 @@
 ```shell
 java -jar joogle.jar -f App.java "void => ()"
 ```
+
+## Search definitions
+
+### Search in file
 >>- `java -jar joogle.jar`: this execute the `.jar` file
 >>- `-f App.java`: this indicates the file to search the sentence
 >>- `"void => ()"`: this indicates the sentence to search within the file
 
+### Search in directory
 >- search the sentence in the given directory
 >>- `-d .\src\`: this indicates to search the sentence inside of all the `.java` files in the given directory
 >>>- if the directory contains more directories they are not taken into account
+
+### Search in directories
 
 >- search the sentence in all of the directories of the given directory
 >>- `-D .\src\`: this indicates to search the sentence inside of all the `.java` files in all the routes of the given directory 
 >>>- summary if the directory contains more directories they are taken into account
 
+### Search for files
+
 >- search for the proyect files
 >>- `-lf .\src\`: this will list all of the files inside the proyect
+
+### Search for method and its context
 
 >- search for the method of the given directory
 >>- `-lm .\src\`: this will list all of the methods inside the directory
 
 >- search for the method context
 >>- `-lm .\src\ "methodName"`: this acts like the `cat` commnad but for methods
+
+### Search for TODO's
 
 >- search for the TODO's sentences:
 >>- `-lt .\src\`: this will list all the TODO's in the directory or file
