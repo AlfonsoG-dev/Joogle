@@ -31,75 +31,6 @@ public class Busqueda {
         fileUtils = new FileUtils();
     }
     /**
-     * buscar "todos" en el proyecto
-     * @param filePath: archivo a leer las sentencias todo
-     */
-    public void BuscarTODO(String filePath) {
-        try {
-            File miFile = new File(filePath);
-            if(miFile.isFile()) {
-                utils.GetTodoSentences(miFile.getPath());
-            } else {
-                String[] fileNames = fileUtils.GetFilesFromDirectories(miFile.listFiles()).split("\n");
-                for(String fn: fileNames) {
-                    if(fn.isEmpty() == false) {
-                        BuscarTODO(fn);
-                    }
-                }
-            }
-
-        } catch(Exception e) {
-            System.err.println(e.getLocalizedMessage());
-        }
-    }
-    /**
-     * buscar la ruta de los archivos dentro del proyecto
-     * @param filePath: ruta de los archivos a leer
-     */
-    public void BuscarFiles(String filePath) {
-        try {
-            File miFile = new File(filePath);
-            String[] fileNames = fileUtils.GetFilesFromDirectories(miFile.listFiles()).split("\n");
-            for(String fn: fileNames) {
-                if(fn.isEmpty() == false) {
-                    format.formatoBusquedaFiles(fn);
-                }
-            }
-        } catch(Exception e) {
-            System.err.println(e.getLocalizedMessage());
-        }
-    }
-    /**
-     * busca los métodos de la ruta especifica
-     * @param filePath: ruta a leer
-     * @param sentence: sentencia a buscar
-     */
-    public void BuscarMethods(String filePath, String sentence) {
-        try {
-            String cSentence = sentence.replace("/", "");
-            File miFile = new File(filePath);
-            if(miFile.isFile() && cSentence.equals("") == false) {
-                utils.GetMethodContext(miFile.getCanonicalPath(), cSentence);
-            } else if(miFile.isFile() && cSentence.equals("")) {
-                String[] metodos = utils.GetMethodName(filePath).split("\n");
-                for(String m: metodos) {
-                    int lineNumber = utils.GetLineNumber(miFile.getCanonicalPath(), m);
-                    format.formatoBusquedaMethod(miFile.getCanonicalPath(), m, lineNumber);
-                }
-            }
-            else if(miFile.isDirectory()) {
-                String[] filesName = fileUtils.GetFilesFromDirectories(miFile.listFiles()).split("\n");
-                for(String fn: filesName) {
-                    if(fn.isEmpty() == false ) {
-                        this.BuscarMethods(fn, cSentence);
-                    }
-                }
-            }
-        } catch(Exception e) {
-            //
-        }
-    }
-    /**
     * busca la sentencia según el tipo de retorno y los argumentos
     * @param filePath: ruta del archivo a leer
     * @param sentencia: sentencia a buscar
@@ -190,6 +121,75 @@ public class Busqueda {
 
         } catch(Exception e) {
             System.err.println(e.getLocalizedMessage());
+        }
+    }
+    /**
+     * buscar "todos" en el proyecto
+     * @param filePath: archivo a leer las sentencias todo
+     */
+    public void BuscarTODO(String filePath) {
+        try {
+            File miFile = new File(filePath);
+            if(miFile.isFile()) {
+                utils.GetTodoSentences(miFile.getPath());
+            } else {
+                String[] fileNames = fileUtils.GetFilesFromDirectories(miFile.listFiles()).split("\n");
+                for(String fn: fileNames) {
+                    if(fn.isEmpty() == false) {
+                        BuscarTODO(fn);
+                    }
+                }
+            }
+
+        } catch(Exception e) {
+            System.err.println(e.getLocalizedMessage());
+        }
+    }
+    /**
+     * buscar la ruta de los archivos dentro del proyecto
+     * @param filePath: ruta de los archivos a leer
+     */
+    public void BuscarFiles(String filePath) {
+        try {
+            File miFile = new File(filePath);
+            String[] fileNames = fileUtils.GetFilesFromDirectories(miFile.listFiles()).split("\n");
+            for(String fn: fileNames) {
+                if(fn.isEmpty() == false) {
+                    format.formatoBusquedaFiles(fn);
+                }
+            }
+        } catch(Exception e) {
+            System.err.println(e.getLocalizedMessage());
+        }
+    }
+    /**
+     * busca los métodos de la ruta especifica
+     * @param filePath: ruta a leer
+     * @param sentence: sentencia a buscar
+     */
+    public void BuscarMethods(String filePath, String sentence) {
+        try {
+            String cSentence = sentence.replace("/", "");
+            File miFile = new File(filePath);
+            if(miFile.isFile() && cSentence.equals("") == false) {
+                utils.GetMethodContext(miFile.getCanonicalPath(), cSentence);
+            } else if(miFile.isFile() && cSentence.equals("")) {
+                String[] metodos = utils.GetMethodName(filePath).split("\n");
+                for(String m: metodos) {
+                    int lineNumber = utils.GetLineNumber(miFile.getCanonicalPath(), m);
+                    format.formatoBusquedaMethod(miFile.getCanonicalPath(), m, lineNumber);
+                }
+            }
+            else if(miFile.isDirectory()) {
+                String[] filesName = fileUtils.GetFilesFromDirectories(miFile.listFiles()).split("\n");
+                for(String fn: filesName) {
+                    if(fn.isEmpty() == false ) {
+                        this.BuscarMethods(fn, cSentence);
+                    }
+                }
+            }
+        } catch(Exception e) {
+            //
         }
     }
 }
