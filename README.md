@@ -33,13 +33,18 @@
 ```shell
 java -jar joogle.jar -search operation App.java "search sentence"
 ```
+>- only the equal return type and arguments get the color green the most equal will be yellow
 
 ## Search definitions
 
 ### Search in file
 >>- `java -jar joogle.jar`: this execute the `.jar` file
 >>- `-f App.java`: this indicates the file to search the sentence
->>- `"void => ()"`: this indicates the sentence to search within the file
+>>- `"return type => (arguments)"`: this indicates the sentence to search within the file
+>>>- *EJM*:
+```console
+java -jar joogle.jar -f Utils.java "int => (String, boolean, File[])"
+```
 
 ### Search in directory
 >- search the sentence in the given directory
