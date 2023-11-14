@@ -1,10 +1,11 @@
 # Joogle
 >- CLI exploration app like [Coogle](https://www.youtube.com/watch?v=wK1HjnwDQng&t=1s) by Tsoding
->- Developed with Java
+>- Parses the java file to find the methods anl instance declarations
 
 ![expected output](./docs/expected_output.png)
 -------
 ![expected output_lm](./docs/expected_output_lm.png)
+------
 
 ## Dependencies 
 >- [Java 17](https://www.oracle.com/es/java/technologies/downloads/#jdk17-windows)
@@ -25,74 +26,44 @@
 - [x] list all the TODO in the current proyect
 - [x] input type panel if you not give CLI option
 
+-----
+
 ## Usage
-
->- if you use the `.jar` file to execute.
->>- to search within a java file you specify the file
-```shell
-java -jar joogle.jar -f App.java /""/
-```
->- to list all the files wiht the `.java` extensión
-```shell
-java -jar joogle.jar -lf .\src\
-```
->- to list all the méthods within the given directory
-```shell
-java -jar joogle.jar -lm .\src\
-```
->>- if you want to know the content of the method you need to especify the name of the directory and the method
->>>- this will output the code block of that method
-```shell
-java -jar joogle.jar -lm .\src\ /"main"/
-```
-
->- to list all the TODO's in the current proyect
-```shell
-java -jar joogle.jar -lt .\src\
-```
->>- to search within a directory you specify the directory
->>>- the search only includes the `.java` files within that directory
-```shell
-java -jar joogle.jar -d .\src\ /""/
-```
->>- to search within directories
->>>- the search includes all the files in the given directory
->>>- if the directory includes more directories the search would go furder till reach the `.java` files
-```shell
-java -jar joogle.jar -D .\src\ /""/
-```
->- if you need to execute the program without the `.jar` file
-```shell
-java -cp .\bin\ .\src\App.java -d .\src\ /""/
-```
-## Usage Explanation
 >- search the sentence within a file
 ```shell
-java -jar joogle.jar -f App.java /"void => ()"/
+java -jar joogle.jar -f App.java "void => ()"
 ```
 >>- `java -jar joogle.jar`: this execute the `.jar` file
 >>- `-f App.java`: this indicates the file to search the sentence
->>- `/"void => ()"/`: this indicates the sentence to search within the file
+>>- `"void => ()"`: this indicates the sentence to search within the file
 
->- if you want to search the sentence inside the given directory
+>- search the sentence in the given directory
 >>- `-d .\src\`: this indicates to search the sentence inside of all the `.java` files in the given directory
 >>>- if the directory contains more directories they are not taken into account
 
->- if you want to search the sentence inside all the files in the given directory
+>- search the sentence in all of the directories of the given directory
 >>- `-D .\src\`: this indicates to search the sentence inside of all the `.java` files in all the routes of the given directory 
 >>>- summary if the directory contains more directories they are taken into account
 
+>- search for the proyect files
+>>- `-lf .\src\`: this will list all of the files inside the proyect
+
+>- search for the method of the given directory
+>>- `-lm .\src\`: this will list all of the methods inside the directory
+
+>- search for the method context
+>>- `-lm .\src\ "methodName"`: this acts like the `cat` commnad but for methods
+
+>- search for the TODO's sentences:
+>>- `-lt .\src\`: this will list all the TODO's in the directory or file
+
+------
 ### Aditional take
->- if you want to combine the CLI options, you can but remember to change the file or directory of the search
+>- if you combine the CLI options in the current state of the proyect you cant do it.
 ```shell
-java -jar joogle.jar -f App.java -d ./OtherProyect/ /"void => ()"/
+java -jar joogle.jar -f app.java -f other.java ""
 ```
->>- if you combine the CLI options in the current state of the proyect you cant do it.
-```shell
-java -jar joogle.jar -f app.java -f other.java /""/
-```
->>- it will output: `use --h for more information about the CLI options`
->>- if you give the search sentence to each one of the CLI options, it will output the first one.
+>>- it will output the result of the first option
 
 >- if you want aditional information in the CLI
 >>- this will output the each one of the CLI options
@@ -105,7 +76,7 @@ java -jar joogle.jar --h
 ## Compile And Execute
 
 >- if you are not using an IDE and need to compila the proyect with the *"javac"* CLI tool
->>- i include a `java-exe.ps1` shell script
+>>- in the root of the proyect, you can find: `java-exe.ps1` shell script to compile and create the jar file
 
 ```shell
 #class to compile
@@ -113,7 +84,7 @@ $Clases = " ./src/*.java"
 #compile program and save the .class data in bin
 $Compile = "javac -d ./bin" + "$Clases"
 #just for testing purposes
-$JavaCommand = "java -cp ./bin ./src/App.java -f ./src/App.java " + '/""/'
+$JavaCommand = "java -cp ./bin ./src/App.java -f ./src/App.java " + '""'
 #execute the commands
 $RunCommand = "$Compile" + " && " + "$JavaCommand"
 
