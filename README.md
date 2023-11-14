@@ -29,9 +29,9 @@
 -----
 
 ## Usage
->- search the sentence within a file
+>- you can use the jar file to execute or create and executable
 ```shell
-java -jar joogle.jar -f App.java "void => ()"
+java -jar joogle.jar -search operation App.java "search sentence"
 ```
 
 ## Search definitions
