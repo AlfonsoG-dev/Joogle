@@ -71,7 +71,7 @@ public final class MethodModel {
                 }
                 if(spaces.length == 2) {
                     spaces[0] = spaces[1];
-                } else if(fileUtils.TokenList().contains(spaces[0])) {
+                } else if(fileUtils.declarationTokenList().contains(spaces[0])) {
                     spaces[0] = spaces[i];
                 }
             }

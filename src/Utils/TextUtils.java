@@ -28,17 +28,16 @@ public class TextUtils {
         String lines = "";
         for(int i=0; i<fileLines.length; ++i) {
             String valores = fileLines[i].trim();
-            for(String t: fileUtils.TokenList()) {
-                if(valores.startsWith(t) && valores.contains("(") || valores.endsWith(",\n")) {
-                    if(fileLines[i+1].contains("{") && fileLines[i+1].contains("(") == false) {
-                        String datos = fileLines[i+1];
-                        valores = valores.concat(" " + datos.trim()).replace("{", "");
-                    }
+            String[] spaces = valores.split(" ");
+            if(fileUtils.declarationTokenList().contains(spaces[0]) && valores.contains("(") || valores.endsWith(",\n")) {
+                if(fileLines[i+1].contains("{") && fileLines[i+1].contains("(") == false) {
+                    String datos = fileLines[i+1];
+                    valores = valores.concat(" " + datos.trim()).replace("{", "");
                 }
-                if(valores.startsWith(t) && valores.contains(")")
-                        || valores.endsWith("\n")) {
-                    lines += valores.replace("{", "").trim() + "\n";
-                }
+            }
+            if(fileUtils.declarationTokenList().contains(spaces[0]) && valores.contains(")")
+                    || valores.endsWith("\n")) {
+                lines += valores.replace("{", "").trim() + "\n";
             }
         }
         return lines;
@@ -56,18 +55,17 @@ public class TextUtils {
             String[] numeros_fl = fileLines[i].replace("}", "").split(":");
             if(numeros_fl.length == 2) {
                 String valores = numeros_fl[1].trim();
-                for(String t: fileUtils.TokenList()) {
-                    if(valores.startsWith(t) && valores.contains("(") || valores.contains(",") && valores.endsWith("\n")) {
-                        if(fileLines[i+1].contains("{")) {
-                            String[] datos = fileLines[i+1].split(":");
-                            valores = valores.concat(" " + datos[1].trim());
-                            methods.add(new MethodModel(valores.replace("{", "").trim(), Integer.parseInt(datos[0])));
-                        }
+                String[] spaces = valores.split(" ");
+                if(fileUtils.declarationTokenList().contains(spaces[0]) && valores.contains("(") || valores.endsWith(",\n")) {
+                    if(fileLines[i+1].contains("{") && fileLines[i+1].contains("(") == false) {
+                        String[] datos = fileLines[i+1].split(":");
+                        valores = valores.concat(" " + datos[1].trim());
+                        methods.add(new MethodModel(valores.replace("{", "").trim(), Integer.parseInt(datos[0])));
                     }
-                    if(valores.startsWith(t) && valores.contains(")") || valores.endsWith("\n")) {
-                        lines = valores.replace("{", "").trim();
-                        methods.add(new MethodModel(lines, Integer.parseInt(numeros_fl[0])));
-                    }
+                }
+                if(fileUtils.declarationTokenList().contains(spaces[0])&& valores.contains(")") || valores.endsWith("\n")) {
+                    lines = valores.replace("{", "").trim();
+                    methods.add(new MethodModel(lines, Integer.parseInt(numeros_fl[0])));
                 }
             }
         }

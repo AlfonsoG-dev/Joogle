@@ -14,7 +14,7 @@ public record FileUtils() {
     * tokens a ignorar en la busqueda
     * @return lista de tokens a ignorar
     */
-    public ArrayList<String> TokenList() {
+    public ArrayList<String> declarationTokenList() {
         String[] tokens = new String[] {
             "public", "private", "protected", "final", "abstract", "static", "record", "class", "interface", "enum"
         };

@@ -53,10 +53,10 @@ public class BusquedaUtil {
         }
         String respuesta = "";
         String[] fileText = fileUtils.GetCleanTextFromFile(filePath).split("\n");
-        if(end != -1 &&
+        if(end > 0 &&
                 textUtils.DeleteComments(fileText, inicial, end).isEmpty() == false) {
             System.out.println(textUtils.DeleteComments(fileText, inicial, end));
-        } else if(end == -1 &&
+        } else if(end < 0 &&
                 textUtils.DeleteComments(fileText, inicial, fileText.length).isEmpty() == false) {
             System.out.println(textUtils.DeleteComments(fileText, inicial, fileText.length));
         }

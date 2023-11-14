@@ -8,7 +8,7 @@ class Joogle {
      * metodo ejecutor de la clase
      * @param args: argumentos de la consola
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) { 
         Operations operation = new Operations(args);
         Options mOptions = new Options();
         if(args.length == 0) {
