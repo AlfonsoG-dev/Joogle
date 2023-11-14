@@ -27,21 +27,6 @@ public final class MethodModel {
         return lineNumber;
     }
     /**
-     * nombre del metodo
-     */
-    public String GetMethodName() {
-        String build = "";
-        String[] partition = sentence.split("\n");
-        for(String p: partition) {
-            String[] datos = p.split("\\(");
-            for(int i=0; i<datos.length-1; ++i) {
-                String[] separate = datos[i].split(" ");
-                build += separate[separate.length-1].trim() +"\n";
-            }
-        }
-        return build;
-    }
-    /**
      * utilidad para hallar el nombre de un método
      */
     public static String getNameOfMethods(String fileSentence) {
@@ -54,6 +39,14 @@ public final class MethodModel {
                 build += separate[separate.length-1].trim() +"\n";
             }
         }
+        return build;
+    }
+    /**
+     * nombre del metodo
+     */
+    public String GetMethodName() {
+        String build = "";
+        build = MethodModel.getNameOfMethods(sentence);
         return build;
     }
     /**

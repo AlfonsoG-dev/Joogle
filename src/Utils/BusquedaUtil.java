@@ -31,58 +31,6 @@ public class BusquedaUtil {
         textUtils = new TextUtils();
     }
     /**
-     * da el contexto del método, es decir, el bloque de codigo dentro del método buscado
-     * @param filePath: archivo a leer
-     * @param sentencia: método buscado
-     */
-    public String GetMethodContext(String filePath, String sentencia) {
-        String[] fileLines = textUtils.GetSentences(filePath).split("\n");
-        int inicial = GetLineNumber(filePath, sentencia);
-        String buscada = inicial + ":" + LocalizarMetodo(filePath, sentencia);
-        String conNumLinea = "";
-        int end = 0;
-        for(int i=0; i<fileLines.length; ++i) {
-            conNumLinea = GetLineNumber(filePath, MethodModel.getNameOfMethods(fileLines[i])) + ":" + fileLines[i];
-            if(conNumLinea.equals(buscada) && (i+1) < fileLines.length) {
-                end = GetLineNumber(filePath, MethodModel.getNameOfMethods(fileLines[i+1]));
-                format.formatoPresentFilename(filePath, inicial);
-            } else if(conNumLinea.equals(buscada) && (i+1) >= fileLines.length) {
-                format.formatoPresentFilename(filePath, inicial);
-                end = -1;
-            }
-        }
-        String respuesta = "";
-        String[] fileText = fileUtils.GetCleanTextFromFile(filePath).split("\n");
-        if(end > 0 &&
-                textUtils.DeleteComments(fileText, inicial, end).isEmpty() == false) {
-            System.out.println(textUtils.DeleteComments(fileText, inicial, end));
-        } else if(end < 0 &&
-                textUtils.DeleteComments(fileText, inicial, fileText.length).isEmpty() == false) {
-            System.out.println(textUtils.DeleteComments(fileText, inicial, fileText.length));
-        }
-        return respuesta;
-    }
-    /**
-     * genera un string con las sentencias que sean "todos"
-     * @param filePath: archivo a leer
-     * @return true si el archivo tiene sentencias todo, false de lo contrario
-     */
-    public void GetTodoSentences(String filePath) {
-        String[] fileLines = fileUtils.GetCleanTextFromFile(filePath).split("\n");
-        boolean existe = false;
-        for(int i=0; i<fileLines.length; ++i) {
-            String valores = fileLines[i].replace(" ", "");
-            if(valores.startsWith("//TODO:") || valores.startsWith("*TODO:") ||
-                    valores.startsWith("//TODO") || valores.startsWith("/*TODO:")) {
-                System.out.println(format.SetColorSentence(filePath, Colores.ANSI_YELLOW) + ":" + i + fileLines[i]);
-                existe = true;
-            }
-        }
-        if(existe == false) {
-            System.err.println("\n\t NO TIENE TODO's POR EL MOMENTO \n");
-        }
-    }
-    /**
     * genera un String con los métodos del archivo
     * @param filePath: ruta del archivo a leer
     * @return String con los métodos del archivo
@@ -239,5 +187,57 @@ public class BusquedaUtil {
         }
         format.ConcurrencyFormat(r, "Arguments");
         return result;
+    }
+    /**
+     * da el contexto del método, es decir, el bloque de codigo dentro del método buscado
+     * @param filePath: archivo a leer
+     * @param sentencia: método buscado
+     */
+    public String GetMethodContext(String filePath, String sentencia) {
+        String[] fileLines = textUtils.GetSentences(filePath).split("\n");
+        int inicial = GetLineNumber(filePath, sentencia);
+        String buscada = inicial + ":" + LocalizarMetodo(filePath, sentencia);
+        String conNumLinea = "";
+        int end = 0;
+        for(int i=0; i<fileLines.length; ++i) {
+            conNumLinea = GetLineNumber(filePath, MethodModel.getNameOfMethods(fileLines[i])) + ":" + fileLines[i];
+            if(conNumLinea.equals(buscada) && (i+1) < fileLines.length) {
+                end = GetLineNumber(filePath, MethodModel.getNameOfMethods(fileLines[i+1]));
+                format.formatoPresentFilename(filePath, inicial);
+            } else if(conNumLinea.equals(buscada) && (i+1) >= fileLines.length) {
+                format.formatoPresentFilename(filePath, inicial);
+                end = -1;
+            }
+        }
+        String respuesta = "";
+        String[] fileText = fileUtils.GetCleanTextFromFile(filePath).split("\n");
+        if(end > 0 &&
+                textUtils.DeleteComments(fileText, inicial, end).isEmpty() == false) {
+            System.out.println(textUtils.DeleteComments(fileText, inicial, end));
+        } else if(end < 0 &&
+                textUtils.DeleteComments(fileText, inicial, fileText.length).isEmpty() == false) {
+            System.out.println(textUtils.DeleteComments(fileText, inicial, fileText.length));
+        }
+        return respuesta;
+    }
+    /**
+     * genera un string con las sentencias que sean "todos"
+     * @param filePath: archivo a leer
+     * @return true si el archivo tiene sentencias todo, false de lo contrario
+     */
+    public void GetTodoSentences(String filePath) {
+        String[] fileLines = fileUtils.GetCleanTextFromFile(filePath).split("\n");
+        boolean existe = false;
+        for(int i=0; i<fileLines.length; ++i) {
+            String valores = fileLines[i].replace(" ", "");
+            if(valores.startsWith("//TODO:") || valores.startsWith("*TODO:") ||
+                    valores.startsWith("//TODO") || valores.startsWith("/*TODO:")) {
+                System.out.println(format.SetColorSentence(filePath, Colores.ANSI_YELLOW) + ":" + i + fileLines[i]);
+                existe = true;
+            }
+        }
+        if(existe == false) {
+            System.err.println("\n\t NO TIENE TODO's POR EL MOMENTO \n");
+        }
     }
 }
