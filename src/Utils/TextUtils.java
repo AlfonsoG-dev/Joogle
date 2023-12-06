@@ -35,8 +35,8 @@ public class TextUtils {
                     valores = valores.concat(" " + datos.trim()).replace("{", "");
                 }
             }
-            if(fileUtils.declarationTokenList().contains(spaces[0]) && valores.contains(")")
-                    || valores.endsWith("\n")) {
+            if(fileUtils.declarationTokenList().contains(spaces[0]) && valores.contains(")") && 
+                    fileLines[i-1].contains("() {") == false || valores.endsWith("\n")) {
                 lines += valores.replace("{", "").trim() + "\n";
             }
         }
@@ -63,7 +63,8 @@ public class TextUtils {
                         methods.add(new MethodModel(valores.replace("{", "").trim(), Integer.parseInt(datos[0])));
                     }
                 }
-                if(fileUtils.declarationTokenList().contains(spaces[0])&& valores.contains(")") || valores.endsWith("\n")) {
+                if(fileUtils.declarationTokenList().contains(spaces[0]) && valores.contains(")") && 
+                        fileLines[i-1].contains("() {") == false || valores.endsWith("\n")) {
                     lines = valores.replace("{", "").trim();
                     methods.add(new MethodModel(lines, Integer.parseInt(numeros_fl[0])));
                 }
