@@ -232,7 +232,8 @@ public class BusquedaUtil {
             String valores = fileLines[i].replace(" ", "");
             if(valores.startsWith("//TODO:") || valores.startsWith("*TODO:") ||
                     valores.startsWith("//TODO") || valores.startsWith("/*TODO:")) {
-                System.out.println(format.SetColorSentence(filePath, Colores.ANSI_YELLOW) + ":" + i + fileLines[i]);
+                int line = i+1;
+                System.out.println(format.SetColorSentence(filePath, Colores.ANSI_YELLOW) + ":" +  line + fileLines[i]);
                 existe = true;
             }
         }
