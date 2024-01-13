@@ -172,12 +172,12 @@ public class Busqueda {
             String cSentence = sentence.replace("/", "");
             File miFile = new File(filePath);
             if(miFile.isFile() && cSentence.equals("") == false) {
-                utils.GetMethodContext(miFile.getCanonicalPath(), cSentence);
+                utils.GetMethodContext(miFile.getPath(), cSentence);
             } else if(miFile.isFile() && cSentence.equals("")) {
                 String[] metodos = utils.GetMethodName(filePath).split("\n");
                 for(String m: metodos) {
-                    int lineNumber = utils.GetLineNumber(miFile.getCanonicalPath(), m);
-                    format.formatoBusquedaMethod(miFile.getCanonicalPath(), m, lineNumber);
+                    int lineNumber = utils.GetLineNumber(miFile.getPath(), m);
+                    format.formatoBusquedaMethod(miFile.getPath(), m, lineNumber);
                 }
             }
             else if(miFile.isDirectory()) {
