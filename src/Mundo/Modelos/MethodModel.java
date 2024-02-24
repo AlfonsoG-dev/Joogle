@@ -45,19 +45,18 @@ public final class MethodModel {
      * nombre del metodo
      */
     public String GetMethodName() {
-        String build = "";
-        build = MethodModel.getNameOfMethods(sentence);
-        return build;
+        return MethodModel.getNameOfMethods(sentence);
     }
     /**
      * utilidad para hallar el tipo de retorno de las sentencias del texto
      */
     public static String getReturnType(String fileSentence) {
         String[] sentences = fileSentence.split("\n");
-        String tipes = "";
+        String types = "";
         for(String s: sentences) {
-            String[] methods = s.split("\\(");
-            String[] spaces = methods[0].split(" ");
+            String[] 
+                methods = s.split("\\("),
+                spaces  = methods[0].split(" ");
             for(int i=0; i<spaces.length; ++i) {
                 if(spaces[1].contains(",")) {
                     spaces[0] = spaces[1].concat(" " + spaces[2]);
@@ -68,35 +67,35 @@ public final class MethodModel {
                     spaces[0] = spaces[i];
                 }
             }
-            tipes += spaces[0] + "\n";
+            types += spaces[0] + "\n";
         }
-        return tipes;
+        return types;
     }
     /**
      * utilidad para separar los argumentos que tienen coma
      */
     private static String containsComa(String arguments) {
-        String nombres = "";
-        String[] ars = arguments.split(",");
         String args = "(";
+        String[] ars = arguments.split(",");
         for(String at: ars) {
-            String tipe = at.replace("(", "").replace(")", "").trim();
-            String[] separate = tipe.split(" ");
+            String type = at.replace("(", "").replace(")", "").trim();
+            String[] separate = type.split(" ");
             args += separate[0] + ", ";
         }
-        String clean_args = args.substring(0, args.length()-2) + ")";
-        nombres += clean_args + "\n";
-        return nombres;
+        return args.substring(0, args.length()-2) + ")\n";
     }
     /**
      * utilidad para hallar los argumentos de las sentencias del texto
      */
     public static String getArguments(String fileSentence) {
         String[] sentences = fileSentence.split("\n");
-        String nombres = "", tipos = "";
+        String 
+            nombres = "",
+            tipos   = "";
         for(String s: sentences) {
-            String[] separate = s.split("\\(");
-            String[] partition = separate[1].split("\\)");
+            String[] 
+                separate  = s.split("\\("),
+                partition = separate[1].split("\\)");
             String args = "";
             if(partition.length == 0) {
                 args  = ")";
@@ -120,7 +119,6 @@ public final class MethodModel {
                 nombres += args + "\n";
             }
         }
-        String fNombres = nombres.replace("(", "( ").replace(")", " )");
-        return fNombres;
+        return nombres.replace("(", "( ").replace(")", " )");
     }
 }
