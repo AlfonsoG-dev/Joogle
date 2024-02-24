@@ -193,7 +193,7 @@ public class BusquedaUtil {
      * @param filePath: archivo a leer
      * @param sentencia: método buscado
      */
-    public String GetMethodContext(String filePath, String sentencia) {
+    public synchronized String GetMethodContext(String filePath, String sentencia) {
         String[] fileLines = textUtils.GetSentences(filePath).split("\n");
         int inicial = GetLineNumber(filePath, sentencia);
         String buscada = inicial + ":" + LocalizarMetodo(filePath, sentencia);
@@ -225,7 +225,7 @@ public class BusquedaUtil {
      * @param filePath: archivo a leer
      * @return true si el archivo tiene sentencias todo, false de lo contrario
      */
-    public void GetTodoSentences(String filePath) {
+    public synchronized void GetTodoSentences(String filePath) {
         String[] fileLines = fileUtils.GetCleanTextFromFile(filePath).split("\n");
         boolean existe = false;
         for(int i=0; i<fileLines.length; ++i) {

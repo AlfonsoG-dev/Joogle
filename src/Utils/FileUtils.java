@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 /**
@@ -16,7 +19,17 @@ public record FileUtils() {
     */
     public ArrayList<String> declarationTokenList() {
         String[] tokens = new String[] {
-            "public", "private", "protected", "final", "abstract", "static", "record", "class", "interface", "enum"
+            "public",
+            "private",
+            "protected",
+            "final",
+            "synchronized",
+            "abstract",
+            "static",
+            "record",
+            "class",
+            "interface",
+            "enum"
         };
         ArrayList<String> lista = new ArrayList<String>();
         for(String t: tokens) {
@@ -29,14 +42,16 @@ public record FileUtils() {
      * @param files: los archivos dentro del directorio
      * @return string con la ruta de los archivos
      */
-    public String GetFilesFromDirectory(File[] files) throws IOException {
-        String fileNames = "";
-        for(File f: files) {
-            if(f.isFile() && f.getName().contains(".java")) {
-                fileNames += f.getPath() + "\n";
-            }
-        }
-        return fileNames;
+    public ArrayList<String> GetFilesFromDirectory(DirectoryStream<Path> myFiles) throws IOException {
+        ArrayList<String> files = new ArrayList<>();
+        myFiles
+            .forEach(e -> {
+                File f = e.toFile();
+                if(f.isFile() && f.getName().contains(".java")) {
+                    files.add(f.getPath());
+                }
+            });
+        return files;
     }
     /**
     * genera un String con la ruta de los archivos dentro de los directorios
@@ -45,17 +60,28 @@ public record FileUtils() {
     * @throws IOException: error al buscar los archivos del directorio
     * @return String con la ruta de los archivos
     */
-    public String GetFilesFromDirectories(File[] miFiles) throws IOException {
-        String fileName = "";
-        for(File f: miFiles) {
-            if(f.isFile() && f.getName().contains(".java")) {
-                fileName += f.getPath() + "\n";
-            }
-            if(f.isDirectory()) {
-                fileName += this.GetFilesFromDirectories(f.listFiles()) + "\n";
-            }
-        }
-        return fileName;
+    public ArrayList<String> GetFilesFromDirectories(DirectoryStream<Path> myFiles) {
+        ArrayList<String> files = new ArrayList<>();
+        myFiles
+            .forEach(e -> {
+                File f = e.toFile();
+                if(f.isFile() && f.getName().contains(".java")) {
+                    files.add(f.getPath());
+                }
+                if(f.isDirectory()) {
+                    try {
+                        files.addAll(
+                                GetFilesFromDirectories(
+                                    Files.newDirectoryStream(f.toPath())
+                            )
+                        );
+                    } catch(Exception err) {
+                        err.printStackTrace();
+                    }
+                }
+            });
+
+        return files;
     }
     /**
     * Genera un String con los valores del archivo con numero de linea

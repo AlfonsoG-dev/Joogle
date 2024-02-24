@@ -1,5 +1,9 @@
 package Mundo;
 import java.io.File;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
 
 import Utils.BusquedaUtil;
 import Visual.BusquedaFormat;
@@ -74,7 +78,7 @@ public class Busqueda {
     * @param filePath: ruta del archivo a leer
     * @param searchSentence: sentencia a buscar
     */
-    public void SearchInFile(String filePath, String searchSentence) {
+    public synchronized void SearchInFile(String filePath, String searchSentence) {
         try {
             File miFile = new File(filePath);
             if(miFile.isFile() && miFile.getName().contains(".java")) {
@@ -94,10 +98,13 @@ public class Busqueda {
     public void SearcInDirectory(String directory, String searchSentence) {
         try {
             File miFile = new File(directory);
-            String[] fileNames = fileUtils.GetFilesFromDirectory(miFile.listFiles()).split("\n");
-            for(String fn: fileNames) {
-                SearchInFile(fn, searchSentence);
-            }
+            DirectoryStream<Path> files = Files.newDirectoryStream(miFile.toPath());
+            ArrayList<String> fileNames = fileUtils.GetFilesFromDirectory(files);
+            fileNames
+                .parallelStream()
+                .forEach(e -> {
+                    SearchInFile(e, searchSentence);
+                });
         } catch(Exception e) {
             System.err.println(e.getLocalizedMessage());
         }
@@ -109,14 +116,15 @@ public class Busqueda {
     */
     public void SearcInDirectories(String directorys, String searchSentence) {
         try {
-            String filesName = "";
             File miFile = new File(directorys);
             if(miFile.isDirectory()) {
-                filesName = fileUtils.GetFilesFromDirectories(miFile.listFiles());
-                String[] partition = filesName.split("\n");
-                for(String p: partition) {
-                    SearchInFile(p, searchSentence);
-                }
+                DirectoryStream<Path> files = Files.newDirectoryStream(miFile.toPath());
+                ArrayList<String> filesName = fileUtils.GetFilesFromDirectories(files);
+                filesName
+                    .parallelStream()
+                    .forEach(e -> {
+                        SearchInFile(e, searchSentence);
+                    });
             }
 
         } catch(Exception e) {
@@ -133,12 +141,15 @@ public class Busqueda {
             if(miFile.isFile()) {
                 utils.GetTodoSentences(miFile.getPath());
             } else {
-                String[] fileNames = fileUtils.GetFilesFromDirectories(miFile.listFiles()).split("\n");
-                for(String fn: fileNames) {
-                    if(fn.isEmpty() == false) {
-                        BuscarTODO(fn);
-                    }
-                }
+                DirectoryStream<Path> files = Files.newDirectoryStream(miFile.toPath());
+                ArrayList<String> fileNames = fileUtils.GetFilesFromDirectories(files);
+                fileNames
+                    .parallelStream()
+                    .forEach(e -> {
+                        if(e.isEmpty() == false) {
+                            BuscarTODO(e);
+                        }
+                    });
             }
 
         } catch(Exception e) {
@@ -152,12 +163,15 @@ public class Busqueda {
     public void BuscarFiles(String filePath) {
         try {
             File miFile = new File(filePath);
-            String[] fileNames = fileUtils.GetFilesFromDirectories(miFile.listFiles()).split("\n");
-            for(String fn: fileNames) {
-                if(fn.isEmpty() == false) {
-                    format.formatoBusquedaFiles(fn);
-                }
-            }
+            DirectoryStream<Path> files = Files.newDirectoryStream(miFile.toPath());
+            ArrayList<String> fileNames = fileUtils.GetFilesFromDirectories(files);
+            fileNames
+                .parallelStream()
+                .forEach(e -> {
+                    if(e.isEmpty() == false) {
+                        format.formatoBusquedaFiles(e);
+                    }
+                });
         } catch(Exception e) {
             System.err.println(e.getLocalizedMessage());
         }
@@ -181,12 +195,15 @@ public class Busqueda {
                 }
             }
             else if(miFile.isDirectory()) {
-                String[] filesName = fileUtils.GetFilesFromDirectories(miFile.listFiles()).split("\n");
-                for(String fn: filesName) {
-                    if(fn.isEmpty() == false ) {
-                        this.BuscarMethods(fn, cSentence);
-                    }
-                }
+                DirectoryStream<Path> files = Files.newDirectoryStream(miFile.toPath());
+                ArrayList<String> filesName = fileUtils.GetFilesFromDirectories(files);
+                filesName
+                    .parallelStream()
+                    .forEach(e -> {
+                        if(e.isEmpty() == false ) {
+                            BuscarMethods(e, cSentence);
+                        }
+                    });
             }
         } catch(Exception e) {
             //

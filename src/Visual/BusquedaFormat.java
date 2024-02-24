@@ -44,7 +44,7 @@ public record BusquedaFormat() {
      * da el formato de respuesta a la busqueda de files
      * @param fileName: nombre del archivo a leer
      */
-    public void formatoBusquedaFiles(String fileName) {
+    public synchronized void formatoBusquedaFiles(String fileName) {
         String[] name = fileName.split("\\\\");
         name[name.length-1] = Colores.RED_UNDERLINED + name[name.length-1] + Colores.ANSI_RESET;
         String build = "", cBuild = "";
@@ -59,7 +59,7 @@ public record BusquedaFormat() {
      * @param fileName: nombre del archivo a leer
      * @para lineNumber: numéro de linea en el que se encuentra el método
      */
-    public void formatoBusquedaMethod(String fileName, String methodName, int lineNumber) {
+    public synchronized void formatoBusquedaMethod(String fileName, String methodName, int lineNumber) {
         String fLine = Colores.RED_UNDERLINED + fileName + Colores.ANSI_RESET  +
             ":" + Colores.ANSI_YELLOW + lineNumber + Colores.ANSI_RESET;
         System.out.println(String.format("%s >- %s", fLine, Colores.ANSI_YELLOW +
