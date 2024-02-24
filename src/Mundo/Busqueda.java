@@ -41,27 +41,28 @@ public class Busqueda {
     */
     public void BuscarSentencia(String filePath, String sentencia) {
         try {
-            String[] methodNames = utils.GetMethodName(filePath).split("\n");
-            String[] types = utils.CompareToReturnType(filePath, sentencia).split("\n");
-            String[] arguments = utils.CompareToArguments(filePath, sentencia).split("\n");
+            String[] 
+                methodNames = utils.GetMethodName(filePath).split("\n"),
+                types       = utils.CompareToReturnType(filePath, sentencia).split("\n"),
+                arguments   = utils.CompareToArguments(filePath, sentencia).split("\n");
             File miFile = new File(filePath);
             if (miFile.exists()) {
                 for(int i = 0; i < methodNames.length; ++i) {
                     if (sentencia.equals("")) {
                         format.formatoBusquedaSentencia(
-                        utils.GetLineNumber(filePath, methodNames[i]),
-                        filePath,
-                        methodNames[i],
-                        types[i],
-                        arguments[i]
+                            utils.GetLineNumber(filePath, methodNames[i]),
+                            filePath,
+                            methodNames[i],
+                            types[i],
+                            arguments[i]
                         );
                     } else {
                         format.formatoBusquedaSentencia(
-                        utils.GetLineNumber(filePath, methodNames[i]),
-                        filePath,
-                        methodNames[i],
-                        types[i],
-                        arguments[i]
+                            utils.GetLineNumber(filePath, methodNames[i]),
+                            filePath,
+                            methodNames[i],
+                            types[i],
+                            arguments[i]
                         );
                     }
                 }

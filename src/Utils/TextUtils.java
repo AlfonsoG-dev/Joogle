@@ -114,7 +114,7 @@ public class TextUtils {
                 }
             }
         } catch(Exception e) {
-            System.err.println(e.getLocalizedMessage());
+            e.printStackTrace();
         }
         return r;
     }

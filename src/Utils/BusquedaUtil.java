@@ -109,9 +109,10 @@ public class BusquedaUtil {
     * @return lista de datos modificados con el color
     */
     public String CompareToReturnType(String filePath, String sentence) {
-        String st = sentence.split("=>")[0].replace(" ", "").toLowerCase();
+        String 
+            st     = sentence.split("=>")[0].replace(" ", "").toLowerCase(),
+            result = "";
         String[] sentences = GetReturnType(filePath).split("\n");
-        String result = "";
         int r = 0;
         for(String s: sentences) {
             if(st.equals("")) {
@@ -138,12 +139,13 @@ public class BusquedaUtil {
     * @return lista de datos modificados con el color
     */
     public String CompareToArguments(String filePath, String sentence) {
-        String st = "";
+        String 
+            st     = "",
+            result = "";
         if(sentence.contains("=>")) {
             st = sentence.split("=>")[1].replace(" ", "").toLowerCase();
         }
         String[] sentences = GetArguments(filePath).split("\n");
-        String result = "";
         int r = 0;
         for(int i=0; i<sentences.length; ++i) {
             String s = sentences[i].replace(" ", "").toLowerCase();
@@ -196,8 +198,10 @@ public class BusquedaUtil {
     public synchronized String GetMethodContext(String filePath, String sentencia) {
         String[] fileLines = textUtils.GetSentences(filePath).split("\n");
         int inicial = GetLineNumber(filePath, sentencia);
-        String buscada = inicial + ":" + LocalizarMetodo(filePath, sentencia);
-        String conNumLinea = "";
+        String 
+            buscada     = inicial + ":" + LocalizarMetodo(filePath, sentencia),
+            conNumLinea = "",
+            respuesta   = "";
         int end = 0;
         for(int i=0; i<fileLines.length; ++i) {
             conNumLinea = GetLineNumber(filePath, MethodModel.getNameOfMethods(fileLines[i])) + ":" + fileLines[i];
@@ -209,7 +213,6 @@ public class BusquedaUtil {
                 end = -1;
             }
         }
-        String respuesta = "";
         String[] fileText = fileUtils.GetCleanTextFromFile(filePath).split("\n");
         if(end > 0 &&
                 textUtils.DeleteComments(fileText, inicial, end).isEmpty() == false) {
