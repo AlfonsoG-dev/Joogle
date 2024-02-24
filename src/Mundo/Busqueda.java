@@ -99,6 +99,9 @@ public class Busqueda {
     public void searcInDirectory(String directory, String searchSentence) {
         try {
             File miFile = new File(directory);
+            if(miFile.isFile()) {
+                throw new Exception("ONLY WORKS WITH DIRECTORIES");
+            }
             DirectoryStream<Path> files = Files.newDirectoryStream(miFile.toPath());
             ArrayList<String> fileNames = fileUtils.getFilesFromDirectory(files);
             fileNames
@@ -118,7 +121,9 @@ public class Busqueda {
     public void searcInDirectories(String directorys, String searchSentence) {
         try {
             File miFile = new File(directorys);
-            if(miFile.isDirectory()) {
+            if(miFile.isFile()) {
+                throw new Exception("ONLY WORKS WITH DIRECTORIES");
+            } else if(miFile.isDirectory()) {
                 DirectoryStream<Path> files = Files.newDirectoryStream(miFile.toPath());
                 ArrayList<String> filesName = fileUtils.getFilesFromDirectories(files);
                 filesName
@@ -141,7 +146,7 @@ public class Busqueda {
             File miFile = new File(filePath);
             if(miFile.isFile()) {
                 utils.getTodoSentences(miFile.getPath());
-            } else {
+            } else if(miFile.isDirectory()) {
                 DirectoryStream<Path> files = Files.newDirectoryStream(miFile.toPath());
                 ArrayList<String> fileNames = fileUtils.getFilesFromDirectories(files);
                 fileNames
@@ -163,14 +168,18 @@ public class Busqueda {
     public void buscarFiles(String filePath) {
         try {
             File miFile = new File(filePath);
-            DirectoryStream<Path> files = Files.newDirectoryStream(miFile.toPath());
-            ArrayList<String> fileNames = fileUtils.getFilesFromDirectories(files);
-            fileNames
-                .parallelStream()
-                .filter(e -> !e.isEmpty())
-                .forEach(e -> {
-                    format.formatoBusquedaFiles(e);
-                });
+            if(miFile.isDirectory()) {
+                DirectoryStream<Path> files = Files.newDirectoryStream(miFile.toPath());
+                ArrayList<String> fileNames = fileUtils.getFilesFromDirectories(files);
+                fileNames
+                    .parallelStream()
+                    .filter(e -> !e.isEmpty())
+                    .forEach(e -> {
+                        format.formatoBusquedaFiles(e);
+                    });
+            } else if(miFile.isFile()) {
+                format.formatoBusquedaFiles(miFile.getPath());
+            }
         } catch(Exception e) {
             e.printStackTrace();
         }
