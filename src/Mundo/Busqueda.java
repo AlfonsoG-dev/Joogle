@@ -69,7 +69,7 @@ public class Busqueda {
                 System.out.println("el archivo no existe");
             }
         } catch (Exception e) {
-            System.err.println(e.getLocalizedMessage());
+            e.printStackTrace();
         }
 
     }
@@ -87,7 +87,7 @@ public class Busqueda {
                 BuscarSentencia(filePath, sentence);
             }
         } catch(Exception e) {
-            System.out.println(e.getLocalizedMessage());
+            e.printStackTrace();
         }
     }
     /**
@@ -106,7 +106,7 @@ public class Busqueda {
                     SearchInFile(e, searchSentence);
                 });
         } catch(Exception e) {
-            System.err.println(e.getLocalizedMessage());
+            e.printStackTrace();
         }
     }
     /**
@@ -128,7 +128,7 @@ public class Busqueda {
             }
 
         } catch(Exception e) {
-            System.err.println(e.getLocalizedMessage());
+            e.printStackTrace();
         }
     }
     /**
@@ -145,15 +145,14 @@ public class Busqueda {
                 ArrayList<String> fileNames = fileUtils.GetFilesFromDirectories(files);
                 fileNames
                     .parallelStream()
+                    .filter(e -> !e.isEmpty())
                     .forEach(e -> {
-                        if(e.isEmpty() == false) {
-                            BuscarTODO(e);
-                        }
+                        BuscarTODO(e);
                     });
             }
 
         } catch(Exception e) {
-            System.err.println(e.getLocalizedMessage());
+            e.printStackTrace();
         }
     }
     /**
@@ -167,13 +166,12 @@ public class Busqueda {
             ArrayList<String> fileNames = fileUtils.GetFilesFromDirectories(files);
             fileNames
                 .parallelStream()
+                .filter(e -> !e.isEmpty())
                 .forEach(e -> {
-                    if(e.isEmpty() == false) {
-                        format.formatoBusquedaFiles(e);
-                    }
+                    format.formatoBusquedaFiles(e);
                 });
         } catch(Exception e) {
-            System.err.println(e.getLocalizedMessage());
+            e.printStackTrace();
         }
     }
     /**
@@ -199,14 +197,13 @@ public class Busqueda {
                 ArrayList<String> filesName = fileUtils.GetFilesFromDirectories(files);
                 filesName
                     .parallelStream()
+                    .filter(e -> !e.isEmpty())
                     .forEach(e -> {
-                        if(e.isEmpty() == false ) {
-                            BuscarMethods(e, cSentence);
-                        }
+                        BuscarMethods(e, cSentence);
                     });
             }
         } catch(Exception e) {
-            //
+            e.printStackTrace();
         }
     }
 }
