@@ -1,6 +1,7 @@
 package Utils;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import Mundo.Modelos.MethodModel;
 import Visual.BusquedaFormat;
@@ -76,10 +77,11 @@ public class BusquedaUtil {
     * @return String con la sentencia completa del método buscado
     */
     public String LocalizarMetodo(String filePath, String sentencia) {
-        String build = "";
+        String 
+            r     = sentencia.trim().toLowerCase(),
+            build = "";
         ArrayList<MethodModel> partition = textUtils.listMethods(filePath);
         for(MethodModel mt: partition) {
-            String r = sentencia.trim().toLowerCase();
             if(mt.GetMethodName().toLowerCase().contains(r)) {
                 build = mt.getSentences();
             }
@@ -160,13 +162,17 @@ public class BusquedaUtil {
                 ++r;
             } else {
                 if(s.contains(",") && st.contains(",")) {
-                    String[] comas = sentences[i].split(",");
-                    String[] sComas = st.split(",");
+                    String[] 
+                        comas  = sentences[i].split(","),
+                        sComas = st.split(",");
                     String cB = "";
                     for(int c=0; c<comas.length; ++c) {
                         for(int sc=0; sc<sComas.length; ++sc) {
-                            if(comas[c].replace(" ", "").replace(")", "").toLowerCase().equals(sComas[sc].replace(")", "")) 
-                                    || textUtils.CompareCharToChar(comas[c], sComas[sc]) > st.length()) {
+                            String 
+                                conditionA = comas[c].replace(" ", "").replace(")", "").toLowerCase(),
+                                conditionB = sComas[sc].replace(")", "");
+                            int conditionC = textUtils.CompareCharToChar(comas[c], sComas[sc]);
+                            if(conditionA.equals(conditionB) ||  conditionC > st.length()) {
                                 comas[c] = format.SetColorSentence(comas[c], Colores.ANSI_YELLOW);
                             }
                         }
@@ -174,11 +180,14 @@ public class BusquedaUtil {
                     }
                     sentences[i] = cB.substring(0, cB.length()-2);
                 } else if(st.contains(",")) {
-                    String sComa = sentence.split(",")[0];
-                    String comas = sentences[i].split(",")[0];
-                    String cB = "";
-                    if(comas.replace(" ", "").toLowerCase().equals(sComa.replace(" ", "").toLowerCase() + ")") 
-                            || textUtils.CompareCharToChar(comas, sComa) > st.length()) {
+                    String 
+                        comas      = sentences[i].split(",")[0],
+                        sComa      = sentence.split(",")[0],
+                        conditionA = comas.replace(" ", "").toLowerCase(),
+                        conditionB = sComa.replace(" ", "").toLowerCase() + ")",
+                        cB         = "";
+                    int conditionC = textUtils.CompareCharToChar(comas, sComa);
+                    if(conditionA.equals(conditionB) || conditionC > st.length()) {
                         comas = format.SetColorSentence(comas, Colores.ANSI_YELLOW);
                     }
                     cB += comas + ", ";
@@ -204,9 +213,15 @@ public class BusquedaUtil {
             respuesta   = "";
         int end = 0;
         for(int i=0; i<fileLines.length; ++i) {
-            conNumLinea = GetLineNumber(filePath, MethodModel.getNameOfMethods(fileLines[i])) + ":" + fileLines[i];
+            conNumLinea = GetLineNumber(
+                    filePath,
+                    MethodModel.getNameOfMethods(fileLines[i])
+            ) + ":" + fileLines[i];
             if(conNumLinea.equals(buscada) && (i+1) < fileLines.length) {
-                end = GetLineNumber(filePath, MethodModel.getNameOfMethods(fileLines[i+1]));
+                end = GetLineNumber(
+                        filePath,
+                        MethodModel.getNameOfMethods(fileLines[i+1])
+                );
                 format.formatoPresentFilename(filePath, inicial);
             } else if(conNumLinea.equals(buscada) && (i+1) >= fileLines.length) {
                 format.formatoPresentFilename(filePath, inicial);
@@ -214,12 +229,21 @@ public class BusquedaUtil {
             }
         }
         String[] fileText = fileUtils.GetCleanTextFromFile(filePath).split("\n");
-        if(end > 0 &&
-                textUtils.DeleteComments(fileText, inicial, end).isEmpty() == false) {
-            System.out.println(textUtils.DeleteComments(fileText, inicial, end));
-        } else if(end < 0 &&
-                textUtils.DeleteComments(fileText, inicial, fileText.length).isEmpty() == false) {
-            System.out.println(textUtils.DeleteComments(fileText, inicial, fileText.length));
+        String 
+            s = textUtils.DeleteComments(
+                    fileText,
+                    inicial,
+                    end
+            ),
+            e = textUtils.DeleteComments(
+                    fileText,
+                    inicial,
+                    fileText.length
+            );
+        if(end > 0 && s.isEmpty() == false) {
+            System.out.println(s);
+        } else if(end < 0 && e.isEmpty() == false) {
+            System.out.println(e);
         }
         return respuesta;
     }
@@ -233,10 +257,19 @@ public class BusquedaUtil {
         boolean existe = false;
         for(int i=0; i<fileLines.length; ++i) {
             String valores = fileLines[i].replace(" ", "");
-            if(valores.startsWith("//TODO:") || valores.startsWith("*TODO:") ||
-                    valores.startsWith("//TODO") || valores.startsWith("/*TODO:")) {
+            boolean
+                conditionA = valores.startsWith("//TODO:"),
+                conditionB = valores.startsWith("*TODO:"),
+                conditionC = valores.startsWith("//TODO:"),
+                conditionD = valores.startsWith("/*TODO:");
+            if(conditionA || conditionB || conditionC || conditionD) {
                 int line = i+1;
-                System.out.println(format.SetColorSentence(filePath, Colores.ANSI_YELLOW) + ":" +  line + fileLines[i]);
+                System.out.println(
+                        format.SetColorSentence(
+                            filePath,
+                            Colores.ANSI_YELLOW
+                        ) + ":" +  line + fileLines[i]
+                );
                 existe = true;
             }
         }
