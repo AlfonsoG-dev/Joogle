@@ -23,20 +23,24 @@ public class TextUtils {
     * @param filePath: ruta del archivo a leer
     * @return String con las lineas en donde hay métodos
     */
-    public String GetSentences(String filePath) {
-        String[] fileLines = fileUtils.GetCleanTextFromFile(filePath).split("\n");
+    public String getSentences(String filePath) {
+        String[] fileLines = fileUtils.getCleanTextFromFile(filePath).split("\n");
         String lines = "";
         for(int i=0; i<fileLines.length; ++i) {
             String valores = fileLines[i].trim();
             String[] spaces = valores.split(" ");
-            if(fileUtils.declarationTokenList().contains(spaces[0]) && valores.contains("(") || valores.endsWith(",\n")) {
+            boolean 
+                conditionA = fileUtils.declarationTokenList().contains(spaces[0]),
+                conditionB = valores.contains("("),
+                conditionC = valores.endsWith(",\n");
+            if(conditionA &&  conditionB || conditionC) {
                 if(fileLines[i+1].contains("{") && fileLines[i+1].contains("(") == false) {
                     String datos = fileLines[i+1];
                     valores = valores.concat(" " + datos.trim()).replace("{", "");
                 }
             }
-            if(fileUtils.declarationTokenList().contains(spaces[0]) && valores.contains(")") && 
-                    fileLines[i-1].contains("() {") == false || valores.endsWith("\n")) {
+            if(conditionA && valores.contains(")") && !fileLines[i-1].contains("() {") || 
+                    valores.endsWith("\n")) {
                 lines += valores.replace("{", "").trim() + "\n";
             }
         }
@@ -48,7 +52,7 @@ public class TextUtils {
      * @return String con las lineas y su numero de linea
      */
     public ArrayList<MethodModel> listMethods(String filePath) {
-        String[] fileLines = fileUtils.GetTextFromFile(filePath).split("\n");
+        String[] fileLines = fileUtils.getTextFromFile(filePath).split("\n");
         ArrayList<MethodModel> methods = new ArrayList<>();
         String lines = "";
         for(int i=0; i<fileLines.length; ++i) {
@@ -56,15 +60,19 @@ public class TextUtils {
             if(numeros_fl.length == 2) {
                 String valores = numeros_fl[1].trim();
                 String[] spaces = valores.split(" ");
-                if(fileUtils.declarationTokenList().contains(spaces[0]) && valores.contains("(") || valores.endsWith(",\n")) {
+                boolean 
+                    conditionA = fileUtils.declarationTokenList().contains(spaces[0]),
+                    conditionB = valores.contains("("),
+                    conditionC = valores.endsWith(",\n");
+                if(conditionA &&  conditionB || conditionC) {
                     if(fileLines[i+1].contains("{") && fileLines[i+1].contains("(") == false) {
                         String[] datos = fileLines[i+1].split(":");
                         valores = valores.concat(" " + datos[1].trim());
                         methods.add(new MethodModel(valores.replace("{", "").trim(), Integer.parseInt(datos[0])));
                     }
                 }
-                if(fileUtils.declarationTokenList().contains(spaces[0]) && valores.contains(")") && 
-                        fileLines[i-1].contains("() {") == false || valores.endsWith("\n")) {
+                if(conditionA && valores.contains(")") && !fileLines[i-1].contains("() {") || 
+                        valores.endsWith("\n")) {
                     lines = valores.replace("{", "").trim();
                     methods.add(new MethodModel(lines, Integer.parseInt(numeros_fl[0])));
                 }
@@ -79,17 +87,21 @@ public class TextUtils {
      * @param end: final de la lectura del archivo
      * @return un String con la lectura en el rango deseado
      */
-    public String DeleteComments(String[] fileText, int inicial, int end) {
+    public String deleteComments(String[] fileText, int inicial, int end) {
         String res = "";
         if(end == 0) {
             res += fileText[inicial-1] + "\n";
         }
         for(int i=inicial-1; i<end-1; ++i) {
-            if(fileText[i].trim().startsWith("/*") || fileText[i].trim().startsWith("/**") ||
-                    fileText[i].trim().startsWith("*") || fileText[i].trim().startsWith("//")) {
+            boolean 
+                conditionA = fileText[i].trim().startsWith("/*"),
+                conditionB = fileText[i].trim().startsWith("/**"),
+                conditionC = fileText[i].trim().startsWith("*"),
+                conditionD = fileText[i].trim().startsWith("//");
+            if(conditionA || conditionB || conditionC || conditionD) {
                 fileText[i] = "";
             }
-            if(fileText[i].equals("") == false) {
+            if(!fileText[i].equals("")) {
                 res += fileText[i] + "\n";
             }
         }
@@ -101,9 +113,10 @@ public class TextUtils {
      * @param second: letra para comparar
      * @return el número de coincidencias entre las letras
      */
-    public int CompareCharToChar(String first, String second) {
-        String n1 = first.toLowerCase();
-        String n2 = second.toLowerCase();
+    public int compareCharToChar(String first, String second) {
+        String 
+            n1 = first.toLowerCase(),
+            n2 = second.toLowerCase();
         int r = 0;
         try {
             for(char fn: n1.toCharArray()) {

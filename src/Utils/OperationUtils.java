@@ -14,7 +14,7 @@ public record OperationUtils(String[] options, int i) {
      * verifica si las opcion [1] se ha digitado
      * @return la opcion[i+1], de lo contrario "./"
      */
-    public String VerificarOptionFile() {
+    public String verificarOptionFile() {
         String res = "";
         if((i+1) >= options.length) {
             res = "./";
@@ -27,7 +27,7 @@ public record OperationUtils(String[] options, int i) {
      * verifica si la opcion [2] se ha digitado
      * @return la opcion[i+2], de lo contrario ""
      */
-    public String VerificarOptionSentence() {
+    public String verificarOptionSentence() {
         String res = "";
         if((i+2) >= options.length) {
             res = "";
@@ -40,59 +40,59 @@ public record OperationUtils(String[] options, int i) {
      * operacion para buscar dentro de un archivo
      * si se da una sentencia, se colorea el resultado buscado
      */
-    public void SearchInFileOperation() throws Exception {
-        if(VerificarOptionFile().equals("./")) {
+    public void searchInFileOperation() throws Exception {
+        if(verificarOptionFile().equals("./")) {
             throw new Exception("debe proporcionar un archivo");
         }
-        String fileName = VerificarOptionFile();
-        String sentence = VerificarOptionSentence();
-        busqueda.SearchInFile(fileName, sentence);
+        String fileName = verificarOptionFile();
+        String sentence = verificarOptionSentence();
+        busqueda.searchInFile(fileName, sentence);
     }
     /**
      * operacion para buscar dentro de un directorio
      * si se da una sentencia, se colorea el resultado buscado
      */
-    public void SearcInDirectoryOperation() {
-        String directory = VerificarOptionFile();
-        String sentence = VerificarOptionSentence();
-        busqueda.SearcInDirectory(directory, sentence);
+    public void searcInDirectoryOperation() {
+        String directory = verificarOptionFile();
+        String sentence = verificarOptionSentence();
+        busqueda.searcInDirectory(directory, sentence);
     }
     /**
      * operacion para buscar dentro de directorios
      * si se da una sentencia, se colorea el resultado buscado
      */
-    public void SearcInDirectoriesOperation() {
-        String directorys = VerificarOptionFile();
-        String sentence = VerificarOptionSentence();
-        busqueda.SearcInDirectories(directorys, sentence);
+    public void searcInDirectoriesOperation() {
+        String directorys = verificarOptionFile();
+        String sentence = verificarOptionSentence();
+        busqueda.searcInDirectories(directorys, sentence);
     }
     /**
      * operacion para buscar por el nombre de los archivos, 
      * los archivos tienen como extencion .java
      */
-    public void SearchForFilesOperation() {
-        String directorys = VerificarOptionFile();
-        busqueda.BuscarFiles(directorys);
+    public void searchForFilesOperation() {
+        String directorys = verificarOptionFile();
+        busqueda.buscarFiles(directorys);
     }
     /**
      * operacion para buscar por los metodos del proyecto
      * si se da una sentencia, se buscara por el bloque de codigo de ese método
      */
-    public void SearchForMethodsOperation() {
-        String directorys = VerificarOptionFile();
-        String sentence = VerificarOptionSentence();
-        busqueda.BuscarMethods(directorys, sentence);
+    public void searchForMethodsOperation() {
+        String directorys = verificarOptionFile();
+        String sentence = verificarOptionSentence();
+        busqueda.buscarMethods(directorys, sentence);
     }
     /**
      * operacion para buscar los T\ODO's del proyecto
      */
-    public void SearchForTODOKeyOperation() {
-        busqueda.BuscarTODO(VerificarOptionFile());
+    public void searchForTODOKeyOperation() {
+        busqueda.buscarTODO(verificarOptionFile());
     }
     /**
      * mensaje con todas las operaciones disponibles
      */
-    public void GetHelpOperation() {
+    public void getHelpOperation() {
         System.out.println("Opciones para joogle");
         System.out.println("-f para buscar dentro de un archivo:" + 
                 "\t seguido de /\"\"/ para buscar una sentencia");

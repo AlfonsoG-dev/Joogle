@@ -12,9 +12,9 @@ class Joogle {
         Operations operation = new Operations(args);
         Options mOptions = new Options();
         if(args.length == 0) {
-            mOptions.OrganizeInputptions();
+            mOptions.organizeInputptions();
         } else {
-            operation.OrganizeCLIOptions();
+            operation.organizeCLIOptions();
         }
     }
 }

@@ -5,8 +5,7 @@ import java.io.InputStreamReader;
 
 import Visual.Colores;
 public class Options {
-
-    public void OrganizeInputptions() {
+    public void organizeInputptions() {
         try {
             BufferedReader mio = new BufferedReader(new InputStreamReader(System.in));
             System.out.print(Colores.GREEN_UNDERLINED + "!press enter¡" + Colores.ANSI_RESET);
@@ -15,22 +14,22 @@ public class Options {
                 System.out.print("[operation]: ");
                 switch(mio.readLine()) {
                     case "-f":
-                        miPanel.SearchInFileOption();
+                        miPanel.searchInFileOption();
                         break;
                     case "-d":
-                        miPanel.SearcInDirectoryOption();
+                        miPanel.searcInDirectoryOption();
                         break;
                     case "-D":
-                        miPanel.SearcInDirectoriesOption();
+                        miPanel.searcInDirectoriesOption();
                         break;
                     case "-lf":
-                        miPanel.SearchForFilesOptions();
+                        miPanel.searchForFilesOptions();
                         break;
                     case "-lt":
-                        miPanel.SearchForTodoOptions();
+                        miPanel.searchForTodoOptions();
                         break;
                     case "-lm":
-                        miPanel.SearchForMethodsOption();
+                        miPanel.searchForMethodsOption();
                         break;
                     case "--h":
                         System.out.println("Opciones para joogle");

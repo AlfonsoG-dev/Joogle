@@ -13,47 +13,47 @@ public class PanelOption {
         miBufferedReader = nBufferedReader;
     }
 
-    public void SearchInFileOption() throws IOException {
+    public void searchInFileOption() throws IOException {
         System.out.print("[file]: ");
         String f = miBufferedReader.readLine();
         System.out.print("[sentence]: ");
         String s = miBufferedReader.readLine();
-        busqueda.SearchInFile(f, s);
+        busqueda.searchInFile(f, s);
     }
 
-    public void SearcInDirectoryOption() throws IOException {
+    public void searcInDirectoryOption() throws IOException {
         System.out.print("[directory]: ");
         String dir = miBufferedReader.readLine();
         System.out.print("[sentence]: ");
         String ds = miBufferedReader.readLine();
-        busqueda.SearcInDirectory(dir, ds);
+        busqueda.searcInDirectory(dir, ds);
     }
 
-    public void SearcInDirectoriesOption() throws IOException {
+    public void searcInDirectoriesOption() throws IOException {
         System.out.print("[directory]: ");
         String dirD = miBufferedReader.readLine();
         System.out.print("[sentence]: ");
         String dsD = miBufferedReader.readLine();
-        busqueda.SearcInDirectories(dirD, dsD);
+        busqueda.searcInDirectories(dirD, dsD);
     }
 
-    public void SearchForFilesOptions() throws IOException {
+    public void searchForFilesOptions() throws IOException {
         System.out.print("[directory]: ");
         String fd = miBufferedReader.readLine();
-        busqueda.BuscarFiles(fd);
+        busqueda.buscarFiles(fd);
     }
 
-    public void SearchForTodoOptions() throws IOException {
+    public void searchForTodoOptions() throws IOException {
         System.out.print("[directory]: ");
         String d = miBufferedReader.readLine();
-        busqueda.BuscarTODO(d);
+        busqueda.buscarTODO(d);
     }
 
-    public void SearchForMethodsOption() throws IOException {
+    public void searchForMethodsOption() throws IOException {
         System.out.print("[file]: ");
         String fl = miBufferedReader.readLine();
         System.out.print("[sentece]: ");
         String sl = miBufferedReader.readLine();
-        busqueda.BuscarMethods(fl, sl);
+        busqueda.buscarMethods(fl, sl);
     }
 }

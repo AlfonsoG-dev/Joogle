@@ -42,7 +42,7 @@ public record FileUtils() {
      * @param files: los archivos dentro del directorio
      * @return string con la ruta de los archivos
      */
-    public ArrayList<String> GetFilesFromDirectory(DirectoryStream<Path> myFiles) throws IOException {
+    public ArrayList<String> getFilesFromDirectory(DirectoryStream<Path> myFiles) throws IOException {
         ArrayList<String> files = new ArrayList<>();
         myFiles
             .forEach(e -> {
@@ -60,7 +60,7 @@ public record FileUtils() {
     * @throws IOException: error al buscar los archivos del directorio
     * @return String con la ruta de los archivos
     */
-    public ArrayList<String> GetFilesFromDirectories(DirectoryStream<Path> myFiles) {
+    public ArrayList<String> getFilesFromDirectories(DirectoryStream<Path> myFiles) {
         ArrayList<String> files = new ArrayList<>();
         myFiles
             .forEach(e -> {
@@ -71,7 +71,7 @@ public record FileUtils() {
                 if(f.isDirectory()) {
                     try {
                         files.addAll(
-                                GetFilesFromDirectories(
+                                getFilesFromDirectories(
                                     Files.newDirectoryStream(f.toPath())
                             )
                         );
@@ -88,7 +88,7 @@ public record FileUtils() {
     * @param filePath: ruta del archivo a leer
     * @return String con los datos del archivo con numero de linea
     */
-    public String GetTextFromFile(String filePath) {
+    public String getTextFromFile(String filePath) {
         String build = "";
         FileReader miReader = null;
         BufferedReader miBufferReader = null;
@@ -127,7 +127,7 @@ public record FileUtils() {
      * @param filePath: ruta del archivo a leer
      * @return String con los datos del archivo sin numero de linea
      */
-    public String GetCleanTextFromFile(String filePath) {
+    public String getCleanTextFromFile(String filePath) {
         String build = "";
         FileReader miReader = null;
         BufferedReader miBufferReader = null;

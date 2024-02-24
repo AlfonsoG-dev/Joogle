@@ -32,31 +32,31 @@ public final class Operations {
     *  -lm listar los métodos del archivo
     *  -lt listart todos los todos en el proyecto
     */
-    public void OrganizeCLIOptions() {
+    public void organizeCLIOptions() {
         try {
             outter: for(int i=0; i<options.length; ++i) {
                 opUtils = new OperationUtils(options, i);
                 switch(options[i]) {
                     case "-f":
-                        opUtils.SearchInFileOperation();
+                        opUtils.searchInFileOperation();
                         break;
                     case "-d":
-                        opUtils.SearcInDirectoryOperation();
+                        opUtils.searcInDirectoryOperation();
                         break;
                     case "-D":
-                        opUtils.SearcInDirectoriesOperation();
+                        opUtils.searcInDirectoriesOperation();
                         break;
                     case "-lf":
-                        opUtils.SearchForFilesOperation();
+                        opUtils.searchForFilesOperation();
                         break;
                     case "-lm":
-                        opUtils.SearchForMethodsOperation();
+                        opUtils.searchForMethodsOperation();
                         break;
                     case "-lt":
-                        opUtils.SearchForTODOKeyOperation();
+                        opUtils.searchForTODOKeyOperation();
                         break;
                     case "--h":
-                        opUtils.GetHelpOperation();
+                        opUtils.getHelpOperation();
                         break;
                     default: 
                         System.out.println("utilize el comando --h para mas informacion");

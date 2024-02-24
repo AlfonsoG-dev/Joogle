@@ -44,7 +44,7 @@ public final class MethodModel {
     /**
      * nombre del metodo
      */
-    public String GetMethodName() {
+    public String getMethodName() {
         return MethodModel.getNameOfMethods(sentence);
     }
     /**

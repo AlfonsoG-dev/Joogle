@@ -1,9 +1,9 @@
 package Utils;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 import Mundo.Modelos.MethodModel;
+
 import Visual.BusquedaFormat;
 import Visual.Colores;
 
@@ -36,9 +36,9 @@ public class BusquedaUtil {
     * @param filePath: ruta del archivo a leer
     * @return String con los métodos del archivo
     */
-    public String GetMethodName(String filePath) {
+    public String getMethodName(String filePath) {
         String build = "";
-        String[] partition = textUtils.GetSentences(filePath).split("\n");
+        String[] partition = textUtils.getSentences(filePath).split("\n");
         for(String p: partition) {
             build += MethodModel.getNameOfMethods(p);
         }
@@ -49,8 +49,8 @@ public class BusquedaUtil {
     * @param filePath: ruta del archivo a leer
     * @return String con el tipo de retorno del método
     */
-    private String GetReturnType(String filePath) {
-        String[] sentences = textUtils.GetSentences(filePath).split("\n");
+    private String getReturnType(String filePath) {
+        String[] sentences = textUtils.getSentences(filePath).split("\n");
         String tipes = "";
         for(String s: sentences) {
             tipes += MethodModel.getReturnType(s);
@@ -62,8 +62,8 @@ public class BusquedaUtil {
     * @param filePath: ruta del archivo a leer
     * @return String con los argumentos del método
     */
-    private String GetArguments(String filePath) {
-        String[] sentences = textUtils.GetSentences(filePath).split("\n");
+    private String getArguments(String filePath) {
+        String[] sentences = textUtils.getSentences(filePath).split("\n");
         String arguments = "";
         for(String s: sentences) {
             arguments += MethodModel.getArguments(s);
@@ -76,13 +76,13 @@ public class BusquedaUtil {
     * @param sentencia: sentencia a buscar
     * @return String con la sentencia completa del método buscado
     */
-    public String LocalizarMetodo(String filePath, String sentencia) {
+    public String localizarMetodo(String filePath, String sentencia) {
         String 
             r     = sentencia.trim().toLowerCase(),
             build = "";
         ArrayList<MethodModel> partition = textUtils.listMethods(filePath);
         for(MethodModel mt: partition) {
-            if(mt.GetMethodName().toLowerCase().contains(r)) {
+            if(mt.getMethodName().toLowerCase().contains(r)) {
                 build = mt.getSentences();
             }
         }
@@ -94,11 +94,11 @@ public class BusquedaUtil {
     * @param sentence: sentencia a buscar
     * @return número de linea del método buscado
     */
-    public int GetLineNumber(String filePath, String sentence) {
+    public int getLineNumber(String filePath, String sentence) {
         ArrayList<MethodModel> separate = textUtils.listMethods(filePath);
         int res = 0;
         for(MethodModel mt: separate) {
-            if(mt.GetMethodName().toLowerCase().contains(sentence.toLowerCase())) {
+            if(mt.getMethodName().toLowerCase().contains(sentence.toLowerCase())) {
                 res = mt.getLineNumber();
             }
         }
@@ -110,28 +110,28 @@ public class BusquedaUtil {
     * @param sentence: sentencia buscada
     * @return lista de datos modificados con el color
     */
-    public String CompareToReturnType(String filePath, String sentence) {
+    public String compareToReturnType(String filePath, String sentence) {
         String 
             st     = sentence.split("=>")[0].replace(" ", "").toLowerCase(),
             result = "";
-        String[] sentences = GetReturnType(filePath).split("\n");
+        String[] sentences = getReturnType(filePath).split("\n");
         int r = 0;
         for(String s: sentences) {
             if(st.equals("")) {
-                result += format.SetColorSentence(s, Colores.ANSI_YELLOW) + "\n";
+                result += format.setColorSentence(s, Colores.ANSI_YELLOW) + "\n";
                 ++r;
             } else if(s.toLowerCase().replace(" ", "").equals(st) ||
                     textUtils.CompareCharToChar(s, st) == st.length()) {
-                result += format.SetColorSentence(s, Colores.GREEN_UNDERLINED) + "\n";
+                result += format.setColorSentence(s, Colores.GREEN_UNDERLINED) + "\n";
                 ++r;
             } else if(textUtils.CompareCharToChar(s, st) > st.length()) {
-                result += format.SetColorSentence(s, Colores.ANSI_YELLOW) + "\n";
+                result += format.setColorSentence(s, Colores.ANSI_YELLOW) + "\n";
                 ++r;
             } else {
                 result += s + "\n";
             }
         }
-        format.ConcurrencyFormat(r, "ReturnType");
+        format.concurrencyFormat(r, "ReturnType");
         return result;
     }
     /**
@@ -140,14 +140,14 @@ public class BusquedaUtil {
     * @param sentence: sentencia buscada
     * @return lista de datos modificados con el color
     */
-    public String CompareToArguments(String filePath, String sentence) {
+    public String compareToArguments(String filePath, String sentence) {
         String 
             st     = "",
             result = "";
         if(sentence.contains("=>")) {
             st = sentence.split("=>")[1].replace(" ", "").toLowerCase();
         }
-        String[] sentences = GetArguments(filePath).split("\n");
+        String[] sentences = getArguments(filePath).split("\n");
         int r = 0;
         for(int i=0; i<sentences.length; ++i) {
             String s = sentences[i].replace(" ", "").toLowerCase();
@@ -155,10 +155,10 @@ public class BusquedaUtil {
                 result += sentences[i] + "\n";
                 ++r;
             } else if(s.equals(st)) {
-                result += format.SetColorSentence(sentences[i], Colores.GREEN_UNDERLINED) + "\n";
+                result += format.setColorSentence(sentences[i], Colores.GREEN_UNDERLINED) + "\n";
                 ++r;
             } else if(textUtils.CompareCharToChar(s, st) > st.length()) {
-                result += format.SetColorSentence(sentences[i], Colores.ANSI_YELLOW) + "\n";
+                result += format.setColorSentence(sentences[i], Colores.ANSI_YELLOW) + "\n";
                 ++r;
             } else {
                 if(s.contains(",") && st.contains(",")) {
@@ -173,7 +173,7 @@ public class BusquedaUtil {
                                 conditionB = sComas[sc].replace(")", "");
                             int conditionC = textUtils.CompareCharToChar(comas[c], sComas[sc]);
                             if(conditionA.equals(conditionB) ||  conditionC > st.length()) {
-                                comas[c] = format.SetColorSentence(comas[c], Colores.ANSI_YELLOW);
+                                comas[c] = format.setColorSentence(comas[c], Colores.ANSI_YELLOW);
                             }
                         }
                         cB += comas[c] + ", ";
@@ -188,7 +188,7 @@ public class BusquedaUtil {
                         cB         = "";
                     int conditionC = textUtils.CompareCharToChar(comas, sComa);
                     if(conditionA.equals(conditionB) || conditionC > st.length()) {
-                        comas = format.SetColorSentence(comas, Colores.ANSI_YELLOW);
+                        comas = format.setColorSentence(comas, Colores.ANSI_YELLOW);
                     }
                     cB += comas + ", ";
                     sentences[i] = cB.substring(0, cB.length()-2);
@@ -196,7 +196,7 @@ public class BusquedaUtil {
                 result += sentences[i] + "\n";
             }
         }
-        format.ConcurrencyFormat(r, "Arguments");
+        format.concurrencyFormat(r, "Arguments");
         return result;
     }
     /**
@@ -204,21 +204,21 @@ public class BusquedaUtil {
      * @param filePath: archivo a leer
      * @param sentencia: método buscado
      */
-    public synchronized String GetMethodContext(String filePath, String sentencia) {
-        String[] fileLines = textUtils.GetSentences(filePath).split("\n");
-        int inicial = GetLineNumber(filePath, sentencia);
+    public synchronized String getMethodContext(String filePath, String sentencia) {
+        String[] fileLines = textUtils.getSentences(filePath).split("\n");
+        int inicial = getLineNumber(filePath, sentencia);
         String 
-            buscada     = inicial + ":" + LocalizarMetodo(filePath, sentencia),
+            buscada     = inicial + ":" + localizarMetodo(filePath, sentencia),
             conNumLinea = "",
             respuesta   = "";
         int end = 0;
         for(int i=0; i<fileLines.length; ++i) {
-            conNumLinea = GetLineNumber(
+            conNumLinea = getLineNumber(
                     filePath,
                     MethodModel.getNameOfMethods(fileLines[i])
             ) + ":" + fileLines[i];
             if(conNumLinea.equals(buscada) && (i+1) < fileLines.length) {
-                end = GetLineNumber(
+                end = getLineNumber(
                         filePath,
                         MethodModel.getNameOfMethods(fileLines[i+1])
                 );
@@ -228,14 +228,14 @@ public class BusquedaUtil {
                 end = -1;
             }
         }
-        String[] fileText = fileUtils.GetCleanTextFromFile(filePath).split("\n");
+        String[] fileText = fileUtils.getCleanTextFromFile(filePath).split("\n");
         String 
-            s = textUtils.DeleteComments(
+            s = textUtils.deleteComments(
                     fileText,
                     inicial,
                     end
             ),
-            e = textUtils.DeleteComments(
+            e = textUtils.deleteComments(
                     fileText,
                     inicial,
                     fileText.length
@@ -252,8 +252,8 @@ public class BusquedaUtil {
      * @param filePath: archivo a leer
      * @return true si el archivo tiene sentencias todo, false de lo contrario
      */
-    public synchronized void GetTodoSentences(String filePath) {
-        String[] fileLines = fileUtils.GetCleanTextFromFile(filePath).split("\n");
+    public synchronized void getTodoSentences(String filePath) {
+        String[] fileLines = fileUtils.getCleanTextFromFile(filePath).split("\n");
         boolean existe = false;
         for(int i=0; i<fileLines.length; ++i) {
             String valores = fileLines[i].replace(" ", "");
@@ -265,7 +265,7 @@ public class BusquedaUtil {
             if(conditionA || conditionB || conditionC || conditionD) {
                 int line = i+1;
                 System.out.println(
-                        format.SetColorSentence(
+                        format.setColorSentence(
                             filePath,
                             Colores.ANSI_YELLOW
                         ) + ":" +  line + fileLines[i]
