@@ -121,10 +121,10 @@ public class BusquedaUtil {
                 result += format.setColorSentence(s, Colores.ANSI_YELLOW) + "\n";
                 ++r;
             } else if(s.toLowerCase().replace(" ", "").equals(st) ||
-                    textUtils.CompareCharToChar(s, st) == st.length()) {
+                    textUtils.compareCharToChar(s, st) == st.length()) {
                 result += format.setColorSentence(s, Colores.GREEN_UNDERLINED) + "\n";
                 ++r;
-            } else if(textUtils.CompareCharToChar(s, st) > st.length()) {
+            } else if(textUtils.compareCharToChar(s, st) > st.length()) {
                 result += format.setColorSentence(s, Colores.ANSI_YELLOW) + "\n";
                 ++r;
             } else {
@@ -157,7 +157,7 @@ public class BusquedaUtil {
             } else if(s.equals(st)) {
                 result += format.setColorSentence(sentences[i], Colores.GREEN_UNDERLINED) + "\n";
                 ++r;
-            } else if(textUtils.CompareCharToChar(s, st) > st.length()) {
+            } else if(textUtils.compareCharToChar(s, st) > st.length()) {
                 result += format.setColorSentence(sentences[i], Colores.ANSI_YELLOW) + "\n";
                 ++r;
             } else {
@@ -171,7 +171,7 @@ public class BusquedaUtil {
                             String 
                                 conditionA = comas[c].replace(" ", "").replace(")", "").toLowerCase(),
                                 conditionB = sComas[sc].replace(")", "");
-                            int conditionC = textUtils.CompareCharToChar(comas[c], sComas[sc]);
+                            int conditionC = textUtils.compareCharToChar(comas[c], sComas[sc]);
                             if(conditionA.equals(conditionB) ||  conditionC > st.length()) {
                                 comas[c] = format.setColorSentence(comas[c], Colores.ANSI_YELLOW);
                             }
@@ -186,7 +186,7 @@ public class BusquedaUtil {
                         conditionA = comas.replace(" ", "").toLowerCase(),
                         conditionB = sComa.replace(" ", "").toLowerCase() + ")",
                         cB         = "";
-                    int conditionC = textUtils.CompareCharToChar(comas, sComa);
+                    int conditionC = textUtils.compareCharToChar(comas, sComa);
                     if(conditionA.equals(conditionB) || conditionC > st.length()) {
                         comas = format.setColorSentence(comas, Colores.ANSI_YELLOW);
                     }
