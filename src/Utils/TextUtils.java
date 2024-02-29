@@ -34,7 +34,7 @@ public class TextUtils {
                 conditionB = valores.contains("("),
                 conditionC = valores.endsWith(",\n");
             if(conditionA &&  conditionB || conditionC) {
-                if(fileLines[i+1].contains("{") && fileLines[i+1].contains("(") == false) {
+                if(fileLines[i+1].contains("{") && !fileLines[i+1].contains("(")) {
                     String datos = fileLines[i+1];
                     valores = valores.concat(" " + datos.trim()).replace("{", "");
                 }
@@ -65,16 +65,26 @@ public class TextUtils {
                     conditionB = valores.contains("("),
                     conditionC = valores.endsWith(",\n");
                 if(conditionA &&  conditionB || conditionC) {
-                    if(fileLines[i+1].contains("{") && fileLines[i+1].contains("(") == false) {
+                    if(fileLines[i+1].contains("{") && !fileLines[i+1].contains("(")) {
                         String[] datos = fileLines[i+1].split(":");
                         valores = valores.concat(" " + datos[1].trim());
-                        methods.add(new MethodModel(valores.replace("{", "").trim(), Integer.parseInt(datos[0])));
+                        methods.add(
+                                new MethodModel(
+                                    valores.replace("{", "").trim(),
+                                    Integer.parseInt(datos[0])
+                                )
+                        );
                     }
                 }
                 if(conditionA && valores.contains(")") && !fileLines[i-1].contains("() {") || 
                         valores.endsWith("\n")) {
                     lines = valores.replace("{", "").trim();
-                    methods.add(new MethodModel(lines, Integer.parseInt(numeros_fl[0])));
+                    methods.add(
+                            new MethodModel(
+                                lines,
+                                Integer.parseInt(numeros_fl[0])
+                            )
+                    );
                 }
             }
         }

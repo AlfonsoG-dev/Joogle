@@ -199,6 +199,11 @@ public class BusquedaUtil {
         format.concurrencyFormat(r, "Arguments");
         return result;
     }
+    private void contextMessage(String s) {
+        if(!s.isEmpty()) {
+            System.out.println(s);
+        }
+    }
     /**
      * da el contexto del método, es decir, el bloque de codigo dentro del método buscado
      * @param filePath: archivo a leer
@@ -230,20 +235,22 @@ public class BusquedaUtil {
         }
         String[] fileText = fileUtils.getCleanTextFromFile(filePath).split("\n");
         String 
+            s = "",
+            e = "";
+        if(end > 0) {
             s = textUtils.deleteComments(
                     fileText,
                     inicial,
                     end
-            ),
+            );
+            contextMessage(s);
+        } else if(end < 0) {
             e = textUtils.deleteComments(
                     fileText,
                     inicial,
                     fileText.length
             );
-        if(end > 0 && s.isEmpty() == false) {
-            System.out.println(s);
-        } else if(end < 0 && e.isEmpty() == false) {
-            System.out.println(e);
+            contextMessage(e);
         }
         return respuesta;
     }
@@ -255,14 +262,37 @@ public class BusquedaUtil {
     public synchronized void getTodoSentences(String filePath) {
         String[] fileLines = fileUtils.getCleanTextFromFile(filePath).split("\n");
         boolean existe = false;
+
         for(int i=0; i<fileLines.length; ++i) {
             String valores = fileLines[i].replace(" ", "");
             boolean
-                conditionA = valores.startsWith("//TODO:"),
-                conditionB = valores.startsWith("*TODO:"),
-                conditionC = valores.startsWith("//TODO:"),
-                conditionD = valores.startsWith("/*TODO:");
-            if(conditionA || conditionB || conditionC || conditionD) {
+                conditionA = valores.startsWith("*TODO:"),
+                conditionB = valores.startsWith("/*TODO:") && valores.endsWith("*/"),
+                conditionC = valores.startsWith("//TODO:");
+            if(conditionA) {
+                int 
+                    line  = i+1,
+                    count = line;
+                String 
+                    s = fileLines[i],
+                    e = "",
+                    b = "\n";
+                while(count < fileLines.length) {
+                    if(fileLines[count].contains("*/")) {
+                        b += s + "\n" + e; 
+                        break;
+                    } else if(fileLines[count].contains("*")) {
+                        e += fileLines[count] + "\n";
+                        ++count;
+                    }
+                }
+                System.out.println(
+                        format.setColorSentence(
+                            filePath,
+                            Colores.ANSI_YELLOW
+                        ) + ":" + line + b
+                );
+            } else if(conditionB || conditionC) {
                 int line = i+1;
                 System.out.println(
                         format.setColorSentence(
