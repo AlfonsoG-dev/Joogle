@@ -42,13 +42,13 @@ public record FileUtils() {
      * @param files: los archivos dentro del directorio
      * @return string con la ruta de los archivos
      */
-    public ArrayList<String> getFilesFromDirectory(DirectoryStream<Path> myFiles) throws IOException {
-        ArrayList<String> files = new ArrayList<>();
+    public ArrayList<File> getFilesFromDirectory(DirectoryStream<Path> myFiles) throws IOException {
+        ArrayList<File> files = new ArrayList<>();
         myFiles
             .forEach(e -> {
                 File f = e.toFile();
                 if(f.isFile() && f.getName().contains(".java")) {
-                    files.add(f.getPath());
+                    files.add(f);
                 }
             });
         return files;
@@ -60,13 +60,13 @@ public record FileUtils() {
     * @throws IOException: error al buscar los archivos del directorio
     * @return String con la ruta de los archivos
     */
-    public ArrayList<String> getFilesFromDirectories(DirectoryStream<Path> myFiles) {
-        ArrayList<String> files = new ArrayList<>();
+    public ArrayList<File> getFilesFromDirectories(DirectoryStream<Path> myFiles) {
+        ArrayList<File> files = new ArrayList<>();
         myFiles
             .forEach(e -> {
                 File f = e.toFile();
                 if(f.isFile() && f.getName().contains(".java")) {
-                    files.add(f.getPath());
+                    files.add(f);
                 }
                 if(f.isDirectory()) {
                     try {

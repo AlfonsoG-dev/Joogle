@@ -83,7 +83,15 @@ public class Busqueda {
         try {
             File miFile = new File(filePath);
             if(miFile.isFile() && miFile.getName().contains(".java")) {
-                System.out.println(String.format("\n%s\n", format.setColorSentence(filePath, Colores.ANSI_CYAN)));
+                System.out.println(
+                        String.format(
+                            "\n%s\n",
+                            format.setColorSentence(
+                                filePath,
+                                Colores.ANSI_CYAN
+                            )
+                        )
+                );
                 String sentence = searchSentence.replace("/", "");
                 buscarSentencia(filePath, sentence);
             }
@@ -103,9 +111,10 @@ public class Busqueda {
                 throw new Exception("ONLY WORKS WITH DIRECTORIES");
             }
             DirectoryStream<Path> files = Files.newDirectoryStream(miFile.toPath());
-            ArrayList<String> fileNames = fileUtils.getFilesFromDirectory(files);
+            ArrayList<File> fileNames = fileUtils.getFilesFromDirectory(files);
             fileNames
                 .parallelStream()
+                .map(e -> e.getPath())
                 .forEach(e -> {
                     searchInFile(e, searchSentence);
                 });
@@ -125,9 +134,10 @@ public class Busqueda {
                 throw new Exception("ONLY WORKS WITH DIRECTORIES");
             } else if(miFile.isDirectory()) {
                 DirectoryStream<Path> files = Files.newDirectoryStream(miFile.toPath());
-                ArrayList<String> filesName = fileUtils.getFilesFromDirectories(files);
+                ArrayList<File> filesName = fileUtils.getFilesFromDirectories(files);
                 filesName
                     .parallelStream()
+                    .map(e -> e.getPath())
                     .forEach(e -> {
                         searchInFile(e, searchSentence);
                     });
@@ -148,9 +158,10 @@ public class Busqueda {
                 utils.getTodoSentences(miFile.getPath());
             } else if(miFile.isDirectory()) {
                 DirectoryStream<Path> files = Files.newDirectoryStream(miFile.toPath());
-                ArrayList<String> fileNames = fileUtils.getFilesFromDirectories(files);
+                ArrayList<File> fileNames = fileUtils.getFilesFromDirectories(files);
                 fileNames
                     .parallelStream()
+                    .map(e -> e.getPath())
                     .filter(e -> !e.isEmpty())
                     .forEach(e -> {
                         buscarTODO(e);
@@ -170,9 +181,10 @@ public class Busqueda {
             File miFile = new File(filePath);
             if(miFile.isDirectory()) {
                 DirectoryStream<Path> files = Files.newDirectoryStream(miFile.toPath());
-                ArrayList<String> fileNames = fileUtils.getFilesFromDirectories(files);
+                ArrayList<File> fileNames = fileUtils.getFilesFromDirectories(files);
                 fileNames
                     .parallelStream()
+                    .map(e -> e.getPath())
                     .filter(e -> !e.isEmpty())
                     .forEach(e -> {
                         format.formatoBusquedaFiles(e);
@@ -193,7 +205,7 @@ public class Busqueda {
         try {
             String cSentence = sentence.replace("/", "");
             File miFile = new File(filePath);
-            if(miFile.isFile() && cSentence.equals("") == false) {
+            if(miFile.isFile() && !cSentence.equals("")) {
                 utils.getMethodContext(miFile.getPath(), cSentence);
             } else if(miFile.isFile() && cSentence.equals("")) {
                 String[] metodos = utils.getMethodName(filePath).split("\n");
@@ -201,12 +213,12 @@ public class Busqueda {
                     int lineNumber = utils.getLineNumber(miFile.getPath(), m);
                     format.formatoBusquedaMethod(miFile.getPath(), m, lineNumber);
                 }
-            }
-            else if(miFile.isDirectory()) {
+            } else if(miFile.isDirectory()) {
                 DirectoryStream<Path> files = Files.newDirectoryStream(miFile.toPath());
-                ArrayList<String> filesName = fileUtils.getFilesFromDirectories(files);
+                ArrayList<File> filesName = fileUtils.getFilesFromDirectories(files);
                 filesName
                     .parallelStream()
+                    .map(e -> e.getPath())
                     .filter(e -> !e.isEmpty())
                     .forEach(e -> {
                         buscarMethods(e, cSentence);

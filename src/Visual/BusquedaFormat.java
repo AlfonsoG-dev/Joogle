@@ -1,5 +1,7 @@
 package Visual;
 
+import java.io.File;
+
 /**
  * clase para dar formato al resultado de la busqueda
  */
@@ -52,17 +54,16 @@ public record BusquedaFormat() {
      * @param fileName: nombre del archivo a leer
      */
     public synchronized void formatoBusquedaFiles(String fileName) {
-        String[] name = fileName.split("\\\\");
-        name[name.length-1] = Colores.RED_UNDERLINED + name[name.length-1] + Colores.ANSI_RESET;
-        String build = "", cBuild = "";
-        for(String n:name) {
-            build += n +"\\";
-        }
-        cBuild = build.substring(0, build.length()-2);
+        File miFile = new File(fileName);
+        String name = Colores.RED_UNDERLINED + miFile.getName() + Colores.ANSI_RESET;
+        String build = "";
+        build = miFile.getPath().replace(miFile.getName(), name);
         System.out.println(
                 String.format(
                     ">- %s",
-                    Colores.ANSI_YELLOW + cBuild + Colores.ANSI_RESET + "\n"
+                    Colores.ANSI_YELLOW +
+                    build +
+                    Colores.ANSI_RESET + "\n"
                 )
         );
     }
@@ -72,9 +73,14 @@ public record BusquedaFormat() {
      * @para lineNumber: numéro de linea en el que se encuentra el método
      */
     public synchronized void formatoBusquedaMethod(String fileName, String methodName, int lineNumber) {
-        String fLine =
-            Colores.RED_UNDERLINED + fileName + Colores.ANSI_RESET  +
-            ":" + Colores.ANSI_YELLOW + lineNumber + Colores.ANSI_RESET;
+        String fLine = 
+            Colores.RED_UNDERLINED +
+            fileName +
+            Colores.ANSI_RESET  +
+            ":" +
+            Colores.ANSI_YELLOW +
+            lineNumber +
+            Colores.ANSI_RESET;
         System.out.println(
                 String.format(
                         "%s >- %s", fLine, Colores.ANSI_YELLOW +
