@@ -30,16 +30,16 @@ public final class MethodModel {
      * utilidad para hallar el nombre de un método
      */
     public static String getNameOfMethods(String fileSentence) {
-        String build = "";
+        StringBuffer build = new StringBuffer();
         String[] partition = fileSentence.split("\n");
         for(String p: partition) {
             String[] datos = p.split("\\(");
             for(int i=0; i<datos.length-1; ++i) {
                 String[] separate = datos[i].split(" ");
-                build += separate[separate.length-1].trim() +"\n";
+                build.append(separate[separate.length-1].trim() +"\n");
             }
         }
-        return build;
+        return build.toString();
     }
     /**
      * nombre del metodo
@@ -52,7 +52,7 @@ public final class MethodModel {
      */
     public static String getReturnType(String fileSentence) {
         String[] sentences = fileSentence.split("\n");
-        String types = "";
+        StringBuffer types = new StringBuffer();
         for(String s: sentences) {
             String[] 
                 methods = s.split("\\("),
@@ -67,20 +67,21 @@ public final class MethodModel {
                     spaces[0] = spaces[i];
                 }
             }
-            types += spaces[0] + "\n";
+            types.append(spaces[0] + "\n");
         }
-        return types;
+        return types.toString();
     }
     /**
      * utilidad para separar los argumentos que tienen coma
      */
     private static String containsComa(String arguments) {
-        String args = "(";
+        StringBuffer args = new StringBuffer();
         String[] ars = arguments.split(",");
+        args.append("(");
         for(String at: ars) {
             String type = at.replace("(", "").replace(")", "").trim();
             String[] separate = type.split(" ");
-            args += separate[0] + ", ";
+            args.append(separate[0] + ", ");
         }
         return args.substring(0, args.length()-2) + ")\n";
     }
@@ -89,9 +90,9 @@ public final class MethodModel {
      */
     public static String getArguments(String fileSentence) {
         String[] sentences = fileSentence.split("\n");
-        String 
-            nombres = "",
-            tipos   = "";
+        StringBuffer 
+            nombres = new StringBuffer(),
+            tipos   = new StringBuffer();
         for(String s: sentences) {
             String[] 
                 separate  = s.split("\\("),
@@ -102,12 +103,12 @@ public final class MethodModel {
             } else {
                 args = partition[0] + ")";
             }
-            tipos += "(" +  args.trim() + "\n";
+            tipos.append("(" +  args.trim() + "\n");
         }
-        String[] argumentos = tipos.split("\n");
+        String[] argumentos = tipos.toString().split("\n");
         for(String a: argumentos) {
             if(a.contains(",")) {
-                nombres += MethodModel.containsComa(a);
+                nombres.append(MethodModel.containsComa(a));
             } else {
                 String[] separate = a.split(" ");
                 String args = "";
@@ -116,9 +117,9 @@ public final class MethodModel {
                 } else {
                     args += separate[0];
                 }
-                nombres += args + "\n";
+                nombres.append(args + "\n");
             }
         }
-        return nombres.replace("(", "( ").replace(")", " )");
+        return nombres.toString().replace("(", "( ").replace(")", " )");
     }
 }

@@ -25,7 +25,7 @@ public class TextUtils {
     */
     public String getSentences(String filePath) {
         String[] fileLines = fileUtils.getCleanTextFromFile(filePath).split("\n");
-        String lines = "";
+        StringBuffer lines = new StringBuffer();
         for(int i=0; i<fileLines.length; ++i) {
             String valores = fileLines[i].trim();
             String[] spaces = valores.split(" ");
@@ -41,10 +41,10 @@ public class TextUtils {
             }
             if(conditionA && valores.contains(")") && !fileLines[i-1].contains("() {") || 
                     valores.endsWith("\n")) {
-                lines += valores.replace("{", "").trim() + "\n";
+                lines.append(valores.replace("{", "").trim() + "\n");
             }
         }
-        return lines;
+        return lines.toString();
     }
     /**
      * genera un {@link String} con las sentencia incluido el número de linea 
@@ -98,9 +98,9 @@ public class TextUtils {
      * @return un String con la lectura en el rango deseado
      */
     public String deleteComments(String[] fileText, int inicial, int end) {
-        String res = "";
+        StringBuffer res = new StringBuffer();
         if(end == 0) {
-            res += fileText[inicial-1] + "\n";
+            res.append(fileText[inicial-1] + "\n");
         }
         for(int i=inicial-1; i<end-1; ++i) {
             boolean 
@@ -112,10 +112,10 @@ public class TextUtils {
                 fileText[i] = "";
             }
             if(!fileText[i].equals("")) {
-                res += fileText[i] + "\n";
+                res.append(fileText[i] + "\n");
             }
         }
-        return res;
+        return res.toString();
     }
     /**
      * comparar letra por letra para distinguir la más parecida

@@ -89,7 +89,7 @@ public record FileUtils() {
     * @return String con los datos del archivo con numero de linea
     */
     public String getTextFromFile(String filePath) {
-        String build = "";
+        StringBuffer build = new StringBuffer();
         FileReader miReader = null;
         BufferedReader miBufferReader = null;
         try {
@@ -97,7 +97,7 @@ public record FileUtils() {
             miBufferReader = new BufferedReader(miReader);
             int i=1;
             while(miBufferReader.ready()) {
-                build += i + ":" + miBufferReader.readLine() + "\n";
+                build.append(i + ":" + miBufferReader.readLine() + "\n");
                 ++i;
             }
         } catch (Exception e) {
@@ -120,7 +120,7 @@ public record FileUtils() {
                 }
             }
         }
-        return build;
+        return build.toString();
     }
     /**
      * genera un String con los valores del archivo sin numero de linea
@@ -128,14 +128,14 @@ public record FileUtils() {
      * @return String con los datos del archivo sin numero de linea
      */
     public String getCleanTextFromFile(String filePath) {
-        String build = "";
+        StringBuffer build = new StringBuffer();
         FileReader miReader = null;
         BufferedReader miBufferReader = null;
         try {
             miReader = new FileReader(filePath);
             miBufferReader = new BufferedReader(miReader);
             while(miBufferReader.ready()) {
-                build += miBufferReader.readLine() + "\n";
+                build.append(miBufferReader.readLine() + "\n");
             }
         } catch (Exception e) {
             System.err.println(e);
@@ -157,6 +157,6 @@ public record FileUtils() {
                 }
             }
         }
-        return build;
+        return build.toString();
     }
 }

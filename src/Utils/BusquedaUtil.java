@@ -37,12 +37,12 @@ public class BusquedaUtil {
     * @return String con los métodos del archivo
     */
     public String getMethodName(String filePath) {
-        String build = "";
+        StringBuffer build = new StringBuffer();
         String[] partition = textUtils.getSentences(filePath).split("\n");
         for(String p: partition) {
-            build += MethodModel.getNameOfMethods(p);
+            build.append(MethodModel.getNameOfMethods(p));
         }
-        return build;
+        return build.toString();
     }
     /**
     * genera un String con el tipo de retorno del método
@@ -51,11 +51,11 @@ public class BusquedaUtil {
     */
     private String getReturnType(String filePath) {
         String[] sentences = textUtils.getSentences(filePath).split("\n");
-        String tipes = "";
+        StringBuffer types = new StringBuffer();
         for(String s: sentences) {
-            tipes += MethodModel.getReturnType(s);
+            types.append(MethodModel.getReturnType(s));
         }
-        return tipes;
+        return types.toString();
     }
     /**
     * genera un String con los argumentos que recibe el método
@@ -64,11 +64,11 @@ public class BusquedaUtil {
     */
     private String getArguments(String filePath) {
         String[] sentences = textUtils.getSentences(filePath).split("\n");
-        String arguments = "";
+        StringBuffer arguments = new StringBuffer();
         for(String s: sentences) {
-            arguments += MethodModel.getArguments(s);
+            arguments.append(MethodModel.getArguments(s));
         }
-        return arguments;
+        return arguments.toString();
     }
     /**
     * genera un string con la sentencia completa según el método buscado
@@ -111,28 +111,27 @@ public class BusquedaUtil {
     * @return lista de datos modificados con el color
     */
     public String compareToReturnType(String filePath, String sentence) {
-        String 
-            st     = sentence.split("=>")[0].replace(" ", "").toLowerCase(),
-            result = "";
+        String st = sentence.split("=>")[0].replace(" ", "").toLowerCase();
+        StringBuffer result = new StringBuffer();
         String[] sentences = getReturnType(filePath).split("\n");
         int r = 0;
         for(String s: sentences) {
             if(st.equals("")) {
-                result += format.setColorSentence(s, Colores.ANSI_YELLOW) + "\n";
+                result.append(format.setColorSentence(s, Colores.ANSI_YELLOW) + "\n");
                 ++r;
             } else if(s.toLowerCase().replace(" ", "").equals(st) ||
                     textUtils.compareCharToChar(s, st) == st.length()) {
-                result += format.setColorSentence(s, Colores.GREEN_UNDERLINED) + "\n";
+                result.append(format.setColorSentence(s, Colores.GREEN_UNDERLINED) + "\n");
                 ++r;
             } else if(textUtils.compareCharToChar(s, st) > st.length()) {
-                result += format.setColorSentence(s, Colores.ANSI_YELLOW) + "\n";
+                result.append(format.setColorSentence(s, Colores.ANSI_YELLOW) + "\n");
                 ++r;
             } else {
-                result += s + "\n";
+                result.append(s + "\n");
             }
         }
         format.concurrencyFormat(r, "ReturnType");
-        return result;
+        return result.toString();
     }
     /**
     * modifica los datos para que solo aquellos que tengan el mismo valor se pinten de cierto color
@@ -141,31 +140,33 @@ public class BusquedaUtil {
     * @return lista de datos modificados con el color
     */
     public String compareToArguments(String filePath, String sentence) {
-        String 
-            st     = "",
-            result = "";
+        String st = sentence.split("=>")[1].replace(" ", "").toLowerCase();
+        StringBuffer result = new StringBuffer();
         if(sentence.contains("=>")) {
-            st = sentence.split("=>")[1].replace(" ", "").toLowerCase();
         }
         String[] sentences = getArguments(filePath).split("\n");
         int r = 0;
         for(int i=0; i<sentences.length; ++i) {
             String s = sentences[i].replace(" ", "").toLowerCase();
             if(st.equals("")) {
-                result += sentences[i] + "\n";
+                result.append(sentences[i] + "\n");
                 ++r;
             } else if(s.equals(st)) {
-                result += format.setColorSentence(sentences[i], Colores.GREEN_UNDERLINED) + "\n";
+                result.append(
+                        format.setColorSentence(sentences[i], Colores.GREEN_UNDERLINED) + "\n"
+                );
                 ++r;
             } else if(textUtils.compareCharToChar(s, st) > st.length()) {
-                result += format.setColorSentence(sentences[i], Colores.ANSI_YELLOW) + "\n";
+                result.append(
+                        format.setColorSentence(sentences[i], Colores.ANSI_YELLOW) + "\n"
+                );
                 ++r;
             } else {
                 if(s.contains(",") && st.contains(",")) {
                     String[] 
                         comas  = sentences[i].split(","),
                         sComas = st.split(",");
-                    String cB = "";
+                    StringBuffer cB = new StringBuffer();
                     for(int c=0; c<comas.length; ++c) {
                         for(int sc=0; sc<sComas.length; ++sc) {
                             String 
@@ -176,7 +177,7 @@ public class BusquedaUtil {
                                 comas[c] = format.setColorSentence(comas[c], Colores.ANSI_YELLOW);
                             }
                         }
-                        cB += comas[c] + ", ";
+                        cB.append(comas[c] + ", ");
                     }
                     sentences[i] = cB.substring(0, cB.length()-2);
                 } else if(st.contains(",")) {
@@ -184,20 +185,21 @@ public class BusquedaUtil {
                         comas      = sentences[i].split(",")[0],
                         sComa      = sentence.split(",")[0],
                         conditionA = comas.replace(" ", "").toLowerCase(),
-                        conditionB = sComa.replace(" ", "").toLowerCase() + ")",
-                        cB         = "";
+                        conditionB = sComa.replace(" ", "").toLowerCase() + ")";
+
+                    StringBuffer cB = new StringBuffer();
                     int conditionC = textUtils.compareCharToChar(comas, sComa);
                     if(conditionA.equals(conditionB) || conditionC > st.length()) {
                         comas = format.setColorSentence(comas, Colores.ANSI_YELLOW);
                     }
-                    cB += comas + ", ";
+                    cB.append(comas + ", ");
                     sentences[i] = cB.substring(0, cB.length()-2);
                 }
-                result += sentences[i] + "\n";
+                result.append(sentences[i] + "\n");
             }
         }
         format.concurrencyFormat(r, "Arguments");
-        return result;
+        return result.toString();
     }
     private void contextMessage(String s) {
         if(!s.isEmpty()) {
