@@ -1,7 +1,5 @@
-$clases = " ./src/*.java ./src/Interfaz/*.java ./src/Mundo/*.java ./src/Mundo/Modelos/*.java ./src/Utils/*.java ./src/Visual/*.java"
-$compile = "javac -d ./bin/ " + "$clases"
-$CreateJarFile = "jar -cfm Joogle.jar Manifesto.txt -C ./bin/ ."
-$JavaCommand = "java -jar Joogle.jar -d .\src\ "
-$RunCommand = "$compile" + " && " + "$CreateJarFile" + " && " + "$JavaCommand"
-
-Invoke-Expression $RunCommand
+$compile = "javac -Xlint:all -d .\bin\ .\src\*.java .\src\Interfaz\*.java .\src\Mundo\*.java .\src\Mundo\Modelos\*.java .\src\Utils\*.java .\src\Visual\*.java "
+$createJar = "jar -cfm Joogle.jar Manifesto.txt -C .\bin\ ."
+$javaCommand = "java -jar Joogle.jar"
+$runCommand = "$compile" + " && " + "$createJar" + " && " +"$javaCommand"
+Invoke-Expression $runCommand
