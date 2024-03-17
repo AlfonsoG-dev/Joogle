@@ -1,9 +1,6 @@
 package Mundo;
 import java.io.File;
-import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
 
 import Utils.BusquedaUtil;
 import Visual.BusquedaFormat;
@@ -110,9 +107,7 @@ public class Busqueda {
             if(miFile.isFile()) {
                 throw new Exception("ONLY WORKS WITH DIRECTORIES");
             }
-            DirectoryStream<Path> files = Files.newDirectoryStream(miFile.toPath());
-            ArrayList<File> fileNames = fileUtils.getFilesFromDirectory(files);
-            fileNames
+            fileUtils.getFilesFromDirectory(Files.newDirectoryStream(miFile.toPath()))
                 .parallelStream()
                 .map(e -> e.getPath())
                 .forEach(e -> {
@@ -133,9 +128,7 @@ public class Busqueda {
             if(miFile.isFile()) {
                 throw new Exception("ONLY WORKS WITH DIRECTORIES");
             } else if(miFile.isDirectory()) {
-                DirectoryStream<Path> files = Files.newDirectoryStream(miFile.toPath());
-                ArrayList<File> filesName = fileUtils.getFilesFromDirectories(files);
-                filesName
+                fileUtils.getFilesFromDirectories(Files.newDirectoryStream(miFile.toPath()))
                     .parallelStream()
                     .map(e -> e.getPath())
                     .forEach(e -> {
@@ -157,9 +150,7 @@ public class Busqueda {
             if(miFile.isFile()) {
                 utils.getTodoSentences(miFile.getPath());
             } else if(miFile.isDirectory()) {
-                DirectoryStream<Path> files = Files.newDirectoryStream(miFile.toPath());
-                ArrayList<File> fileNames = fileUtils.getFilesFromDirectories(files);
-                fileNames
+                fileUtils.getFilesFromDirectories(Files.newDirectoryStream(miFile.toPath()))
                     .parallelStream()
                     .map(e -> e.getPath())
                     .filter(e -> !e.isEmpty())
@@ -180,9 +171,7 @@ public class Busqueda {
         try {
             File miFile = new File(filePath);
             if(miFile.isDirectory()) {
-                DirectoryStream<Path> files = Files.newDirectoryStream(miFile.toPath());
-                ArrayList<File> fileNames = fileUtils.getFilesFromDirectories(files);
-                fileNames
+                fileUtils.getFilesFromDirectories(Files.newDirectoryStream(miFile.toPath()))
                     .parallelStream()
                     .map(e -> e.getPath())
                     .filter(e -> !e.isEmpty())
@@ -214,9 +203,7 @@ public class Busqueda {
                     format.formatoBusquedaMethod(miFile.getPath(), m, lineNumber);
                 }
             } else if(miFile.isDirectory()) {
-                DirectoryStream<Path> files = Files.newDirectoryStream(miFile.toPath());
-                ArrayList<File> filesName = fileUtils.getFilesFromDirectories(files);
-                filesName
+                fileUtils.getFilesFromDirectories(Files.newDirectoryStream(miFile.toPath()))
                     .parallelStream()
                     .map(e -> e.getPath())
                     .filter(e -> !e.isEmpty())
