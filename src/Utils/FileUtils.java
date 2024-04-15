@@ -4,10 +4,13 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * record con los métodos para utilizar los archivos
@@ -17,7 +20,7 @@ public record FileUtils() {
     * tokens a ignorar en la busqueda
     * @return lista de tokens a ignorar
     */
-    public ArrayList<String> declarationTokenList() {
+    public List<String> declarationTokenList() {
         String[] tokens = new String[] {
             "public",
             "private",
@@ -31,7 +34,7 @@ public record FileUtils() {
             "interface",
             "enum"
         };
-        ArrayList<String> lista = new ArrayList<String>();
+        List<String> lista = new ArrayList<String>();
         for(String t: tokens) {
             lista.add(t);
         }
@@ -42,8 +45,8 @@ public record FileUtils() {
      * @param files: los archivos dentro del directorio
      * @return string con la ruta de los archivos
      */
-    public ArrayList<File> getFilesFromDirectory(DirectoryStream<Path> myFiles) throws IOException {
-        ArrayList<File> files = new ArrayList<>();
+    public List<File> getFilesFromDirectory(DirectoryStream<Path> myFiles) throws IOException {
+        List<File> files = new ArrayList<>();
         myFiles
             .forEach(e -> {
                 File f = e.toFile();
@@ -60,8 +63,8 @@ public record FileUtils() {
     * @throws IOException: error al buscar los archivos del directorio
     * @return String con la ruta de los archivos
     */
-    public ArrayList<File> getFilesFromDirectories(DirectoryStream<Path> myFiles) {
-        ArrayList<File> files = new ArrayList<>();
+    public List<File> getFilesFromDirectories(DirectoryStream<Path> myFiles) {
+        List<File> files = new ArrayList<>();
         myFiles
             .forEach(e -> {
                 File f = e.toFile();

@@ -1,6 +1,6 @@
 package Utils;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import Mundo.Modelos.MethodModel;
 
@@ -80,7 +80,7 @@ public class BusquedaUtil {
         String 
             r     = sentencia.trim().toLowerCase(),
             build = "";
-        ArrayList<MethodModel> partition = textUtils.listMethods(filePath);
+        List<MethodModel> partition = textUtils.listMethods(filePath);
         for(MethodModel mt: partition) {
             if(mt.getMethodName().toLowerCase().contains(r)) {
                 build = mt.getSentences();
@@ -95,7 +95,7 @@ public class BusquedaUtil {
     * @return número de linea del método buscado
     */
     public int getLineNumber(String filePath, String sentence) {
-        ArrayList<MethodModel> separate = textUtils.listMethods(filePath);
+        List<MethodModel> separate = textUtils.listMethods(filePath);
         int res = 0;
         for(MethodModel mt: separate) {
             if(mt.getMethodName().toLowerCase().contains(sentence.toLowerCase())) {
@@ -226,10 +226,11 @@ public class BusquedaUtil {
             respuesta   = "";
         int end = 0;
         for(int i=0; i<fileLines.length; ++i) {
-            conNumLinea = getLineNumber(
-                    filePath,
-                    MethodModel.getNameOfMethods(fileLines[i])
-            ) + ":" + fileLines[i];
+            conNumLinea = String.format(
+                    "%s:%s",
+                    getLineNumber(filePath, MethodModel.getNameOfMethods(fileLines[i])),
+                    fileLines[i]
+            ); 
             if(conNumLinea.equals(buscada) && (i+1) < fileLines.length) {
                 end = getLineNumber(
                         filePath,
@@ -295,10 +296,11 @@ public class BusquedaUtil {
                     }
                 }
                 System.out.println(
-                        format.setColorSentence(
-                            filePath,
-                            Colores.ANSI_YELLOW
-                        ) + ":" + line + b
+                        String.format(
+                            "%s:%s", 
+                            format.setColorSentence( filePath, Colores.ANSI_YELLOW),
+                            line + b
+                        )
                 );
             } else if(conditionB || conditionC) {
                 int line = i+1;

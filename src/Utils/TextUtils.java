@@ -1,6 +1,7 @@
 package Utils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import Mundo.Modelos.MethodModel;
 
@@ -51,9 +52,9 @@ public class TextUtils {
      * @param filePath: ruta del archivo a leer
      * @return String con las lineas y su numero de linea
      */
-    public ArrayList<MethodModel> listMethods(String filePath) {
+    public List<MethodModel> listMethods(String filePath) {
         String[] fileLines = fileUtils.getTextFromFile(filePath).split("\n");
-        ArrayList<MethodModel> methods = new ArrayList<>();
+        List<MethodModel> methods = new ArrayList<>();
         String lines = "";
         for(int i=0; i<fileLines.length; ++i) {
             String[] numeros_fl = fileLines[i].replace("}", "").split(":");
