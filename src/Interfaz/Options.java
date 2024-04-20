@@ -11,7 +11,7 @@ public class Options {
             System.out.print(Colores.GREEN_UNDERLINED + "!press enter¡" + Colores.ANSI_RESET);
             while(mio.readLine().equals("-q") == false) {
                 PanelOption miPanel = new PanelOption(mio);
-                System.out.print("[operation]: ");
+                System.out.print("[ INFO ]: ");
                 switch(mio.readLine()) {
                     case "-f":
                         miPanel.searchInFileOption();

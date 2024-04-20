@@ -42,7 +42,7 @@ public record OperationUtils(String[] options, int i) {
      */
     public void searchInFileOperation() throws Exception {
         if(verificarOptionFile().equals("./")) {
-            throw new Exception("debe proporcionar un archivo");
+            throw new Exception("[ ERROR ]: debe proporcionar un archivo");
         }
         String fileName = verificarOptionFile();
         String sentence = verificarOptionSentence();

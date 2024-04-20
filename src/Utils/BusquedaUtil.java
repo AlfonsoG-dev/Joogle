@@ -314,7 +314,7 @@ public class BusquedaUtil {
             }
         }
         if(existe == false) {
-            System.err.println("\n\t NO TIENE TODO's POR EL MOMENTO \n");
+            System.err.println("\n[ INFO ]: \t NO TIENE TODO's POR EL MOMENTO \n");
         }
     }
 }
