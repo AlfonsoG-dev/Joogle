@@ -111,10 +111,7 @@ public class BusquedaUtil {
     * @return lista de datos modificados con el color
     */
     public String compareToReturnType(String filePath, String sentence) {
-        String st = "";
-        if(sentence.trim().contains("=>")) {
-            st = sentence.split("=>")[0].replace(" ", "").toLowerCase();
-        }
+        String st = sentence.split("\\(")[0].replace(" ", "").toLowerCase();
         StringBuffer result = new StringBuffer();
         String[] sentences = getReturnType(filePath).split("\n");
         int r = 0;
@@ -143,13 +140,8 @@ public class BusquedaUtil {
     * @return lista de datos modificados con el color
     */
     public String compareToArguments(String filePath, String sentence) {
-        String st = "";
-        if(sentence.trim().contains("=>")) {
-            st = sentence.split("=>")[1].replace(" ", "").toLowerCase();
-        }
+        String st = "(" + sentence.split("\\(")[1].replace(" ", "").toLowerCase();
         StringBuffer result = new StringBuffer();
-        if(sentence.contains("=>")) {
-        }
         String[] sentences = getArguments(filePath).split("\n");
         int r = 0;
         for(int i=0; i<sentences.length; ++i) {
