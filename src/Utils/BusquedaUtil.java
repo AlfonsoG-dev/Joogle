@@ -2,7 +2,7 @@ package Utils;
 
 import java.util.List;
 
-import Mundo.Modelos.MethodModel;
+import Mundo.Modelos.Model;
 
 import Visual.BusquedaFormat;
 import Visual.Colores;
@@ -40,7 +40,7 @@ public class BusquedaUtil {
         StringBuffer build = new StringBuffer();
         String[] partition = textUtils.getSentences(filePath).split("\n");
         for(String p: partition) {
-            build.append(MethodModel.getNameOfMethods(p));
+            build.append(Model.getNameOfMethods(p));
         }
         return build.toString();
     }
@@ -53,7 +53,7 @@ public class BusquedaUtil {
         String[] sentences = textUtils.getSentences(filePath).split("\n");
         StringBuffer types = new StringBuffer();
         for(String s: sentences) {
-            types.append(MethodModel.getReturnType(s));
+            types.append(Model.getReturnType(s));
         }
         return types.toString();
     }
@@ -66,7 +66,7 @@ public class BusquedaUtil {
         String[] sentences = textUtils.getSentences(filePath).split("\n");
         StringBuffer arguments = new StringBuffer();
         for(String s: sentences) {
-            arguments.append(MethodModel.getArguments(s));
+            arguments.append(Model.getArguments(s));
         }
         return arguments.toString();
     }
@@ -80,8 +80,8 @@ public class BusquedaUtil {
         String 
             r     = sentencia.trim().toLowerCase(),
             build = "";
-        List<MethodModel> partition = textUtils.listMethods(filePath);
-        for(MethodModel mt: partition) {
+        List<Model> partition = textUtils.listMethods(filePath);
+        for(Model mt: partition) {
             if(mt.getMethodName().toLowerCase().contains(r)) {
                 build = mt.getSentences();
             }
@@ -95,9 +95,9 @@ public class BusquedaUtil {
     * @return número de linea del método buscado
     */
     public int getLineNumber(String filePath, String sentence) {
-        List<MethodModel> separate = textUtils.listMethods(filePath);
+        List<Model> separate = textUtils.listMethods(filePath);
         int res = 0;
-        for(MethodModel mt: separate) {
+        for(Model mt: separate) {
             if(mt.getMethodName().toLowerCase().contains(sentence.toLowerCase())) {
                 res = mt.getLineNumber();
             }
@@ -228,13 +228,13 @@ public class BusquedaUtil {
         for(int i=0; i<fileLines.length; ++i) {
             conNumLinea = String.format(
                     "%s:%s",
-                    getLineNumber(filePath, MethodModel.getNameOfMethods(fileLines[i])),
+                    getLineNumber(filePath, Model.getNameOfMethods(fileLines[i])),
                     fileLines[i]
             ); 
             if(conNumLinea.equals(buscada) && (i+1) < fileLines.length) {
                 end = getLineNumber(
                         filePath,
-                        MethodModel.getNameOfMethods(fileLines[i+1])
+                        Model.getNameOfMethods(fileLines[i+1])
                 );
                 format.formatoPresentFilename(filePath, inicial);
             } else if(conNumLinea.equals(buscada) && (i+1) >= fileLines.length) {

@@ -3,7 +3,7 @@ package Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import Mundo.Modelos.MethodModel;
+import Mundo.Modelos.Model;
 
 /**
  * clase para manipular texto
@@ -52,9 +52,9 @@ public class TextUtils {
      * @param filePath: ruta del archivo a leer
      * @return String con las lineas y su numero de linea
      */
-    public List<MethodModel> listMethods(String filePath) {
+    public List<Model> listMethods(String filePath) {
         String[] fileLines = fileUtils.getTextFromFile(filePath).split("\n");
-        List<MethodModel> methods = new ArrayList<>();
+        List<Model> methods = new ArrayList<>();
         String lines = "";
         for(int i=0; i<fileLines.length; ++i) {
             String[] numeros_fl = fileLines[i].replace("}", "").split(":");
@@ -70,7 +70,7 @@ public class TextUtils {
                         String[] datos = fileLines[i+1].split(":");
                         valores = valores.concat(" " + datos[1].trim());
                         methods.add(
-                                new MethodModel(
+                                new Model(
                                     valores.replace("{", "").trim(),
                                     Integer.parseInt(datos[0])
                                 )
@@ -81,7 +81,7 @@ public class TextUtils {
                         valores.endsWith("\n")) {
                     lines = valores.replace("{", "").trim();
                     methods.add(
-                            new MethodModel(
+                            new Model(
                                 lines,
                                 Integer.parseInt(numeros_fl[0])
                             )

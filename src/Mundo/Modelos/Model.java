@@ -4,12 +4,12 @@ import Utils.FileUtils;
 /**
  * representa los methodos
  */
-public final class MethodModel {
+public final class Model {
 
     private final static FileUtils fileUtils = new FileUtils();
     private String sentence;
     private int lineNumber;
-    public MethodModel(String nMetodo, int nLineNumber) {
+    public Model(String nMetodo, int nLineNumber) {
         sentence = nMetodo;
         lineNumber = nLineNumber;
     }
@@ -45,7 +45,7 @@ public final class MethodModel {
      * nombre del metodo
      */
     public String getMethodName() {
-        return MethodModel.getNameOfMethods(sentence);
+        return Model.getNameOfMethods(sentence);
     }
     /**
      * utilidad para hallar el tipo de retorno de las sentencias del texto
@@ -108,7 +108,7 @@ public final class MethodModel {
         String[] argumentos = tipos.toString().split("\n");
         for(String a: argumentos) {
             if(a.contains(",")) {
-                nombres.append(MethodModel.containsComa(a));
+                nombres.append(Model.containsComa(a));
             } else {
                 String[] separate = a.split(" ");
                 String args = "";
