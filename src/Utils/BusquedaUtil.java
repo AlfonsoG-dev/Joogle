@@ -117,14 +117,20 @@ public class BusquedaUtil {
         int r = 0;
         for(String s: sentences) {
             if(st.equals("")) {
-                result.append(format.setColorSentence(s, Colores.ANSI_YELLOW) + "\n");
+                result.append(
+                        format.setColorSentence(s, Colores.ANSI_YELLOW) + "\n"
+                );
                 ++r;
             } else if(s.toLowerCase().replace(" ", "").equals(st) ||
                     textUtils.compareCharToChar(s, st) == st.length()) {
-                result.append(format.setColorSentence(s, Colores.GREEN_UNDERLINED) + "\n");
+                result.append(
+                        format.setColorSentence(s, Colores.GREEN_UNDERLINED) + "\n"
+                );
                 ++r;
             } else if(textUtils.compareCharToChar(s, st) > st.length()) {
-                result.append(format.setColorSentence(s, Colores.ANSI_YELLOW) + "\n");
+                result.append(
+                        format.setColorSentence(s, Colores.ANSI_YELLOW) + "\n"
+                );
                 ++r;
             } else {
                 result.append(s + "\n");
@@ -270,9 +276,9 @@ public class BusquedaUtil {
         for(int i=0; i<fileLines.length; ++i) {
             String valores = fileLines[i].replace(" ", "");
             boolean
-                conditionA = valores.startsWith("*TODO:"),
-                conditionB = valores.startsWith("/*TODO:") && valores.endsWith("*/"),
-                conditionC = valores.startsWith("//TODO:");
+                conditionA = valores.startsWith("*TODO:") || valores.startsWith("*TODO"),
+                conditionB = valores.startsWith("/*TODO:") || valores.startsWith("/*TODO"),
+                conditionC = valores.startsWith("//TODO:") || valores.startsWith("//TODO");
             if(conditionA) {
                 int 
                     line  = i+1,
