@@ -44,9 +44,11 @@ public class Busqueda {
                 arguments   = utils.compareToArguments(filePath, sentencia).split("\n");
             File miFile = new File(filePath);
             if (miFile.exists()) {
-                System.out.println(methodNames.length + " | " + types.length + " | " + arguments.length);
+                System.out.println(
+                        methodNames.length + " | " + types.length + " | " + arguments.length
+                );
                 for(int i = 0; i < methodNames.length; ++i) {
-                    if (sentencia.equals("")) {
+                    if(types[i].contains(Colores.GREEN_UNDERLINED) || arguments[i].contains(Colores.GREEN_UNDERLINED)) {
                         format.formatoBusquedaSentencia(
                             utils.getLineNumber(filePath, methodNames[i]),
                             filePath,
@@ -54,7 +56,7 @@ public class Busqueda {
                             types[i],
                             arguments[i]
                         );
-                    } else {
+                    } else if (sentencia.equals("")) {
                         format.formatoBusquedaSentencia(
                             utils.getLineNumber(filePath, methodNames[i]),
                             filePath,
@@ -64,8 +66,6 @@ public class Busqueda {
                         );
                     }
                 }
-            } else {
-                System.out.println("[ INFO ]: el archivo no existe");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -90,7 +90,7 @@ public class Busqueda {
                             )
                         )
                 );
-                String sentence = searchSentence.replace("/", "");
+                String sentence = searchSentence;
                 buscarSentencia(filePath, sentence);
             }
         } catch(Exception e) {
