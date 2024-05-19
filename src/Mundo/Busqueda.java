@@ -44,6 +44,7 @@ public class Busqueda {
                 arguments   = utils.compareToArguments(filePath, sentencia).split("\n");
             File miFile = new File(filePath);
             if (miFile.exists()) {
+                System.out.println(methodNames.length + " | " + types.length + " | " + arguments.length);
                 for(int i = 0; i < methodNames.length; ++i) {
                     if (sentencia.equals("")) {
                         format.formatoBusquedaSentencia(

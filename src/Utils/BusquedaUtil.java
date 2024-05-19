@@ -140,7 +140,10 @@ public class BusquedaUtil {
     * @return lista de datos modificados con el color
     */
     public String compareToArguments(String filePath, String sentence) {
-        String st = "(" + sentence.split("\\(")[1].replace(" ", "").toLowerCase();
+        String st = "";
+        if(!sentence.isEmpty()) {
+            st = "(" + sentence.split("\\(")[1].replace(" ", "").toLowerCase();
+        }
         StringBuffer result = new StringBuffer();
         String[] sentences = getArguments(filePath).split("\n");
         int r = 0;

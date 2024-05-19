@@ -6,23 +6,23 @@ import java.util.List;
 import Mundo.Modelos.Model;
 
 /**
- * clase para manipular texto
+ * helper class for text
  */
 public class TextUtils {
     /**
-     * metodos de manipulación del archivo
+     * helper class for files
      */
     private FileUtils fileUtils;
     /**
-     * constructor de la clase
+     * {@link java.lang.reflect.Constructor}
      */
     public TextUtils() {
         fileUtils = new FileUtils();
     }
     /**
-    * genera un String con las sentencias que indican un método
-    * @param filePath: ruta del archivo a leer
-    * @return String con las lineas en donde hay métodos
+    * creates an String with the java file sentences
+    * @param filePath: java file
+    * @return the java file sentences
     */
     public String getSentences(String filePath) {
         String[] fileLines = fileUtils.getCleanTextFromFile(filePath).split("\n");
@@ -33,14 +33,24 @@ public class TextUtils {
             boolean 
                 conditionA = fileUtils.declarationTokenList().contains(spaces[0]),
                 conditionB = valores.contains("("),
-                conditionC = valores.endsWith(",\n");
-            if(conditionA &&  conditionB || conditionC) {
-                if(fileLines[i+1].contains("{") && !fileLines[i+1].contains("(")) {
-                    String datos = fileLines[i+1];
-                    valores = valores.concat(" " + datos.trim()).replace("{", "");
+                conditionC = valores.endsWith(",");
+            if(conditionA &&  conditionB && conditionC) {
+                int 
+                    current = i,
+                    next = current+1;
+                while(next < fileLines.length) {
+                    if(next < fileLines.length) {
+                        valores = valores.concat(" " + fileLines[next].trim());
+                        ++current;
+                    }
+                    if(fileLines[next].contains(") {")) {
+                        valores = valores.concat(" " + fileLines[next].trim()).replace("{", "");
+                        break;
+                    }
+                    ++next;
                 }
             }
-            if(conditionA && valores.contains(")") && !fileLines[i-1].contains("() {") || 
+            if(conditionA && valores.contains(")") && !fileLines[i-1].contains(") {") || 
                     valores.endsWith("\n")) {
                 lines.append(valores.replace("{", "").trim() + "\n");
             }

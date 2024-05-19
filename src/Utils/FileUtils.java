@@ -22,17 +22,18 @@ public record FileUtils() {
     */
     public List<String> declarationTokenList() {
         String[] tokens = new String[] {
+            "abstract",
+            "class",
+            "default",
+            "enum",
+            "final",
+            "interface",
             "public",
             "private",
             "protected",
-            "final",
-            "synchronized",
-            "abstract",
-            "static",
             "record",
-            "class",
-            "interface",
-            "enum"
+            "synchronized",
+            "static"
         };
         List<String> lista = new ArrayList<String>();
         for(String t: tokens) {
@@ -100,7 +101,10 @@ public record FileUtils() {
             miBufferReader = new BufferedReader(miReader);
             int i=1;
             while(miBufferReader.ready()) {
-                build.append(i + ":" + miBufferReader.readLine() + "\n");
+                build.append(i);
+                build.append(":");
+                build.append(miBufferReader.readLine());
+                build.append("\n");
                 ++i;
             }
         } catch (Exception e) {
@@ -138,7 +142,8 @@ public record FileUtils() {
             miReader = new FileReader(filePath);
             miBufferReader = new BufferedReader(miReader);
             while(miBufferReader.ready()) {
-                build.append(miBufferReader.readLine() + "\n");
+                build.append(miBufferReader.readLine());
+                build.append("\n");
             }
         } catch (Exception e) {
             System.err.println(e);
