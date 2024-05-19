@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -21,7 +22,7 @@ public record FileUtils() {
     * @return lista de tokens a ignorar
     */
     public List<String> declarationTokenList() {
-        String[] tokens = new String[] {
+        String[] tokens = {
             "abstract",
             "class",
             "default",
@@ -35,11 +36,7 @@ public record FileUtils() {
             "synchronized",
             "static"
         };
-        List<String> lista = new ArrayList<String>();
-        for(String t: tokens) {
-            lista.add(t);
-        }
-        return lista;
+        return Arrays.asList(tokens);
     }
     /**
      * genera un string con la ruta de los archivos dentro del directorio

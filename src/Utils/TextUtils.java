@@ -74,20 +74,25 @@ public class TextUtils {
                 boolean 
                     conditionA = fileUtils.declarationTokenList().contains(spaces[0]),
                     conditionB = valores.contains("("),
-                    conditionC = valores.endsWith(",\n");
-                if(conditionA &&  conditionB || conditionC) {
-                    if(fileLines[i+1].contains("{") && !fileLines[i+1].contains("(")) {
-                        String[] datos = fileLines[i+1].split(":");
-                        valores = valores.concat(" " + datos[1].trim());
-                        methods.add(
-                                new Model(
-                                    valores.replace("{", "").trim(),
-                                    Integer.parseInt(datos[0])
-                                )
-                        );
+                    conditionC = valores.endsWith(",");
+
+                if(conditionA &&  conditionB && conditionC) {
+                    int 
+                        current = i,
+                        next = current+1;
+                    while(next < fileLines.length) {
+                        if(next < fileLines.length) {
+                            valores = valores.concat(" " + fileLines[next].trim());
+                            ++current;
+                        }
+                        if(fileLines[next].contains(") {")) {
+                            valores = valores.concat(" " + fileLines[next].trim()).replace("{", "");
+                            break;
+                        }
+                        ++next;
                     }
                 }
-                if(conditionA && valores.contains(")") && !fileLines[i-1].contains("() {") || 
+                if(conditionA && valores.contains(")") && !fileLines[i-1].contains(") {") || 
                         valores.endsWith("\n")) {
                     lines = valores.replace("{", "").trim();
                     methods.add(
