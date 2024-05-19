@@ -32,21 +32,22 @@ public class Options {
                         miPanel.searchForMethodsOption();
                         break;
                     case "--h":
-                        System.out.println("Opciones para joogle");
-                        System.out.println("-f para buscar dentro de un archivo:" + 
-                                "\t seguido de /\"\"/ para buscar una sentencia");
-                        System.out.println("-d para buscar dentro de un directorio:" + 
-                                "\t seguido de /\"\"/ para buscar una sentencia");
-                        System.out.println("-D para buscar dentro de todos los directorios:" + 
-                                "\t seguido de /\"\"/ para buscar una sentencia");
-                        System.out.println("-lf para listar todos los archivos .java:\t seguido del directorio");
-                        System.out.println("-lm para listar todos los métodos del proyecto:\t seguido del directorio");
-                        System.out.println("\t si seleccionas un archivo y adicionas el nombre" + 
-                                " del metodo se retorna el bloque de codigo de ese metodo");
-                        System.out.println("-lt para listar todos los TODO del proyecto:\t seguido del directorio");
+                        System.out.println("use -f to search within a file");
+                        System.out.println("\t you need to provide of a search sentence with 'int(boolean)'");
+                        System.out.println("\t the search sentence can be empty just declare with ''");
+                        System.out.println("use -d to search within a directory");
+                        System.out.println("\t as with the previous one you need to provide the 'search(sentence)'");
+                        System.out.println("use -D to search recursive within directories");
+                        System.out.println("\t as with the previous one you need to provide the 'search(sentence)'");
+                        System.out.println("use -lf to list files of the given directory");
+                        System.out.println("use -lm to print the method context");
+                        System.out.println("\t you need to provide the method name with 'methodName'");
+                        System.out.println("use -lt to search for TODO'S in the files of the given directory");
                         break;
                 }
-                System.out.println(Colores.GREEN_UNDERLINED + "use -q to quit or --h for help" + Colores.ANSI_RESET);
+                System.out.println(
+                        Colores.GREEN_UNDERLINED + "use -q to quit or --h for help" + Colores.ANSI_RESET
+                );
             }
         } catch(Exception e) {
         }
