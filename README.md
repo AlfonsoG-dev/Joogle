@@ -2,7 +2,7 @@
 >- CLI exploration app like [Coogle](https://www.youtube.com/watch?v=wK1HjnwDQng&t=1s) by Tsoding
 >- Parses the java file to find the methods and instance declarations
 
-![expected output](./docs/expected_output.png)
+![expected output](./docs/expected_output_d.png.png)
 -------
 ![expected output_lm](./docs/expected_output_lm.png)
 ------
