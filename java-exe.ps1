@@ -4,4 +4,4 @@ $compile = "javac -Werror -Xlint:all -d .\bin\ $srcClases"
 $createJar = "jar -cfm Joogle.jar Manifesto.txt -C .\bin\ ."
 $javaCommand = "java -jar Joogle.jar"
 $runCommand = "$compile" + " && " + "$createJar" + " && " +"$javaCommand"
-Invoke-Expression $runCommand 
+Invoke-Expression $runCommand
