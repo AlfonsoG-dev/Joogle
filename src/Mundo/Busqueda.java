@@ -193,7 +193,7 @@ public class Busqueda {
      */
     public void buscarMethods(String filePath, String sentence) {
         try {
-            String cSentence = sentence.replace("/", "");
+            String cSentence = sentence.replace(File.separator, "");
             File miFile = new File(filePath);
             if(miFile.isFile() && !cSentence.equals("")) {
                 utils.getMethodContext(miFile.getPath(), cSentence);

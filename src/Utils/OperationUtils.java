@@ -1,5 +1,7 @@
 package Utils;
 
+import java.io.File;
+
 import Mundo.Busqueda;
 
 /**
@@ -17,7 +19,7 @@ public record OperationUtils(String[] options, int i) {
     public String verificarOptionFile() {
         String res = "";
         if((i+1) >= options.length) {
-            res = "./";
+            res = "." + File.separator;
         } else {
             res = options[i+1];
         }
@@ -41,7 +43,7 @@ public record OperationUtils(String[] options, int i) {
      * si se da una sentencia, se colorea el resultado buscado
      */
     public void searchInFileOperation() throws Exception {
-        if(verificarOptionFile().equals("./")) {
+        if(verificarOptionFile().equals("." + File.separator)) {
             throw new Exception("[ ERROR ]: debe proporcionar un archivo");
         }
         String fileName = verificarOptionFile();
