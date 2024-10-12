@@ -60,42 +60,42 @@ public class TextUtils {
     public List<Model> listMethods(String filePath) {
         String[] fileLines = fileUtils.getTextFromFile(filePath).split("\n");
         List<Model> methods = new ArrayList<>();
-        String lines = "";
         for(int i=0; i<fileLines.length; ++i) {
-            String[] numeros_fl = fileLines[i].replace("}", "").split(":");
-            if(numeros_fl.length == 2) {
-                String valores = numeros_fl[1].trim();
-                String[] spaces = valores.split(" ");
-                boolean 
-                    conditionA = fileUtils.declarationTokenList().contains(spaces[0]),
-                    conditionB = valores.contains("("),
-                    conditionC = valores.endsWith(",");
-
-                if(conditionA &&  conditionB && conditionC) {
-                    int 
-                        current = i,
-                        next = current+1;
-                    while(next < fileLines.length) {
-                        if(next < fileLines.length) {
-                            valores = valores.concat(" " + fileLines[next].trim());
-                            ++current;
-                        }
-                        if(fileLines[next].contains(") {")) {
-                            valores = valores.concat(" " + fileLines[next].trim()).replace("{", "");
-                            break;
-                        }
-                        ++next;
+            String[] lineNumbers = fileLines[i].trim().replace("}", "").split(":");
+            if(lineNumbers.length == 2) {
+                String fileData = lineNumbers[1].trim();
+                if(fileData != "") {
+                    String[] spaces = fileData.split(" ");
+                    boolean
+                        conditionA = fileUtils.declarationTokenList().contains(spaces[0]),
+                        conditionB = fileData.endsWith(",");
+                    if(conditionA && !conditionB) {
+                        methods.add(
+                                new Model(
+                                    fileData.trim().replace("{", "").trim(),
+                                    Integer.parseInt(lineNumbers[0])
+                                )
+                        );
                     }
-                }
-                if(conditionA && valores.contains(")") && !fileLines[i-1].contains(") {") || 
-                        valores.endsWith("\n")) {
-                    lines = valores.replace("{", "").trim();
-                    methods.add(
-                            new Model(
-                                lines,
-                                Integer.parseInt(numeros_fl[0])
-                            )
-                    );
+                    if(conditionB) {
+                        int next = i+1;
+                        String buildMultiLine = fileData;
+                        while(next < fileLines.length) {
+                            if(fileLines[next].trim().endsWith("{") && !fileLines[next].trim().contains("(")) {
+                                buildMultiLine = buildMultiLine.concat(
+                                        " " + fileLines[next].trim().split(":")[1].trim().replace("{", "").trim()
+                                );
+                                break;
+                            }
+                            ++next;
+                        }
+                        methods.add(
+                                new Model(
+                                    buildMultiLine,
+                                    Integer.parseInt(lineNumbers[0])
+                                )
+                        );
+                    }
                 }
             }
         }
