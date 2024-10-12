@@ -28,31 +28,26 @@ public class TextUtils {
         String[] fileLines = fileUtils.getCleanTextFromFile(filePath).split("\n");
         StringBuffer lines = new StringBuffer();
         for(int i=0; i<fileLines.length; ++i) {
-            String valores = fileLines[i].trim();
-            String[] spaces = valores.split(" ");
-            boolean 
+            String fileData = fileLines[i].trim();
+            String[] spaces = fileData.split(" ");
+            boolean
                 conditionA = fileUtils.declarationTokenList().contains(spaces[0]),
-                conditionB = valores.contains("("),
-                conditionC = valores.endsWith(",");
-            if(conditionA &&  conditionB && conditionC) {
-                int 
-                    current = i,
-                    next = current+1;
+                conditionB = fileData.endsWith(",");
+            if(conditionA && !conditionB) {
+                lines.append(fileData.replace("{", "").trim() + "\n");
+            } 
+            if(conditionB) {
+                int next = i+1;
+                String buildMultiLine = fileData;
                 while(next < fileLines.length) {
-                    if(next < fileLines.length) {
-                        valores = valores.concat(" " + fileLines[next].trim());
-                        ++current;
-                    }
-                    if(fileLines[next].contains(") {")) {
-                        valores = valores.concat(" " + fileLines[next].trim()).replace("{", "");
+                    if(fileLines[next].trim().endsWith("{") && !fileLines[next].trim().contains("(")) {
+                        buildMultiLine = buildMultiLine.concat(" " + fileLines[next].trim());
                         break;
+                    } else {
+                        ++next;
                     }
-                    ++next;
                 }
-            }
-            if(conditionA && valores.contains(")") && !fileLines[i-1].contains(") {") || 
-                    valores.endsWith("\n")) {
-                lines.append(valores.replace("{", "").trim() + "\n");
+                lines.append(buildMultiLine.replace("{", "").trim() + "\n");
             }
         }
         return lines.toString();
