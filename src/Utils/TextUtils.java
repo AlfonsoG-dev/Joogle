@@ -32,22 +32,28 @@ public class TextUtils {
             String[] spaces = fileData.split(" ");
             boolean
                 conditionA = fileUtils.declarationTokenList().contains(spaces[0]),
-                conditionB = fileData.endsWith(",");
-            if(conditionA && !conditionB) {
+                conditionB = fileData.endsWith(","),
+                conditionC = fileData.contains("(");
+            if(conditionA && conditionC && !conditionB) {
                 lines.append(fileData.replace("{", "").trim() + "\n");
-            } 
-            if(conditionB) {
+            } else if(conditionB) {
                 int next = i+1;
                 String buildMultiLine = fileData;
                 while(next < fileLines.length) {
-                    if(fileLines[next].trim().endsWith("{") && !fileLines[next].trim().contains("(")) {
-                        buildMultiLine = buildMultiLine.concat(" " + fileLines[next].trim());
+                    if(fileLines[next].trim().endsWith(",")) {
+                        buildMultiLine += fileLines[next].trim();
+                        next++;
+                    }
+                    if(fileLines[next].trim().endsWith("{")) {
+                        buildMultiLine += fileLines[next].trim();
                         break;
                     } else {
                         ++next;
                     }
                 }
-                lines.append(buildMultiLine.replace("{", "").trim() + "\n");
+                if(fileUtils.declarationTokenList().contains(buildMultiLine.split(" ")[0])) {
+                    lines.append(buildMultiLine.replace("{", "").trim() + "\n");
+                }
             }
         }
         return lines.toString();
