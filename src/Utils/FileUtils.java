@@ -87,6 +87,7 @@ public record FileUtils() {
             int n = 1;
             while((l = r.readLine()) != null) {
                 lines.append(n);
+                lines.append(":");
                 lines.append(l);
                 lines.append("\n");
                 ++n;
