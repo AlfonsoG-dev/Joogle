@@ -36,7 +36,7 @@ public class Busqueda {
     * @param filePath: ruta del archivo a leer
     * @param sentencia: sentencia a buscar
     */
-    public void buscarSentencia(String filePath, String sentencia) {
+    public void searchSentence(String filePath, String sentencia) {
         try {
             String[] 
                 methodNames = utils.getMethodName(filePath).split("\n"),
@@ -91,7 +91,7 @@ public class Busqueda {
                         )
                 );
                 String sentence = searchSentence;
-                buscarSentencia(filePath, sentence);
+                searchSentence(filePath, sentence);
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -102,7 +102,7 @@ public class Busqueda {
     * @param directory: directory con los archivos
     * @param searchSentence: sentencia a buscar
     */
-    public void searcInDirectory(String directory, String searchSentence) {
+    public void searchInDirectory(String directory, String searchSentence) {
         try {
             File miFile = new File(directory);
             if(miFile.isFile()) {
@@ -123,7 +123,7 @@ public class Busqueda {
     * @param directorys: directorys del directory designado
     * @param searchSentence: sentencia a buscar
     */
-    public void searcInDirectories(String directorys, String searchSentence) {
+    public void searchInDirectories(String directorys, String searchSentence) {
         try {
             File miFile = new File(directorys);
             if(miFile.isFile()) {
@@ -145,7 +145,7 @@ public class Busqueda {
      * buscar "todos" en el proyecto
      * @param filePath: archivo a leer las sentencias todo
      */
-    public void buscarTODO(String filePath) {
+    public void searchTODO(String filePath) {
         try {
             File miFile = new File(filePath);
             if(miFile.isFile()) {
@@ -156,7 +156,7 @@ public class Busqueda {
                     .map(e -> e.getPath())
                     .filter(e -> !e.isEmpty())
                     .forEach(e -> {
-                        buscarTODO(e);
+                        searchTODO(e);
                     });
             }
 
@@ -168,7 +168,7 @@ public class Busqueda {
      * buscar la ruta de los archivos dentro del proyecto
      * @param filePath: ruta de los archivos a leer
      */
-    public void buscarFiles(String filePath) {
+    public void searchFiles(String filePath) {
         try {
             File miFile = new File(filePath);
             if(miFile.isDirectory()) {
@@ -191,7 +191,7 @@ public class Busqueda {
      * @param filePath: ruta a leer
      * @param sentence: sentencia a buscar
      */
-    public void buscarMethods(String filePath, String sentence) {
+    public void searchMethods(String filePath, String sentence) {
         try {
             String cSentence = sentence.replace(File.separator, "");
             File miFile = new File(filePath);
@@ -209,7 +209,7 @@ public class Busqueda {
                     .map(e -> e.getPath())
                     .filter(e -> !e.isEmpty())
                     .forEach(e -> {
-                        buscarMethods(e, cSentence);
+                        searchMethods(e, cSentence);
                     });
             }
         } catch(Exception e) {

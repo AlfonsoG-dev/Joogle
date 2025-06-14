@@ -57,7 +57,7 @@ public record OperationUtils(String[] options, int i) {
     public void searcInDirectoryOperation() {
         String directory = verificarOptionFile();
         String sentence = verificarOptionSentence();
-        busqueda.searcInDirectory(directory, sentence);
+        busqueda.searchInDirectory(directory, sentence);
     }
     /**
      * operacion para buscar dentro de directorios
@@ -66,7 +66,7 @@ public record OperationUtils(String[] options, int i) {
     public void searcInDirectoriesOperation() {
         String directorys = verificarOptionFile();
         String sentence = verificarOptionSentence();
-        busqueda.searcInDirectories(directorys, sentence);
+        busqueda.searchInDirectories(directorys, sentence);
     }
     /**
      * operacion para buscar por el nombre de los archivos, 
@@ -74,7 +74,7 @@ public record OperationUtils(String[] options, int i) {
      */
     public void searchForFilesOperation() {
         String directorys = verificarOptionFile();
-        busqueda.buscarFiles(directorys);
+        busqueda.searchFiles(directorys);
     }
     /**
      * operacion para buscar por los metodos del proyecto
@@ -83,13 +83,13 @@ public record OperationUtils(String[] options, int i) {
     public void searchForMethodsOperation() {
         String directorys = verificarOptionFile();
         String sentence = verificarOptionSentence();
-        busqueda.buscarMethods(directorys, sentence);
+        busqueda.searchMethods(directorys, sentence);
     }
     /**
      * operacion para buscar los T\ODO's del proyecto
      */
     public void searchForTODOKeyOperation() {
-        busqueda.buscarTODO(verificarOptionFile());
+        busqueda.searchTODO(verificarOptionFile());
     }
     /**
      * mensaje con todas las operaciones disponibles

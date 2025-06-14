@@ -26,7 +26,7 @@ public class PanelOption {
         String dir = miBufferedReader.readLine();
         System.out.print("[sentence]: ");
         String ds = miBufferedReader.readLine();
-        busqueda.searcInDirectory(dir, ds);
+        busqueda.searchInDirectory(dir, ds);
     }
 
     public void searcInDirectoriesOption() throws IOException {
@@ -34,19 +34,19 @@ public class PanelOption {
         String dirD = miBufferedReader.readLine();
         System.out.print("[sentence]: ");
         String dsD = miBufferedReader.readLine();
-        busqueda.searcInDirectories(dirD, dsD);
+        busqueda.searchInDirectories(dirD, dsD);
     }
 
     public void searchForFilesOptions() throws IOException {
         System.out.print("[directory]: ");
         String fd = miBufferedReader.readLine();
-        busqueda.buscarFiles(fd);
+        busqueda.searchFiles(fd);
     }
 
     public void searchForTodoOptions() throws IOException {
         System.out.print("[directory]: ");
         String d = miBufferedReader.readLine();
-        busqueda.buscarTODO(d);
+        busqueda.searchTODO(d);
     }
 
     public void searchForMethodsOption() throws IOException {
@@ -54,6 +54,6 @@ public class PanelOption {
         String fl = miBufferedReader.readLine();
         System.out.print("[sentece]: ");
         String sl = miBufferedReader.readLine();
-        busqueda.buscarMethods(fl, sl);
+        busqueda.searchMethods(fl, sl);
     }
 }
