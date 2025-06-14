@@ -1,11 +1,12 @@
 package Utils;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.BufferedReader;
 
 import java.nio.file.DirectoryStream;
+import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -61,27 +62,17 @@ public record FileUtils() {
     * @throws IOException: error al buscar los archivos del directorio
     * @return String con la ruta de los archivos
     */
-    public List<File> getFilesFromDirectories(DirectoryStream<Path> myFiles) {
+    public List<File> getFilesFromDirectories(Path myFiles) {
         List<File> files = new ArrayList<>();
-        myFiles
-            .forEach(e -> {
-                File f = e.toFile();
-                if(f.isFile() && f.getName().contains(".java")) {
-                    files.add(f);
-                }
-                if(f.isDirectory()) {
-                    try {
-                        files.addAll(
-                                getFilesFromDirectories(
-                                    Files.newDirectoryStream(f.toPath())
-                            )
-                        );
-                    } catch(Exception err) {
-                        err.printStackTrace();
-                    }
-                }
-            });
-
+        try {
+            files.addAll(Files.walk(myFiles, FileVisitOption.FOLLOW_LINKS)
+                .map(p -> p.toFile())
+                .filter(p -> p.isFile() && p.getName().contains(".java"))
+                .toList()
+            );
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
         return files;
     }
     /**
@@ -90,41 +81,21 @@ public record FileUtils() {
     * @return String con los datos del archivo con numero de linea
     */
     public String getTextFromFile(String filePath) {
-        StringBuffer build = new StringBuffer();
-        FileReader miReader = null;
-        BufferedReader miBufferReader = null;
-        try {
-            miReader = new FileReader(filePath);
-            miBufferReader = new BufferedReader(miReader);
-            int i=1;
-            while(miBufferReader.ready()) {
-                build.append(i);
-                build.append(":");
-                build.append(miBufferReader.readLine());
-                build.append("\n");
-                ++i;
+        StringBuffer lines = new StringBuffer();
+        try (BufferedReader r =new BufferedReader(new FileReader(new File(filePath)))) {
+            String l;
+            int n = 1;
+            while((l = r.readLine()) != null) {
+                lines.append(n);
+                lines.append(l);
+                lines.append("\n");
+                ++n;
             }
-        } catch (Exception e) {
-            System.err.println(e);
-        } finally {
-            if(miReader != null) {
-                try {
-                    miReader.close();
-                } catch(Exception e) {
-                    System.err.println(e);
-                }
-            }
-            if(miBufferReader != null) {
-                try {
-                    miBufferReader.close();
-                } catch(Exception e) {
-                    System.err.println(e);
-                } finally {
-                    miBufferReader = null;
-                }
-            }
+            
+        } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
         }
-        return build.toString();
+        return lines.toString();
     }
     /**
      * genera un String con los valores del archivo sin numero de linea
@@ -132,36 +103,18 @@ public record FileUtils() {
      * @return String con los datos del archivo sin numero de linea
      */
     public String getCleanTextFromFile(String filePath) {
-        StringBuffer build = new StringBuffer();
-        FileReader miReader = null;
-        BufferedReader miBufferReader = null;
-        try {
-            miReader = new FileReader(filePath);
-            miBufferReader = new BufferedReader(miReader);
-            while(miBufferReader.ready()) {
-                build.append(miBufferReader.readLine());
-                build.append("\n");
+        StringBuffer lines = new StringBuffer();
+        try (BufferedReader r =new BufferedReader(new FileReader(new File(filePath)))) {
+            String l;
+            while((l = r.readLine()) != null) {
+                lines.append(l);
+                lines.append("\n");
             }
-        } catch (Exception e) {
-            System.err.println(e);
-        } finally {
-            if(miReader != null) {
-                try {
-                    miReader.close();
-                } catch(Exception e) {
-                    System.err.println(e);
-                }
-            }
-            if(miBufferReader != null) {
-                try {
-                    miBufferReader.close();
-                } catch(Exception e) {
-                    System.err.println(e);
-                } finally {
-                    miBufferReader = null;
-                }
-            }
+            
+        } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
         }
-        return build.toString();
+        return lines.toString();
+
     }
 }

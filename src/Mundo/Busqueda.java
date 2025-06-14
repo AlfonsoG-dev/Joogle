@@ -129,7 +129,7 @@ public class Busqueda {
             if(miFile.isFile()) {
                 throw new Exception("[ ERROR ]: ONLY WORKS WITH DIRECTORIES");
             } else if(miFile.isDirectory()) {
-                fileUtils.getFilesFromDirectories(Files.newDirectoryStream(miFile.toPath()))
+                fileUtils.getFilesFromDirectories(miFile.toPath())
                     .parallelStream()
                     .map(e -> e.getPath())
                     .forEach(e -> {
@@ -151,7 +151,7 @@ public class Busqueda {
             if(miFile.isFile()) {
                 utils.getTodoSentences(miFile.getPath());
             } else if(miFile.isDirectory()) {
-                fileUtils.getFilesFromDirectories(Files.newDirectoryStream(miFile.toPath()))
+                fileUtils.getFilesFromDirectories(miFile.toPath())
                     .parallelStream()
                     .map(e -> e.getPath())
                     .filter(e -> !e.isEmpty())
@@ -172,7 +172,7 @@ public class Busqueda {
         try {
             File miFile = new File(filePath);
             if(miFile.isDirectory()) {
-                fileUtils.getFilesFromDirectories(Files.newDirectoryStream(miFile.toPath()))
+                fileUtils.getFilesFromDirectories(miFile.toPath())
                     .parallelStream()
                     .map(e -> e.getPath())
                     .filter(e -> !e.isEmpty())
@@ -204,7 +204,7 @@ public class Busqueda {
                     format.formatoBusquedaMethod(miFile.getPath(), m, lineNumber);
                 }
             } else if(miFile.isDirectory()) {
-                fileUtils.getFilesFromDirectories(Files.newDirectoryStream(miFile.toPath()))
+                fileUtils.getFilesFromDirectories(miFile.toPath())
                     .parallelStream()
                     .map(e -> e.getPath())
                     .filter(e -> !e.isEmpty())
