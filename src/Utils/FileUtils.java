@@ -10,9 +10,9 @@ import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 
 /**
  * record con los métodos para utilizar los archivos
@@ -44,15 +44,11 @@ public record FileUtils() {
      * @param files: los archivos dentro del directorio
      * @return string con la ruta de los archivos
      */
-    public List<File> getFilesFromDirectory(DirectoryStream<Path> myFiles) throws IOException {
-        List<File> files = new ArrayList<>();
-        myFiles
-            .forEach(e -> {
-                File f = e.toFile();
-                if(f.isFile() && f.getName().contains(".java")) {
-                    files.add(f);
-                }
-            });
+    public List<File> getFilesFromDirectory(File myFiles) throws IOException {
+        List<File> files = null;
+        if(myFiles.isDirectory() && myFiles.listFiles() != null) {
+            files = Arrays.asList(myFiles.listFiles());
+        }
         return files;
     }
     /**
@@ -63,13 +59,12 @@ public record FileUtils() {
     * @return String con la ruta de los archivos
     */
     public List<File> getFilesFromDirectories(Path myFiles) {
-        List<File> files = new ArrayList<>();
+        List<File> files = null;
         try {
-            files.addAll(Files.walk(myFiles, FileVisitOption.FOLLOW_LINKS)
-                .map(p -> p.toFile())
+            files = Files.walk(myFiles, FileVisitOption.FOLLOW_LINKS)
+                .map(Path::toFile)
                 .filter(p -> p.isFile() && p.getName().contains(".java"))
-                .toList()
-            );
+                .toList();
         } catch(IOException e) {
             e.printStackTrace();
         }
@@ -92,7 +87,6 @@ public record FileUtils() {
                 lines.append("\n");
                 ++n;
             }
-            
         } catch (IOException | NullPointerException e) {
             e.printStackTrace();
         }
@@ -111,11 +105,9 @@ public record FileUtils() {
                 lines.append(l);
                 lines.append("\n");
             }
-            
         } catch (IOException | NullPointerException e) {
             e.printStackTrace();
         }
         return lines.toString();
-
     }
 }
