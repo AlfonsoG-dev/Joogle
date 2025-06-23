@@ -44,7 +44,7 @@ public record OperationUtils(String[] options, int i) {
      */
     public void searchInFileOperation() throws Exception {
         if(verificarOptionFile().equals("." + File.separator)) {
-            throw new Exception("[ ERROR ]: debe proporcionar un archivo");
+            throw new Exception("[ Error ]: Falta proporcionar un archivo para su lectura");
         }
         String fileName = verificarOptionFile();
         String sentence = verificarOptionSentence();

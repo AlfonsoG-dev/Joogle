@@ -109,7 +109,7 @@ public class Busqueda {
         try {
             File miFile = new File(directory);
             if(miFile.isFile()) {
-                throw new Exception("[ ERROR ]: ONLY WORKS WITH DIRECTORIES");
+                throw new Exception("[ Error ]: ONLY WORKS WITH DIRECTORIES");
             }
             List<File> files = fileUtils.getFilesFromDirectory(miFile);
             if(files != null) {
@@ -133,7 +133,7 @@ public class Busqueda {
         try {
             File miFile = new File(directorys);
             if(miFile.isFile()) {
-                throw new Exception("[ ERROR ]: ONLY WORKS WITH DIRECTORIES");
+                throw new Exception("[ Error ]: ONLY WORKS WITH DIRECTORIES");
             } else if(miFile.isDirectory()) {
                 fileUtils.getFilesFromDirectories(miFile.toPath())
                     .parallelStream()
