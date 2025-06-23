@@ -81,7 +81,8 @@ public final class Model {
         for(String at: ars) {
             String type = at.replace("(", "").replace(")", "").trim();
             String[] separate = type.split(" ");
-            args.append(separate[0] + ", ");
+            args.append(separate[0]);
+            args.append(", ");
         }
         return args.substring(0, args.length()-2) + ")\n";
     }

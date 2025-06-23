@@ -2,9 +2,12 @@ package Mundo;
 import java.io.File;
 import java.nio.file.Files;
 
+import java.util.List;
+
 import Utils.BusquedaUtil;
-import Visual.BusquedaFormat;
 import Utils.FileUtils;
+
+import Visual.BusquedaFormat;
 import Visual.Colores;
 
 /**
@@ -108,12 +111,15 @@ public class Busqueda {
             if(miFile.isFile()) {
                 throw new Exception("[ ERROR ]: ONLY WORKS WITH DIRECTORIES");
             }
-            fileUtils.getFilesFromDirectory(Files.newDirectoryStream(miFile.toPath()))
-                .parallelStream()
-                .map(e -> e.getPath())
-                .forEach(e -> {
-                    searchInFile(e, searchSentence);
-                });
+            List<File> files = fileUtils.getFilesFromDirectory(miFile);
+            if(files != null) {
+                files
+                .stream()
+                    .map(e -> e.getPath())
+                    .forEach(e -> {
+                        searchInFile(e, searchSentence);
+                    });
+            }
         } catch(Exception e) {
             e.printStackTrace();
         }
