@@ -98,7 +98,7 @@ public class BusquedaUtil {
         List<Model> separate = textUtils.listMethods(filePath);
         int res = 0;
         for(Model mt: separate) {
-            if(mt.getMethodName().toLowerCase().contains(sentence.toLowerCase())) {
+            if(mt.getMethodName().contains(sentence)) {
                 res = mt.getLineNumber();
             }
         }
