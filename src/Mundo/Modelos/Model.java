@@ -78,8 +78,8 @@ public final class Model {
         StringBuffer args = new StringBuffer();
         String[] ars = arguments.split(",");
         args.append("(");
-        for(String at: ars) {
-            String type = at.replace("(", "").replace(")", "").trim();
+        for(int i=0; i<ars.length; ++i) {
+            String type = ars[i].replace("(", "").replace(")", "").trim();
             String[] separate = type.split(" ");
             args.append(separate[0]);
             args.append(", ");
@@ -95,9 +95,7 @@ public final class Model {
             nombres = new StringBuffer(),
             tipos   = new StringBuffer();
         for(String s: sentences) {
-            String[] 
-                separate  = s.split("\\("),
-                partition = separate[1].split("\\)");
+            String[] separate  = s.split("\\("), partition = separate[1].split("\\)");
             String args = "";
             if(partition.length == 0) {
                 args  = ")";

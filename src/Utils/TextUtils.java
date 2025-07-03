@@ -33,26 +33,27 @@ public class TextUtils {
             boolean
                 conditionA = fileUtils.declarationTokenList().contains(spaces[0]),
                 conditionB = fileData.endsWith(","),
-                conditionC = fileData.contains("(");
-            if(conditionA && conditionC && !conditionB) {
+                conditionC = fileData.contains("("),
+                conditionD = fileData.endsWith(")") || fileData.endsWith("{");
+            if(conditionA && conditionC && conditionD) {
                 lines.append(fileData.replace("{", "").trim() + "\n");
             } else if(conditionB) {
                 int next = i+1;
-                String buildMultiLine = fileData;
+                StringBuffer buildMultiLine = new StringBuffer(fileData);
                 while(next < fileLines.length) {
                     if(fileLines[next].trim().endsWith(",")) {
-                        buildMultiLine += fileLines[next].trim();
+                        buildMultiLine.append(fileLines[next].trim());
                         next++;
                     }
-                    if(fileLines[next].trim().endsWith("{")) {
-                        buildMultiLine += fileLines[next].trim();
+                    if(fileLines[next].trim().endsWith("{") || fileLines[next].trim().endsWith(")")) {
+                        buildMultiLine.append(fileLines[next].trim());
                         break;
                     } else {
                         ++next;
                     }
                 }
-                if(fileUtils.declarationTokenList().contains(buildMultiLine.split(" ")[0])) {
-                    lines.append(buildMultiLine.replace("{", "").trim() + "\n");
+                if(fileUtils.declarationTokenList().contains(buildMultiLine.toString().split(" ")[0])) {
+                    lines.append(buildMultiLine.toString().replace("{", "").trim() + "\n");
                 }
             }
         }
