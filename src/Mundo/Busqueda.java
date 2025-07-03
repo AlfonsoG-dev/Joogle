@@ -46,9 +46,6 @@ public class Busqueda {
                 arguments   = utils.compareToArguments(filePath, sentencia).split("\n");
             File miFile = new File(filePath);
             if (miFile.exists()) {
-                System.out.println(
-                        methodNames.length + " | " + types.length + " | " + arguments.length
-                );
                 for(int i = 0; i < methodNames.length; ++i) {
                     if(types[i].contains(Colores.GREEN_UNDERLINED) || arguments[i].contains(Colores.GREEN_UNDERLINED)) {
                         format.formatoBusquedaSentencia(
@@ -84,13 +81,13 @@ public class Busqueda {
             File miFile = new File(filePath);
             if(miFile.isFile() && miFile.getName().contains(".java")) {
                 System.out.println(
-                        String.format(
-                            "\n%s\n",
-                            format.setColorSentence(
-                                filePath,
-                                Colores.ANSI_CYAN
-                            )
+                    String.format(
+                        "\n%s\n",
+                        format.setColorSentence(
+                            filePath,
+                            Colores.ANSI_CYAN
                         )
+                    )
                 );
                 String sentence = searchSentence;
                 searchSentence(filePath, sentence);
@@ -198,11 +195,10 @@ public class Busqueda {
      */
     public void searchMethods(String filePath, String sentence) {
         try {
-            String cSentence = sentence.replace(File.separator, "");
             File miFile = new File(filePath);
-            if(miFile.isFile() && !cSentence.equals("")) {
-                utils.getMethodContext(miFile.getPath(), cSentence);
-            } else if(miFile.isFile() && cSentence.equals("")) {
+            if(miFile.isFile() && !sentence.equals("")) {
+                utils.getMethodContext(miFile.getPath(), sentence);
+            } else if(miFile.isFile() && sentence.equals("")) {
                 String[] metodos = utils.getMethodName(filePath).split("\n");
                 for(String m: metodos) {
                     int lineNumber = utils.getLineNumber(miFile.getPath(), m);
@@ -214,7 +210,7 @@ public class Busqueda {
                     .map(e -> e.getPath())
                     .filter(e -> !e.isEmpty())
                     .forEach(e -> {
-                        searchMethods(e, cSentence);
+                        searchMethods(e, sentence);
                     });
             }
         } catch(Exception e) {

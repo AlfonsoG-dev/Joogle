@@ -42,6 +42,7 @@ public class BusquedaUtil {
         for(String p: partition) {
             build.append(Model.getNameOfMethods(p));
         }
+        format.concurrencyFormat(partition.length, "Methods");
         return build.toString();
     }
     /**
@@ -233,10 +234,7 @@ public class BusquedaUtil {
                     fileLines[i]
             ); 
             if(conNumLinea.equals(buscada) && (i+1) < fileLines.length) {
-                end = getLineNumber(
-                        filePath,
-                        Model.getNameOfMethods(fileLines[i+1])
-                );
+                end = getLineNumber(filePath, Model.getNameOfMethods(fileLines[i+1]));
                 format.formatoPresentFilename(filePath, inicial);
             } else if(conNumLinea.equals(buscada) && (i+1) >= fileLines.length) {
                 format.formatoPresentFilename(filePath, inicial);
@@ -249,16 +247,16 @@ public class BusquedaUtil {
             e = "";
         if(end > 0) {
             s = textUtils.deleteComments(
-                    fileText,
-                    inicial,
-                    end
+                fileText,
+                inicial,
+                end
             );
             contextMessage(s);
         } else if(end < 0) {
             e = textUtils.deleteComments(
-                    fileText,
-                    inicial,
-                    fileText.length
+                fileText,
+                inicial,
+                fileText.length
             );
             contextMessage(e);
         }

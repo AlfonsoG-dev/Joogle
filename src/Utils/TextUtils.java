@@ -75,32 +75,36 @@ public class TextUtils {
                     String[] spaces = fileData.split(" ");
                     boolean
                         conditionA = fileUtils.declarationTokenList().contains(spaces[0]),
-                        conditionB = fileData.endsWith(",");
-                    if(conditionA && !conditionB) {
+                        conditionB = fileData.endsWith(","),
+                        conditionC = fileData.contains("("),
+                        conditionD = fileData.endsWith(")") || fileData.endsWith("{");
+                    if(conditionA && conditionC && conditionD) {
                         methods.add(
-                                new Model(
-                                    fileData.trim().replace("{", "").trim(),
-                                    Integer.parseInt(lineNumbers[0])
-                                )
+                            new Model(
+                                fileData.trim().replace("{", "").trim(),
+                                Integer.parseInt(lineNumbers[0])
+                            )
                         );
-                    }
-                    if(conditionB) {
+                    } else if(conditionB) {
                         int next = i+1;
-                        String buildMultiLine = fileData;
+                        StringBuffer buildMultiLine = new StringBuffer(fileData);
                         while(next < fileLines.length) {
-                            if(fileLines[next].trim().endsWith("{") && !fileLines[next].trim().contains("(")) {
-                                buildMultiLine = buildMultiLine.concat(
-                                        " " + fileLines[next].trim().split(":")[1].trim().replace("{", "").trim()
-                                );
-                                break;
+                            if(fileLines[next].trim().endsWith(",")) {
+                                buildMultiLine.append(fileLines[next].trim().split(":")[1].trim());
+                                next++;
                             }
-                            ++next;
+                            if(fileLines[next].trim().endsWith("{") || fileLines[next].trim().endsWith(")")) {
+                                buildMultiLine.append(fileLines[next].trim().split(":")[1].trim());
+                                break;
+                            } else {
+                                ++next;
+                            }
                         }
                         methods.add(
-                                new Model(
-                                    buildMultiLine,
-                                    Integer.parseInt(lineNumbers[0])
-                                )
+                            new Model(
+                                buildMultiLine.toString(),
+                                Integer.parseInt(lineNumbers[0])
+                            )
                         );
                     }
                 }

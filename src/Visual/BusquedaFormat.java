@@ -95,11 +95,11 @@ public record BusquedaFormat() {
     */
     public void concurrencyFormat(int cantidad, String tipo) {
         System.out.println(
-                String.format(
-                    "%s : %s",
-                    tipo,
-                    Colores.ANSI_RED + cantidad + Colores.ANSI_RESET
-                ) + "\n"
+            String.format(
+                "%s : %s",
+                tipo,
+                Colores.ANSI_RED + cantidad + Colores.ANSI_RESET
+            )
         );
     }
 }
