@@ -11,6 +11,7 @@ import java.nio.file.Path;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 
 /**
@@ -43,7 +44,7 @@ public record FileUtils() {
      * @param files: los archivos dentro del directorio
      * @return string con la ruta de los archivos
      */
-    public List<File> getFilesFromDirectory(File myFiles) throws IOException {
+    public List<File> getFilesFromDirectory(File myFiles) {
         List<File> files = null;
         if(myFiles.isDirectory() && myFiles.listFiles() != null) {
             files = Arrays.asList(myFiles.listFiles());
@@ -59,10 +60,11 @@ public record FileUtils() {
     */
     public List<File> getFilesFromDirectories(Path myFiles) {
         List<File> files = null;
-        try {
-            files = Files.walk(myFiles, FileVisitOption.FOLLOW_LINKS)
+        try(Stream<Path> s = Files.walk(myFiles, FileVisitOption.FOLLOW_LINKS)) {
+            files = s
+                .filter(Files::isRegularFile)
+                .filter(p -> p.getFileName().toString().contains(".java"))
                 .map(Path::toFile)
-                .filter(p -> p.isFile() && p.getName().contains(".java"))
                 .toList();
         } catch(IOException e) {
             e.printStackTrace();

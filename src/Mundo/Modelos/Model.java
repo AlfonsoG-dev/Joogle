@@ -6,7 +6,7 @@ import utils.FileUtils;
  */
 public final class Model {
 
-    private final static FileUtils fileUtils = new FileUtils();
+    private static final FileUtils fileUtils = new FileUtils();
     private String sentence;
     private int lineNumber;
     public Model(String nMetodo, int nLineNumber) {
@@ -30,13 +30,14 @@ public final class Model {
      * utilidad para hallar el nombre de un método
      */
     public static String getNameOfMethods(String fileSentence) {
-        StringBuffer build = new StringBuffer();
+        StringBuilder build = new StringBuilder();
         String[] partition = fileSentence.split("\n");
         for(String p: partition) {
             String[] datos = p.split("\\(");
             for(int i=0; i<datos.length-1; ++i) {
                 String[] separate = datos[i].split(" ");
-                build.append(separate[separate.length-1].trim() +"\n");
+                build.append(separate[separate.length-1].trim());
+                build.append("\n");
             }
         }
         return build.toString();
@@ -52,11 +53,10 @@ public final class Model {
      */
     public static String getReturnType(String fileSentence) {
         String[] sentences = fileSentence.split("\n");
-        StringBuffer types = new StringBuffer();
+        StringBuilder types = new StringBuilder();
         for(String s: sentences) {
-            String[] 
-                methods = s.split("\\("),
-                spaces  = methods[0].split(" ");
+            String[] methods = s.split("\\(");
+            String[] spaces  = methods[0].split(" ");
             for(int i=0; i<spaces.length; ++i) {
                 if(spaces[1].contains(",")) {
                     spaces[0] = spaces[1].concat(" " + spaces[2]);
@@ -67,7 +67,8 @@ public final class Model {
                     spaces[0] = spaces[i];
                 }
             }
-            types.append(spaces[0] + "\n");
+            types.append(spaces[0]);
+            types.append("\n");
         }
         return types.toString();
     }
@@ -75,7 +76,7 @@ public final class Model {
      * utilidad para separar los argumentos que tienen coma
      */
     private static String containsComa(String arguments) {
-        StringBuffer args = new StringBuffer();
+        StringBuilder args = new StringBuilder();
         String[] ars = arguments.split(",");
         args.append("(");
         for(int i=0; i<ars.length; ++i) {
@@ -91,18 +92,20 @@ public final class Model {
      */
     public static String getArguments(String fileSentence) {
         String[] sentences = fileSentence.split("\n");
-        StringBuffer 
-            nombres = new StringBuffer(),
-            tipos   = new StringBuffer();
+        StringBuilder nombres = new StringBuilder();
+        StringBuilder tipos   = new StringBuilder();
         for(String s: sentences) {
-            String[] separate  = s.split("\\("), partition = separate[1].split("\\)");
+            String[] separate  = s.split("\\(");
+            String[] partition = separate[1].split("\\)");
             String args = "";
             if(partition.length == 0) {
                 args  = ")";
             } else {
                 args = partition[0] + ")";
             }
-            tipos.append("(" +  args.trim() + "\n");
+            tipos.append("(");
+            tipos.append(args.trim());
+            tipos.append("\n");
         }
         String[] argumentos = tipos.toString().split("\n");
         for(String a: argumentos) {
@@ -116,7 +119,8 @@ public final class Model {
                 } else {
                     args += separate[0];
                 }
-                nombres.append(args + "\n");
+                nombres.append(args);
+                nombres.append("\n");
             }
         }
         return nombres.toString().replace("(", "( ").replace(")", " )");

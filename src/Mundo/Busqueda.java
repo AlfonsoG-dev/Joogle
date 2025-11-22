@@ -1,6 +1,5 @@
 package mundo;
 import java.io.File;
-
 import java.util.List;
 
 import utils.BusquedaUtil;
@@ -39,37 +38,24 @@ public class Busqueda {
     * @param sentencia: sentencia a buscar
     */
     public void searchSentence(String filePath, String sentencia) {
-        try {
-            String[] 
-                methodNames = utils.getMethodName(filePath).split("\n"),
-                types       = utils.compareToReturnType(filePath, sentencia).split("\n"),
-                arguments   = utils.compareToArguments(filePath, sentencia).split("\n");
-            File miFile = new File(filePath);
-            if (miFile.exists()) {
-                for(int i = 0; i < methodNames.length; ++i) {
-                    if(types[i].contains(Colores.GREEN_UNDERLINED) || arguments[i].contains(Colores.GREEN_UNDERLINED)) {
-                        format.formatoBusquedaSentencia(
+        String[] methodNames = utils.getMethodName(filePath).split("\n");
+        String[] types       = utils.compareToReturnType(filePath, sentencia).split("\n");
+        String[] arguments   = utils.compareToArguments(filePath, sentencia).split("\n");
+        File f = new File(filePath);
+        if (f.exists()) {
+            for(int i = 0; i < methodNames.length; ++i) {
+                if(types[i].contains(Colores.GREEN_UNDERLINED) ||
+                        arguments[i].contains(Colores.GREEN_UNDERLINED) || sentencia.isBlank()) {
+                    format.formatoBusquedaSentencia(
                             utils.getLineNumber(filePath, methodNames[i]),
                             filePath,
                             methodNames[i],
                             types[i],
                             arguments[i]
-                        );
-                    } else if (sentencia.equals("")) {
-                        format.formatoBusquedaSentencia(
-                            utils.getLineNumber(filePath, methodNames[i]),
-                            filePath,
-                            methodNames[i],
-                            types[i],
-                            arguments[i]
-                        );
-                    }
+                    );
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-
     }
     /**
     * busca la sentencia en el archivo designado
@@ -77,23 +63,14 @@ public class Busqueda {
     * @param searchSentence: sentencia a buscar
     */
     public synchronized void searchInFile(String filePath, String searchSentence) {
-        try {
-            File miFile = new File(filePath);
-            if(miFile.isFile() && miFile.getName().contains(".java")) {
-                System.out.println(
-                    String.format(
-                        "\n%s\n",
-                        format.setColorSentence(
-                            filePath,
-                            Colores.ANSI_CYAN
-                        )
-                    )
-                );
-                String sentence = searchSentence;
-                searchSentence(filePath, sentence);
-            }
-        } catch(Exception e) {
-            e.printStackTrace();
+        File miFile = new File(filePath);
+        if(miFile.isFile() && miFile.getName().contains(".java")) {
+            System.console().printf(
+                    "%s",
+                    String.format("%n%s%n", format.setColorSentence(filePath, Colores.ANSI_CYAN))
+            );
+            String sentence = searchSentence;
+            searchSentence(filePath, sentence);
         }
     }
     /**
@@ -102,22 +79,15 @@ public class Busqueda {
     * @param searchSentence: sentencia a buscar
     */
     public void searchInDirectory(String directory, String searchSentence) {
-        try {
-            File miFile = new File(directory);
-            if(miFile.isFile()) {
-                throw new Exception("[ Error ]: ONLY WORKS WITH DIRECTORIES");
+        File miFile = new File(directory);
+        if(miFile.isFile()) {
+            System.console().printf("%s%n", "[ Error ]: ONLY WORKS WITH DIRECTORIES");
+        }
+        List<File> files = fileUtils.getFilesFromDirectory(miFile);
+        if(files != null) {
+            for(File f: files) {
+                searchInFile(f.getPath(), searchSentence);
             }
-            List<File> files = fileUtils.getFilesFromDirectory(miFile);
-            if(files != null) {
-                files
-                .stream()
-                    .map(e -> e.getPath())
-                    .forEach(e -> {
-                        searchInFile(e, searchSentence);
-                    });
-            }
-        } catch(Exception e) {
-            e.printStackTrace();
         }
     }
     /**
@@ -126,44 +96,30 @@ public class Busqueda {
     * @param searchSentence: sentencia a buscar
     */
     public void searchInDirectories(String directorys, String searchSentence) {
-        try {
-            File miFile = new File(directorys);
-            if(miFile.isFile()) {
-                throw new Exception("[ Error ]: ONLY WORKS WITH DIRECTORIES");
-            } else if(miFile.isDirectory()) {
-                fileUtils.getFilesFromDirectories(miFile.toPath())
-                    .parallelStream()
-                    .map(e -> e.getPath())
-                    .forEach(e -> {
-                        searchInFile(e, searchSentence);
-                    });
-            }
-
-        } catch(Exception e) {
-            e.printStackTrace();
+        File miFile = new File(directorys);
+        if(miFile.isFile()) {
+            System.console().printf("%s%n", "[ Error ]: ONLY WORKS WITH DIRECTORIES");
+        } else {
+            fileUtils.getFilesFromDirectories(miFile.toPath())
+                .parallelStream()
+                .map(File::getPath)
+                .forEach(e -> searchInFile(e, searchSentence));
         }
     }
     /**
-     * buscar "todos" en el proyecto
-     * @param filePath: archivo a leer las sentencias todo
+     * Search incomplete tasks in the file.
+     * @param filePath - the file to search.
      */
     public void searchTODO(String filePath) {
-        try {
-            File miFile = new File(filePath);
-            if(miFile.isFile()) {
-                utils.getTodoSentences(miFile.getPath());
-            } else if(miFile.isDirectory()) {
-                fileUtils.getFilesFromDirectories(miFile.toPath())
-                    .parallelStream()
-                    .map(e -> e.getPath())
-                    .filter(e -> !e.isEmpty())
-                    .forEach(e -> {
-                        searchTODO(e);
-                    });
-            }
-
-        } catch(Exception e) {
-            e.printStackTrace();
+        File miFile = new File(filePath);
+        if(miFile.isFile()) {
+            utils.getTodoSentences(miFile.getPath());
+        } else if(miFile.isDirectory()) {
+            fileUtils.getFilesFromDirectories(miFile.toPath())
+                .parallelStream()
+                .map(File::getPath)
+                .filter(e -> !e.isBlank())
+                .forEach(this::searchTODO);
         }
     }
     /**
@@ -171,21 +127,15 @@ public class Busqueda {
      * @param filePath: ruta de los archivos a leer
      */
     public void searchFiles(String filePath) {
-        try {
-            File miFile = new File(filePath);
-            if(miFile.isDirectory()) {
-                fileUtils.getFilesFromDirectories(miFile.toPath())
-                    .parallelStream()
-                    .map(e -> e.getPath())
-                    .filter(e -> !e.isEmpty())
-                    .forEach(e -> {
-                        format.formatoBusquedaFiles(e);
-                    });
-            } else if(miFile.isFile()) {
-                format.formatoBusquedaFiles(miFile.getPath());
-            }
-        } catch(Exception e) {
-            e.printStackTrace();
+        File miFile = new File(filePath);
+        if(miFile.isDirectory()) {
+            fileUtils.getFilesFromDirectories(miFile.toPath())
+                .parallelStream()
+                .map(File::getPath)
+                .filter(e -> !e.isBlank())
+                .forEach(e -> format.formatoBusquedaFiles(e));
+        } else if(miFile.isFile()) {
+            format.formatoBusquedaFiles(miFile.getPath());
         }
     }
     /**
@@ -194,27 +144,21 @@ public class Busqueda {
      * @param sentence: sentencia a buscar
      */
     public void searchMethods(String filePath, String sentence) {
-        try {
-            File miFile = new File(filePath);
-            if(miFile.isFile() && !sentence.equals("")) {
-                utils.getMethodContext(miFile.getPath(), sentence);
-            } else if(miFile.isFile() && sentence.equals("")) {
-                String[] metodos = utils.getMethodName(filePath).split("\n");
-                for(String m: metodos) {
-                    int lineNumber = utils.getLineNumber(miFile.getPath(), m);
-                    format.formatoBusquedaMethod(miFile.getPath(), m, lineNumber);
-                }
-            } else if(miFile.isDirectory()) {
-                fileUtils.getFilesFromDirectories(miFile.toPath())
-                    .parallelStream()
-                    .map(e -> e.getPath())
-                    .filter(e -> !e.isEmpty())
-                    .forEach(e -> {
-                        searchMethods(e, sentence);
-                    });
+        File miFile = new File(filePath);
+        if(miFile.isFile() && !sentence.equals("")) {
+            utils.getMethodContext(miFile.getPath(), sentence);
+        } else if(miFile.isFile() && sentence.equals("")) {
+            String[] metodos = utils.getMethodName(filePath).split("\n");
+            for(String m: metodos) {
+                int lineNumber = utils.getLineNumber(miFile.getPath(), m);
+                format.formatoBusquedaMethod(miFile.getPath(), m, lineNumber);
             }
-        } catch(Exception e) {
-            e.printStackTrace();
+        } else if(miFile.isDirectory()) {
+            fileUtils.getFilesFromDirectories(miFile.toPath())
+                .parallelStream()
+                .map(File::getPath)
+                .filter(e -> !e.isBlank())
+                .forEach(e -> searchMethods(e, sentence));
         }
     }
 }

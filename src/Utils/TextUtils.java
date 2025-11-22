@@ -26,20 +26,20 @@ public class TextUtils {
     */
     public String getSentences(String filePath) {
         String[] fileLines = fileUtils.getCleanTextFromFile(filePath).split("\n");
-        StringBuffer lines = new StringBuffer();
+        StringBuilder lines = new StringBuilder();
         for(int i=0; i<fileLines.length; ++i) {
             String fileData = fileLines[i].trim();
             String[] spaces = fileData.split(" ");
-            boolean
-                conditionA = fileUtils.declarationTokenList().contains(spaces[0]),
-                conditionB = fileData.endsWith(","),
-                conditionC = fileData.contains("("),
-                conditionD = fileData.endsWith(")") || fileData.endsWith("{");
+            boolean conditionA = fileUtils.declarationTokenList().contains(spaces[0]);
+            boolean conditionB = fileData.endsWith(",");
+            boolean conditionC = fileData.contains("(");
+            boolean conditionD = fileData.endsWith(")") || fileData.endsWith("{");
             if(conditionA && conditionC && conditionD) {
-                lines.append(fileData.replace("{", "").trim() + "\n");
+                lines.append(fileData.replace("{", "").trim());
+                lines.append("\n");
             } else if(conditionB) {
                 int next = i+1;
-                StringBuffer buildMultiLine = new StringBuffer(fileData);
+                StringBuilder buildMultiLine = new StringBuilder(fileData);
                 while(next < fileLines.length) {
                     if(fileLines[next].trim().endsWith(",")) {
                         buildMultiLine.append(fileLines[next].trim());
@@ -53,7 +53,8 @@ public class TextUtils {
                     }
                 }
                 if(fileUtils.declarationTokenList().contains(buildMultiLine.toString().split(" ")[0])) {
-                    lines.append(buildMultiLine.toString().replace("{", "").trim() + "\n");
+                    lines.append(buildMultiLine.toString().replace("{", "").trim());
+                    lines.append("\n");
                 }
             }
         }
@@ -71,13 +72,12 @@ public class TextUtils {
             String[] lineNumbers = fileLines[i].trim().replace("}", "").split(":");
             if(lineNumbers.length == 2) {
                 String fileData = lineNumbers[1].trim();
-                if(fileData != "") {
+                if(!fileData.isBlank()) {
                     String[] spaces = fileData.split(" ");
-                    boolean
-                        conditionA = fileUtils.declarationTokenList().contains(spaces[0]),
-                        conditionB = fileData.endsWith(","),
-                        conditionC = fileData.contains("("),
-                        conditionD = fileData.endsWith(")") || fileData.endsWith("{");
+                    boolean conditionA = fileUtils.declarationTokenList().contains(spaces[0]);
+                    boolean conditionB = fileData.endsWith(",");
+                    boolean conditionC = fileData.contains("(");
+                    boolean conditionD = fileData.endsWith(")") || fileData.endsWith("{");
                     if(conditionA && conditionC && conditionD) {
                         methods.add(
                             new Model(
@@ -87,7 +87,7 @@ public class TextUtils {
                         );
                     } else if(conditionB) {
                         int next = i+1;
-                        StringBuffer buildMultiLine = new StringBuffer(fileData);
+                        StringBuilder buildMultiLine = new StringBuilder(fileData);
                         while(next < fileLines.length) {
                             if(fileLines[next].trim().endsWith(",")) {
                                 buildMultiLine.append(fileLines[next].trim().split(":")[1].trim());
@@ -120,21 +120,21 @@ public class TextUtils {
      * @return un String con la lectura en el rango deseado
      */
     public String deleteComments(String[] fileText, int inicial, int end) {
-        StringBuffer res = new StringBuffer();
+        StringBuilder res = new StringBuilder();
         if(end == 0) {
             res.append(fileText[inicial-1] + "\n");
         }
         for(int i=inicial-1; i<end-1; ++i) {
-            boolean 
-                conditionA = fileText[i].trim().startsWith("/*"),
-                conditionB = fileText[i].trim().startsWith("/**"),
-                conditionC = fileText[i].trim().startsWith("*"),
-                conditionD = fileText[i].trim().startsWith("//");
+            boolean conditionA = fileText[i].trim().startsWith("/*");
+            boolean conditionB = fileText[i].trim().startsWith("/**");
+            boolean conditionC = fileText[i].trim().startsWith("*");
+            boolean conditionD = fileText[i].trim().startsWith("//");
             if(conditionA || conditionB || conditionC || conditionD) {
                 fileText[i] = "";
             }
             if(!fileText[i].equals("")) {
-                res.append(fileText[i] + "\n");
+                res.append(fileText[i]);
+                res.append("\n");
             }
         }
         return res.toString();
@@ -146,9 +146,8 @@ public class TextUtils {
      * @return el número de coincidencias entre las letras
      */
     public int compareCharToChar(String first, String second) {
-        String 
-            n1 = first.toLowerCase(),
-            n2 = second.toLowerCase();
+        String n1 = first.toLowerCase();
+        String n2 = second.toLowerCase();
         int r = 0;
         try {
             for(char fn: n1.toCharArray()) {

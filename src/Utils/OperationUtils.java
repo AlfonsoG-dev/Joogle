@@ -11,7 +11,7 @@ public record OperationUtils(String[] options, int i) {
     /**
      * busqueda options
      */
-    private final static Busqueda busqueda = new Busqueda();
+    private static final Busqueda busqueda = new Busqueda();
     /**
      * verifica si las opcion [1] se ha digitado
      * @return la opcion[i+1], de lo contrario "./"
@@ -42,9 +42,10 @@ public record OperationUtils(String[] options, int i) {
      * operacion para buscar dentro de un archivo
      * si se da una sentencia, se colorea el resultado buscado
      */
-    public void searchInFileOperation() throws Exception {
+    public void searchInFileOperation() {
         if(verificarOptionFile().equals("." + File.separator)) {
-            throw new Exception("[ Error ]: Falta proporcionar un archivo para su lectura");
+            System.console().printf("%s%n", "[ Error ]: Falta proporcionar un archivo para su lectura");
+            return;
         }
         String fileName = verificarOptionFile();
         String sentence = verificarOptionSentence();

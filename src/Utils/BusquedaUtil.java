@@ -37,7 +37,7 @@ public class BusquedaUtil {
     * @return String con los métodos del archivo
     */
     public String getMethodName(String filePath) {
-        StringBuffer build = new StringBuffer();
+        StringBuilder build = new StringBuilder();
         String[] partition = textUtils.getSentences(filePath).split("\n");
         for(String p: partition) {
             build.append(Model.getNameOfMethods(p));
@@ -52,7 +52,7 @@ public class BusquedaUtil {
     */
     private String getReturnType(String filePath) {
         String[] sentences = textUtils.getSentences(filePath).split("\n");
-        StringBuffer types = new StringBuffer();
+        StringBuilder types = new StringBuilder();
         for(String s: sentences) {
             types.append(Model.getReturnType(s));
         }
@@ -65,7 +65,7 @@ public class BusquedaUtil {
     */
     private String getArguments(String filePath) {
         String[] sentences = textUtils.getSentences(filePath).split("\n");
-        StringBuffer arguments = new StringBuffer();
+        StringBuilder arguments = new StringBuilder();
         for(String s: sentences) {
             arguments.append(Model.getArguments(s));
         }
@@ -78,9 +78,8 @@ public class BusquedaUtil {
     * @return String con la sentencia completa del método buscado
     */
     public String localizarMetodo(String filePath, String sentencia) {
-        String 
-            r     = sentencia.trim().toLowerCase(),
-            build = "";
+        String r     = sentencia.trim().toLowerCase();
+        String build = "";
         List<Model> partition = textUtils.listMethods(filePath);
         for(Model mt: partition) {
             if(mt.getMethodName().toLowerCase().contains(r)) {
@@ -113,28 +112,22 @@ public class BusquedaUtil {
     */
     public String compareToReturnType(String filePath, String sentence) {
         String st = sentence.split("\\(")[0].replace(" ", "").toLowerCase();
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         String[] sentences = getReturnType(filePath).split("\n");
         int r = 0;
         for(String s: sentences) {
-            if(st.equals("")) {
-                result.append(
-                        format.setColorSentence(s, Colores.ANSI_YELLOW) + "\n"
-                );
+            if(st.equals("") || textUtils.compareCharToChar(s, st) > st.length()) {
+                result.append(format.setColorSentence(s, Colores.ANSI_YELLOW));
+                result.append("\n");
                 ++r;
             } else if(s.toLowerCase().replace(" ", "").equals(st) ||
                     textUtils.compareCharToChar(s, st) == st.length()) {
-                result.append(
-                        format.setColorSentence(s, Colores.GREEN_UNDERLINED) + "\n"
-                );
-                ++r;
-            } else if(textUtils.compareCharToChar(s, st) > st.length()) {
-                result.append(
-                        format.setColorSentence(s, Colores.ANSI_YELLOW) + "\n"
-                );
+                result.append(format.setColorSentence(s, Colores.GREEN_UNDERLINED));
+                result.append("\n");
                 ++r;
             } else {
-                result.append(s + "\n");
+                result.append(s);
+                result.append("\n");
             }
         }
         format.concurrencyFormat(r, "ReturnType");
@@ -151,67 +144,66 @@ public class BusquedaUtil {
         if(!sentence.isEmpty()) {
             st = "(" + sentence.split("\\(")[1].replace(" ", "").toLowerCase();
         }
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         String[] sentences = getArguments(filePath).split("\n");
         int r = 0;
         for(int i=0; i<sentences.length; ++i) {
             String s = sentences[i].replace(" ", "").toLowerCase();
             if(st.equals("")) {
-                result.append(sentences[i] + "\n");
+                result.append(sentences[i]);
+                result.append("\n");
                 ++r;
             } else if(s.equals(st)) {
-                result.append(
-                        format.setColorSentence(sentences[i], Colores.GREEN_UNDERLINED) + "\n"
-                );
+                result.append(format.setColorSentence(sentences[i], Colores.GREEN_UNDERLINED));
+                result.append("\n");
                 ++r;
             } else if(textUtils.compareCharToChar(s, st) > st.length()) {
-                result.append(
-                        format.setColorSentence(sentences[i], Colores.ANSI_YELLOW) + "\n"
-                );
+                result.append(format.setColorSentence(sentences[i], Colores.ANSI_YELLOW));
+                result.append("\n");
                 ++r;
             } else {
                 if(s.contains(",") && st.contains(",")) {
-                    String[] 
-                        comas  = sentences[i].split(","),
-                        sComas = st.split(",");
-                    StringBuffer cB = new StringBuffer();
+                    String[] comas  = sentences[i].split(",");
+                    String[] sComas = st.split(",");
+                    StringBuilder cB = new StringBuilder();
                     for(int c=0; c<comas.length; ++c) {
                         for(int sc=0; sc<sComas.length; ++sc) {
-                            String 
-                                conditionA = comas[c].replace(" ", "").replace(")", "").toLowerCase(),
-                                conditionB = sComas[sc].replace(")", "");
+                            String conditionA = comas[c].replace(" ", "").replace(")", "").toLowerCase();
+                            String conditionB = sComas[sc].replace(")", "");
                             int conditionC = textUtils.compareCharToChar(comas[c], sComas[sc]);
                             if(conditionA.equals(conditionB) ||  conditionC > st.length()) {
                                 comas[c] = format.setColorSentence(comas[c], Colores.ANSI_YELLOW);
                             }
                         }
-                        cB.append(comas[c] + ", ");
+                        cB.append(comas[c]);
+                        cB.append(", ");
                     }
                     sentences[i] = cB.substring(0, cB.length()-2);
                 } else if(st.contains(",")) {
-                    String 
-                        comas      = sentences[i].split(",")[0],
-                        sComa      = sentence.split(",")[0],
-                        conditionA = comas.replace(" ", "").toLowerCase(),
-                        conditionB = sComa.replace(" ", "").toLowerCase() + ")";
+                    String comas      = sentences[i].split(",")[0];
+                    String sComa      = sentence.split(",")[0];
+                    String conditionA = comas.replace(" ", "").toLowerCase();
+                    String conditionB = sComa.replace(" ", "").toLowerCase() + ")";
 
-                    StringBuffer cB = new StringBuffer();
+                    StringBuilder cB = new StringBuilder();
                     int conditionC = textUtils.compareCharToChar(comas, sComa);
                     if(conditionA.equals(conditionB) || conditionC > st.length()) {
                         comas = format.setColorSentence(comas, Colores.ANSI_YELLOW);
                     }
-                    cB.append(comas + ", ");
+                    cB.append(comas);
+                    cB.append(", ");
                     sentences[i] = cB.substring(0, cB.length()-2);
                 }
-                result.append(sentences[i] + "\n");
+                result.append(sentences[i]);
+                result.append("\n");
             }
         }
         format.concurrencyFormat(r, "Arguments");
         return result.toString();
     }
     private void contextMessage(String s) {
-        if(!s.isEmpty()) {
-            System.out.println(s);
+        if(!s.isBlank()) {
+            System.console().printf("%s", s);
         }
     }
     /**
@@ -222,10 +214,9 @@ public class BusquedaUtil {
     public synchronized String getMethodContext(String filePath, String sentencia) {
         String[] fileLines = textUtils.getSentences(filePath).split("\n");
         int inicial = getLineNumber(filePath, sentencia);
-        String 
-            buscada     = inicial + ":" + localizarMetodo(filePath, sentencia),
-            conNumLinea = "",
-            respuesta   = "";
+        String buscada     = inicial + ":" + localizarMetodo(filePath, sentencia);
+        String conNumLinea = "";
+        String respuesta   = "";
         int end = 0;
         for(int i=0; i<fileLines.length; ++i) {
             conNumLinea = String.format(
@@ -242,9 +233,8 @@ public class BusquedaUtil {
             }
         }
         String[] fileText = fileUtils.getCleanTextFromFile(filePath).split("\n");
-        String 
-            s = "",
-            e = "";
+        String s = "";
+        String e = "";
         if(end > 0) {
             s = textUtils.deleteComments(
                 fileText,
@@ -263,9 +253,9 @@ public class BusquedaUtil {
         return respuesta;
     }
     /**
-     * genera un string con las sentencias que sean "todos"
+     * genera un string con las sentencias que sean tareas incompletas.
      * @param filePath: archivo a leer
-     * @return true si el archivo tiene sentencias todo, false de lo contrario
+     * @return true si el archivo tiene tareas incompletas, false de lo contrario.
      */
     public synchronized void getTodoSentences(String filePath) {
         String[] fileLines = fileUtils.getCleanTextFromFile(filePath).split("\n");
@@ -273,24 +263,24 @@ public class BusquedaUtil {
 
         for(int i=0; i<fileLines.length; ++i) {
             String valores = fileLines[i].replace(" ", "");
-            boolean
-                conditionA = valores.startsWith("*TODO:") || valores.startsWith("*TODO"),
-                conditionB = valores.startsWith("/*TODO:") || valores.startsWith("/*TODO"),
-                conditionC = valores.startsWith("//TODO:") || valores.startsWith("//TODO");
+            boolean conditionA = valores.startsWith("*TODO:") || valores.startsWith("*TODO");
+            boolean conditionB = valores.startsWith("/*TODO:") || valores.startsWith("/*TODO");
+            boolean conditionC = valores.startsWith("//TODO:") || valores.startsWith("//TODO");
             if(conditionA) {
-                int 
-                    line  = i+1,
-                    count = line;
-                String 
-                    s = fileLines[i],
-                    e = "",
-                    b = "\n";
+                int line  = i+1;
+                int count = line;
+                String s = fileLines[i];
+                StringBuilder e = new StringBuilder();
+                StringBuilder b = new StringBuilder("\n");
                 while(count < fileLines.length) {
                     if(fileLines[count].contains("*/")) {
-                        b += s + "\n" + e; 
+                        b.append(s);
+                        b.append("\n");
+                        b.append(e); 
                         break;
                     } else if(fileLines[count].contains("*")) {
-                        e += fileLines[count] + "\n";
+                        e.append(fileLines[count]);
+                        e.append("\n");
                         ++count;
                     }
                 }
@@ -298,7 +288,7 @@ public class BusquedaUtil {
                         String.format(
                             "%s:%s", 
                             format.setColorSentence( filePath, Colores.ANSI_YELLOW),
-                            line + b
+                            line + b.toString()
                         )
                 );
             } else if(conditionB || conditionC) {
@@ -312,7 +302,7 @@ public class BusquedaUtil {
                 existe = true;
             }
         }
-        if(existe == false) {
+        if(!existe) {
             System.err.println("\n[ Info ]: \t NO TIENE TODO's POR EL MOMENTO \n");
         }
     }

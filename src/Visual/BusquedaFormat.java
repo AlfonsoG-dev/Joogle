@@ -6,6 +6,7 @@ import java.io.File;
  * clase para dar formato al resultado de la busqueda
  */
 public record BusquedaFormat() {
+    private static final String CONSOL_FORMAT = "%s%n";
     /**
      */
     public String setColorSentence(String sentence, String color) {
@@ -24,7 +25,7 @@ public record BusquedaFormat() {
                 Colores.RED_UNDERLINED +
                 lineNumber + Colores.ANSI_RESET + "\n";
         }
-        System.out.println(build);
+        System.console().printf(CONSOL_FORMAT, build);
     }
     /**
     * da el formato de respuesta a la busqueda
@@ -47,7 +48,7 @@ public record BusquedaFormat() {
         } else {
             build = "| " + "unknow" + " | " + methodName + " :: " + type + " => " + argument + "\n";
         }
-        System.out.println(build);
+        System.console().printf(CONSOL_FORMAT, build);
     }
     /**
      * da el formato de respuesta a la busqueda de files
@@ -58,13 +59,9 @@ public record BusquedaFormat() {
         String name = Colores.RED_UNDERLINED + miFile.getName() + Colores.ANSI_RESET;
         String build = "";
         build = miFile.getPath().replace(miFile.getName(), name);
-        System.out.println(
-                String.format(
-                    ">- %s",
-                    Colores.ANSI_YELLOW +
-                    build +
-                    Colores.ANSI_RESET + "\n"
-                )
+        System.console().printf(
+                CONSOL_FORMAT,
+                String.format(">- %s", Colores.ANSI_YELLOW + build + Colores.ANSI_RESET)
         );
     }
     /**
@@ -81,11 +78,9 @@ public record BusquedaFormat() {
             Colores.ANSI_YELLOW +
             lineNumber +
             Colores.ANSI_RESET;
-        System.out.println(
-                String.format(
-                        "%s >- %s", fLine, Colores.ANSI_YELLOW +
-                        methodName + Colores.ANSI_RESET + "\n"
-                )
+        System.console().printf(
+                CONSOL_FORMAT,
+                String.format("%s >- %s", fLine, Colores.ANSI_YELLOW + methodName + Colores.ANSI_RESET)
         );
     }
     /**
@@ -94,12 +89,9 @@ public record BusquedaFormat() {
     * @param tipo: tipo de valor repetido
     */
     public void concurrencyFormat(int cantidad, String tipo) {
-        System.out.println(
-            String.format(
-                "%s : %s",
-                tipo,
-                Colores.ANSI_RED + cantidad + Colores.ANSI_RESET
-            )
+        System.console().printf(
+            CONSOL_FORMAT,
+            String.format("%s : %s", tipo, Colores.ANSI_RED + cantidad + Colores.ANSI_RESET)
         );
     }
 }
