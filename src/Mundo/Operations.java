@@ -1,7 +1,7 @@
-package Mundo;
+package mundo;
 
-import Utils.OperationUtils;
-import Visual.Colores;
+import utils.OperationUtils;
+import visual.Colores;
 
 /**
  * clase para organizar las operaciones según las opciones dadas por el usuario

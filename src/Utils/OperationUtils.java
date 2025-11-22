@@ -1,8 +1,8 @@
-package Utils;
+package utils;
 
 import java.io.File;
 
-import Mundo.Busqueda;
+import mundo.Busqueda;
 
 /**
  * record para organizar las operaciones CLI

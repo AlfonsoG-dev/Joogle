@@ -1,5 +1,5 @@
-package Mundo.Modelos;
-import Utils.FileUtils;
+package mundo.modelos;
+import utils.FileUtils;
 
 /**
  * representa los methodos

@@ -1,4 +1,4 @@
-package Visual;
+package visual;
 
 /**
  * colores utilizados para la mejorar visualmente los mensajes

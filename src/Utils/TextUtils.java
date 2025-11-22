@@ -1,9 +1,9 @@
-package Utils;
+package utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import Mundo.Modelos.Model;
+import mundo.modelos.Model;
 
 /**
  * helper class for text

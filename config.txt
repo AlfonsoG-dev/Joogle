@@ -1,5 +1,8 @@
+Root-Path: src
 Source-Path: src
 Class-Path: bin
 Main-Class: Joogle
+Test-Path:  
+Test-Class: 
 Libraries: 
-Compile-Flags: -Werror
+Compile-Flags: -Werror -Xlint:all -Xdiags:verbose -g

@@ -1,13 +1,13 @@
-package Mundo;
+package mundo;
 import java.io.File;
 
 import java.util.List;
 
-import Utils.BusquedaUtil;
-import Utils.FileUtils;
+import utils.BusquedaUtil;
+import utils.FileUtils;
 
-import Visual.BusquedaFormat;
-import Visual.Colores;
+import visual.Colores;
+import visual.BusquedaFormat;
 
 /**
  * clase para buscar métodos dentro de clases de java

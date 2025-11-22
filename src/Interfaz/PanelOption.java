@@ -1,10 +1,10 @@
-package Interfaz;
+package interfaz;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 
 
-import Mundo.Busqueda;
+import mundo.Busqueda;
 public class PanelOption {
     private Busqueda busqueda;
     private BufferedReader miBufferedReader;

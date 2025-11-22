@@ -1,17 +1,17 @@
-package Interfaz;
+package interfaz;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-import Visual.Colores;
+import visual.Colores;
 public class Options {
     public void organizeInputptions() {
         try {
             BufferedReader mio = new BufferedReader(new InputStreamReader(System.in));
-            System.out.print(Colores.GREEN_UNDERLINED + "!press enter¡" + Colores.ANSI_RESET);
-            while(mio.readLine().equals("-q") == false) {
+            System.console().printf("%s%n", Colores.GREEN_UNDERLINED + "!press enter¡" + Colores.ANSI_RESET);
+            while(!mio.readLine().equals("-q")) {
                 PanelOption miPanel = new PanelOption(mio);
-                System.out.print("[ Info ]: ");
+                System.console().printf("%s%n", "[ Info ]: ");
                 switch(mio.readLine()) {
                     case "-f":
                         miPanel.searchInFileOption();
@@ -44,12 +44,15 @@ public class Options {
                         System.out.println("\t you need to provide the method name with 'methodName'");
                         System.out.println("use -lt to search for TODO'S in the files of the given directory");
                         break;
+                    default:
+                        break;
                 }
                 System.out.println(
                         Colores.GREEN_UNDERLINED + "use -q to quit or --h for help" + Colores.ANSI_RESET
                 );
             }
         } catch(Exception e) {
+            e.printStackTrace();
         }
     }
 }

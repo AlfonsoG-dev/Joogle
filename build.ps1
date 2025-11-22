@@ -1,6 +1,6 @@
-$srcClases = "src\*.java src\Interfaz\*.java src\Mundo\*.java src\Mundo\Modelos\*.java src\Utils\*.java src\Visual\*.java "
+$srcClasses = "src\*.java src\interfaz\*.java src\mundo\*.java src\mundo\modelos\*.java src\utils\*.java src\visual\*.java "
 $libFiles = ""
-$compile = "javac --release 23 -Werror -Xlint:all -d .\bin\ $srcClases"
+$compile = "javac --release 23 -Xlint:all -Xdiags:verbose -d .\bin\ $srcClasses"
 $createJar = "jar -cfm Joogle.jar Manifesto.txt -C .\bin\ ."
 $javaCommand = "java -jar Joogle.jar"
 $runCommand = "$compile" + " && " + "$createJar" + " && " +"$javaCommand"

@@ -1,5 +1,5 @@
-import Mundo.Operations;
-import Interfaz.Options;
+import mundo.Operations;
+import interfaz.Options;
 /**
  * clase main de ejecución
  */

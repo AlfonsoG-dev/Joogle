@@ -1,11 +1,11 @@
-package Utils;
+package utils;
 
 import java.util.List;
 
-import Mundo.Modelos.Model;
+import mundo.modelos.Model;
 
-import Visual.BusquedaFormat;
-import Visual.Colores;
+import visual.BusquedaFormat;
+import visual.Colores;
 
 /**
  * métodos especiales para ayudar a crear la busqueda
