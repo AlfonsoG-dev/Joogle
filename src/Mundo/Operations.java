@@ -34,7 +34,7 @@ public final class Operations {
     */
     public void organizeCLIOptions() {
         try {
-            outter: for(int i=0; i<options.length; ++i) {
+            for(int i=0; i<options.length; ++i) {
                 opUtils = new OperationUtils(options, i);
                 switch(options[i]) {
                     case "-f":
@@ -59,12 +59,11 @@ public final class Operations {
                         opUtils.getHelpOperation();
                         break;
                     default: 
-                        System.out.println("utilize el comando --h para mas informacion");
-                        break outter;
+                        System.console().printf("%s%n", "utilize el comando --h para mas informacion");
                 }
             }
         } catch(Exception e) {
-            System.err.println(Colores.RED_UNDERLINED + e.getLocalizedMessage() + Colores.ANSI_RESET);
+            System.console().printf("[Error] %s%n", Colores.RED_UNDERLINED + e.getLocalizedMessage() + Colores.ANSI_RESET);
         }
     }
 }

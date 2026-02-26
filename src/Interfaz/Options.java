@@ -5,6 +5,9 @@ import java.io.InputStreamReader;
 
 import visual.Colores;
 public class Options {
+
+    private static final String CONSOLE_FORMAT = "%s%n";
+
     public void organizeInputptions() {
         try {
             BufferedReader mio = new BufferedReader(new InputStreamReader(System.in));
@@ -32,22 +35,22 @@ public class Options {
                         miPanel.searchForMethodsOption();
                         break;
                     case "--h":
-                        System.out.println("use -f to search within a file");
-                        System.out.println("\t you need to provide of a search sentence with 'int(boolean)'");
-                        System.out.println("\t the search sentence can be empty just declare with ''");
-                        System.out.println("use -d to search within a directory");
-                        System.out.println("\t as with the previous one you need to provide the 'search(sentence)'");
-                        System.out.println("use -D to search recursive within directories");
-                        System.out.println("\t as with the previous one you need to provide the 'search(sentence)'");
-                        System.out.println("use -lf to list files of the given directory");
-                        System.out.println("use -lm to print the method context");
-                        System.out.println("\t you need to provide the method name with 'methodName'");
-                        System.out.println("use -lt to search for TODO'S in the files of the given directory");
+                        System.console().printf(CONSOLE_FORMAT, "use -f to search within a file");
+                        System.console().printf(CONSOLE_FORMAT, "\t you need to provide of a search sentence with 'int(boolean)'");
+                        System.console().printf(CONSOLE_FORMAT, "\t the search sentence can be empty just declare with ''");
+                        System.console().printf(CONSOLE_FORMAT, "use -d to search within a directory");
+                        System.console().printf(CONSOLE_FORMAT, "\t as with the previous one you need to provide the 'search(sentence)'");
+                        System.console().printf(CONSOLE_FORMAT, "use -D to search recursive within directories");
+                        System.console().printf(CONSOLE_FORMAT, "\t as with the previous one you need to provide the 'search(sentence)'");
+                        System.console().printf(CONSOLE_FORMAT, "use -lf to list files of the given directory");
+                        System.console().printf(CONSOLE_FORMAT, "use -lm to print the method context");
+                        System.console().printf(CONSOLE_FORMAT, "\t you need to provide the method name with 'methodName'");
+                        System.console().printf(CONSOLE_FORMAT, "use -lt to search for TODO'S in the files of the given directory");
                         break;
                     default:
                         break;
                 }
-                System.out.println(
+                System.console().printf(CONSOLE_FORMAT,
                         Colores.GREEN_UNDERLINED + "use -q to quit or --h for help" + Colores.ANSI_RESET
                 );
             }

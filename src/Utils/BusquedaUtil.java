@@ -133,6 +133,45 @@ public class BusquedaUtil {
         format.concurrencyFormat(r, "ReturnType");
         return result.toString();
     }
+    private void buildMultiLineArgs(String[] sentences, int i, String sentence, String searchArg) {
+        String comas      = sentences[i].split(",")[0];
+        String sComa      = sentence.split(",")[0];
+        String conditionA = comas.replace(" ", "").toLowerCase();
+        String conditionB = sComa.replace(" ", "").toLowerCase() + ")";
+
+        StringBuilder cB = new StringBuilder();
+        int conditionC = textUtils.compareCharToChar(comas, sComa);
+        if(conditionA.equals(conditionB) || conditionC > searchArg.length()) {
+            comas = format.setColorSentence(comas, Colores.ANSI_YELLOW);
+        }
+        cB.append(comas);
+        cB.append(", ");
+        sentences[i] = cB.substring(0, cB.length()-2);
+    }
+    private void buildMultiArgs(StringBuilder result, String argument, String searchArg, String[] sentences, int i, String sentence) {
+        if(argument.contains(",") && searchArg.contains(",")) {
+            String[] comas  = sentences[i].split(",");
+            String[] sComas = searchArg.split(",");
+            StringBuilder cB = new StringBuilder();
+            for(int c=0; c<comas.length; ++c) {
+                for(int sc=0; sc<sComas.length; ++sc) {
+                    String conditionA = comas[c].replace(" ", "").replace(")", "").toLowerCase();
+                    String conditionB = sComas[sc].replace(")", "");
+                    int conditionC = textUtils.compareCharToChar(comas[c], sComas[sc]);
+                    if(conditionA.equals(conditionB) ||  conditionC > searchArg.length()) {
+                        comas[c] = format.setColorSentence(comas[c], Colores.ANSI_YELLOW);
+                    }
+                }
+                cB.append(comas[c]);
+                cB.append(", ");
+            }
+            sentences[i] = cB.substring(0, cB.length()-2);
+        } else if(searchArg.contains(",")) {
+            buildMultiLineArgs(sentences, i, sentence, searchArg);
+        }
+        result.append(sentences[i]);
+        result.append("\n");
+    }
     /**
     * modifica los datos para que solo aquellos que tengan el mismo valor se pinten de cierto color
     * @param filePath: archivo a leer
@@ -162,40 +201,7 @@ public class BusquedaUtil {
                 result.append("\n");
                 ++r;
             } else {
-                if(s.contains(",") && st.contains(",")) {
-                    String[] comas  = sentences[i].split(",");
-                    String[] sComas = st.split(",");
-                    StringBuilder cB = new StringBuilder();
-                    for(int c=0; c<comas.length; ++c) {
-                        for(int sc=0; sc<sComas.length; ++sc) {
-                            String conditionA = comas[c].replace(" ", "").replace(")", "").toLowerCase();
-                            String conditionB = sComas[sc].replace(")", "");
-                            int conditionC = textUtils.compareCharToChar(comas[c], sComas[sc]);
-                            if(conditionA.equals(conditionB) ||  conditionC > st.length()) {
-                                comas[c] = format.setColorSentence(comas[c], Colores.ANSI_YELLOW);
-                            }
-                        }
-                        cB.append(comas[c]);
-                        cB.append(", ");
-                    }
-                    sentences[i] = cB.substring(0, cB.length()-2);
-                } else if(st.contains(",")) {
-                    String comas      = sentences[i].split(",")[0];
-                    String sComa      = sentence.split(",")[0];
-                    String conditionA = comas.replace(" ", "").toLowerCase();
-                    String conditionB = sComa.replace(" ", "").toLowerCase() + ")";
-
-                    StringBuilder cB = new StringBuilder();
-                    int conditionC = textUtils.compareCharToChar(comas, sComa);
-                    if(conditionA.equals(conditionB) || conditionC > st.length()) {
-                        comas = format.setColorSentence(comas, Colores.ANSI_YELLOW);
-                    }
-                    cB.append(comas);
-                    cB.append(", ");
-                    sentences[i] = cB.substring(0, cB.length()-2);
-                }
-                result.append(sentences[i]);
-                result.append("\n");
+                buildMultiArgs(result, s, st, sentences, i, sentence);
             }
         }
         format.concurrencyFormat(r, "Arguments");
@@ -252,6 +258,27 @@ public class BusquedaUtil {
         }
         return respuesta;
     }
+    private void appendTODOLines(String[] fileLines, int i, String filePath) {
+        int line  = i+1;
+        int count = line;
+        String s = fileLines[i];
+        StringBuilder e = new StringBuilder();
+        StringBuilder b = new StringBuilder("\n");
+        while(count < fileLines.length) {
+            if(fileLines[count].contains("*/")) {
+                b.append(s);
+                b.append("\n");
+                b.append(e); 
+                break;
+            } else if(fileLines[count].contains("*")) {
+                e.append(fileLines[count]);
+                e.append("\n");
+                ++count;
+            }
+        }
+        System.console().printf("%s%n", String.format("%s:%s",
+                    format.setColorSentence(filePath, Colores.ANSI_YELLOW), line + b.toString()));
+    }
     /**
      * genera un string con las sentencias que sean tareas incompletas.
      * @param filePath: archivo a leer
@@ -267,43 +294,16 @@ public class BusquedaUtil {
             boolean conditionB = valores.startsWith("/*TODO:") || valores.startsWith("/*TODO");
             boolean conditionC = valores.startsWith("//TODO:") || valores.startsWith("//TODO");
             if(conditionA) {
-                int line  = i+1;
-                int count = line;
-                String s = fileLines[i];
-                StringBuilder e = new StringBuilder();
-                StringBuilder b = new StringBuilder("\n");
-                while(count < fileLines.length) {
-                    if(fileLines[count].contains("*/")) {
-                        b.append(s);
-                        b.append("\n");
-                        b.append(e); 
-                        break;
-                    } else if(fileLines[count].contains("*")) {
-                        e.append(fileLines[count]);
-                        e.append("\n");
-                        ++count;
-                    }
-                }
-                System.out.println(
-                        String.format(
-                            "%s:%s", 
-                            format.setColorSentence( filePath, Colores.ANSI_YELLOW),
-                            line + b.toString()
-                        )
-                );
+                appendTODOLines(fileLines, i, filePath);
             } else if(conditionB || conditionC) {
                 int line = i+1;
-                System.out.println(
-                        format.setColorSentence(
-                            filePath,
-                            Colores.ANSI_YELLOW
-                        ) + ":" +  line + fileLines[i]
-                );
+                System.console().printf("%s%n",
+                        format.setColorSentence(filePath, Colores.ANSI_YELLOW) + ":" +  line + fileLines[i]);
                 existe = true;
             }
         }
         if(!existe) {
-            System.err.println("\n[ Info ]: \t NO TIENE TODO's POR EL MOMENTO \n");
+            System.console().printf("\n[Error] \t%s%n", "NO TIENE TODO'S POR EL MOMENTO \n");
         }
     }
 }
