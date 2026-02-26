@@ -7,7 +7,17 @@ import mundo.Busqueda;
 /**
  * record para organizar las operaciones CLI
  */
-public record OperationUtils(String[] options, int i) {
+public class OperationUtils {
+
+    private static final String CONSOLE_FORMAT = "%s%n";
+
+    private String[] options;
+    private int i;
+
+    public OperationUtils(String[] options, int i) {
+        this.options = options;
+        this.i = i;
+    }
     /**
      * busqueda options
      */
@@ -96,17 +106,17 @@ public record OperationUtils(String[] options, int i) {
      * mensaje con todas las operaciones disponibles
      */
     public void getHelpOperation() {
-        System.out.println("Opciones para joogle");
-        System.out.println("-f para buscar dentro de un archivo:" + 
+        System.console().printf(CONSOLE_FORMAT, "Opciones para joogle");
+        System.console().printf(CONSOLE_FORMAT, "-f para buscar dentro de un archivo:" + 
+                "\t seguido del valor entre \"\" para buscar la sentencia");
+        System.console().printf(CONSOLE_FORMAT, "-d para buscar dentro de un directorio:" + 
                 "\t seguido de /\"\"/ para buscar una sentencia");
-        System.out.println("-d para buscar dentro de un directorio:" + 
+        System.console().printf(CONSOLE_FORMAT, "-D para buscar dentro de todos los directorios:" + 
                 "\t seguido de /\"\"/ para buscar una sentencia");
-        System.out.println("-D para buscar dentro de todos los directorios:" + 
-                "\t seguido de /\"\"/ para buscar una sentencia");
-        System.out.println("-lf para listar todos los archivos .java:\t seguido del directorio");
-        System.out.println("-lm para listar todos los métodos del proyecto:\t seguido del directorio");
-        System.out.println("\t si seleccionas un archivo y adicionas el nombre" + 
+        System.console().printf(CONSOLE_FORMAT, "-lf para listar todos los archivos .java:\t seguido del directorio");
+        System.console().printf(CONSOLE_FORMAT, "-lm para listar todos los métodos del proyecto:\t seguido del directorio");
+        System.console().printf(CONSOLE_FORMAT, "\t si seleccionas un archivo y adicionas el nombre" + 
                 " del metodo se retorna el bloque de codigo de ese metodo");
-        System.out.println("-lt para listar todos los TODO del proyecto:\t seguido del directorio");
+        System.console().printf(CONSOLE_FORMAT, "-lt para listar todos los TODO del proyecto:\t seguido del directorio");
     }
 }

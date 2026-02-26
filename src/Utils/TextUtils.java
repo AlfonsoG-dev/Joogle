@@ -19,6 +19,26 @@ public class TextUtils {
     public TextUtils() {
         fileUtils = new FileUtils();
     }
+    public void appendMultiLineSentence(StringBuilder lines, String fileData, String[] fileLines, int i) {
+        int next = i+1;
+        StringBuilder buildMultiLine = new StringBuilder(fileData);
+        while(next < fileLines.length) {
+            if(fileLines[next].trim().endsWith(",")) {
+                buildMultiLine.append(fileLines[next].trim());
+                next++;
+            }
+            if(fileLines[next].trim().endsWith("{") || fileLines[next].trim().endsWith(")")) {
+                buildMultiLine.append(fileLines[next].trim());
+                break;
+            } else {
+                ++next;
+            }
+        }
+        if(fileUtils.declarationTokenList().contains(buildMultiLine.toString().split(" ")[0])) {
+            lines.append(buildMultiLine.toString().replace("{", "").trim());
+            lines.append("\n");
+        }
+    }
     /**
     * creates an String with the java file sentences
     * @param filePath: java file
@@ -38,27 +58,27 @@ public class TextUtils {
                 lines.append(fileData.replace("{", "").trim());
                 lines.append("\n");
             } else if(conditionB) {
-                int next = i+1;
-                StringBuilder buildMultiLine = new StringBuilder(fileData);
-                while(next < fileLines.length) {
-                    if(fileLines[next].trim().endsWith(",")) {
-                        buildMultiLine.append(fileLines[next].trim());
-                        next++;
-                    }
-                    if(fileLines[next].trim().endsWith("{") || fileLines[next].trim().endsWith(")")) {
-                        buildMultiLine.append(fileLines[next].trim());
-                        break;
-                    } else {
-                        ++next;
-                    }
-                }
-                if(fileUtils.declarationTokenList().contains(buildMultiLine.toString().split(" ")[0])) {
-                    lines.append(buildMultiLine.toString().replace("{", "").trim());
-                    lines.append("\n");
-                }
+                appendMultiLineSentence(lines, fileData, fileLines, i);
             }
         }
         return lines.toString();
+    }
+    private void appendMultiLineMethod(List<Model> methods, String fileData ,String[] lineNumbers, String[] fileLines, int i) {
+        int next = i+1;
+        StringBuilder buildMultiLine = new StringBuilder(fileData);
+        while(next < fileLines.length) {
+            if(fileLines[next].trim().endsWith(",")) {
+                buildMultiLine.append(fileLines[next].trim().split(":")[1].trim());
+                next++;
+            }
+            if(fileLines[next].trim().endsWith("{") || fileLines[next].trim().endsWith(")")) {
+                buildMultiLine.append(fileLines[next].trim().split(":")[1].trim());
+                break;
+            } else {
+                ++next;
+            }
+        }
+        methods.add(new Model(buildMultiLine.toString(), Integer.parseInt(lineNumbers[0])));
     }
     /**
      * genera un {@link String} con las sentencia incluido el número de linea 
@@ -86,26 +106,7 @@ public class TextUtils {
                             )
                         );
                     } else if(conditionB) {
-                        int next = i+1;
-                        StringBuilder buildMultiLine = new StringBuilder(fileData);
-                        while(next < fileLines.length) {
-                            if(fileLines[next].trim().endsWith(",")) {
-                                buildMultiLine.append(fileLines[next].trim().split(":")[1].trim());
-                                next++;
-                            }
-                            if(fileLines[next].trim().endsWith("{") || fileLines[next].trim().endsWith(")")) {
-                                buildMultiLine.append(fileLines[next].trim().split(":")[1].trim());
-                                break;
-                            } else {
-                                ++next;
-                            }
-                        }
-                        methods.add(
-                            new Model(
-                                buildMultiLine.toString(),
-                                Integer.parseInt(lineNumbers[0])
-                            )
-                        );
+                        appendMultiLineMethod(methods, fileData, lineNumbers, fileLines, i);
                     }
                 }
             }
